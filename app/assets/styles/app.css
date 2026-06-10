@@ -1,3 +1,117 @@
-body {
-    background-color: skyblue;
+.navbar {
+    min-height: 90px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.logo-batark {
+    height: 300px;
+}
+
+.home-bg {
+    background-attachment: fixed;
+    position: relative;
+    padding-top: 60px; /* hauteur navbar - image commence sous la nvbar */
+    min-height: 80vh; /* full screen */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.home-bg-overlay {
+    min-height: 75vh;
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.overlay-content {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.overlay-content h1 {
+    font-size: 5rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.overlay-content p {
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+@media (min-width: 768px) {
+
+    .home-bg {
+        background-attachment: fixed;
+        position: relative;
+        padding-top: 60px; /* hauteur navbar - image commence sous la nvbar */
+        min-height: 80vh; /* full screen */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+
+    .overlay-content h1 {
+        font-size: 3rem;
+    }
+
+    .logo-batark {
+        height: 500px;
+    }
+
+    .overlay-content p {
+        text-align: center;
+        font-size: 2rem;
+    }
+}
+
+@media (min-width: 992px) {
+
+    .home-bg {
+        background-attachment: fixed;
+        position: relative;
+        padding-top: 80px; /* hauteur navbar - image commence sous la nvbar */
+        min-height: 100vh; /* full screen */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+
+    .home-bg-overlay {
+        display: flex;
+        align-items: center;
+        margin-top: px;
+        min-height: 100vh;
+    }
+
+    .logo-batark {
+        height: 600px;
+    }
+
+    .overlay-content {
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .overlay-content h1 {
+        font-size: 4rem;
+    }
+
+    .overlay-content p {
+        font-size: 1.8rem;
+        text-align: center;
+    }
+
+    
 }
