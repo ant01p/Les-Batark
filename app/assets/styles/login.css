@@ -1,0 +1,91 @@
+.alert-login {
+    background: rgba(220, 53, 69, 0.15);
+    border: 1px solid rgba(220, 53, 69, 0.5);
+    border-radius: 6px;
+    color: #ff6b7a;
+    font-size: 12px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+.login-options {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.forgot-password {
+    font-size: 16px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.forgot-password:hover {
+    opacity: 0.75;
+    color: #00e5ff;
+}
+
+.login-register-link {
+    font-size: 18px;
+    margin-bottom: 0;
+    color: #aaa;
+}
+
+.login-register-link a:hover {
+    opacity: 0.75;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.remember-me input[type="checkbox"] {
+    width: auto;
+}
+
+.remember-me span {
+    color: #aaa;
+}
+
+@media (min-width: 768px) {
+
+    .login-options {
+        flex-direction: column;
+    }
+
+    .forgot-password {
+        font-size: 25px;
+    }
+
+    .login-register-link {
+        font-size: 25px;
+    }
+
+    .remember-me span {
+        font-size: 25px;
+    }
+}
+
+@media (min-width: 992px) {
+
+    .login-options {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .forgot-password {
+        font-size: 18px;
+    }
+
+    .remember-me span {
+        font-size: 18px;
+    }
+
+    .login-register-link {
+        font-size: 18px;
+    }
+}
