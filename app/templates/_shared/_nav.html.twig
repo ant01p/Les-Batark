@@ -11,12 +11,41 @@
             <ul class="navbar-nav me-auto">
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle " data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Enregistrement</a>
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                        {% if app.user %}
+                            {{ app.user.pseudo }}
+                        {% else %}
+                            Enregistrement
+                        {% endif %}
+                    </a>
+
                     <div class="dropdown-menu bg-black">
-                        <a class="dropdown-item" href="/register">Enregistrement</a>
-                        <a class="dropdown-item" href="/login">Connexion</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="/logout">Déconnexion</a>
+
+                        {% if app.user %}
+
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a class="dropdown-item text-warning" href="{{ path('app_admin') }}">
+                                    Espace administration
+                                </a>
+                                <div class="dropdown-divider"></div>
+                            {% endif %}
+
+                            <a class="dropdown-item" href="{{ path('app_logout') }}">
+                                Déconnexion
+                            </a>
+
+                        {% else %}
+
+                            <a class="dropdown-item" href="{{ path('app_register') }}">
+                                Enregistrement
+                            </a>
+
+                            <a class="dropdown-item" href="{{ path('app_login') }}">
+                                Connexion
+                            </a>
+
+                        {% endif %}
+
                     </div>
                 </li>
 
@@ -36,6 +65,7 @@
                     <a class="nav-link" href="#">Boutique</a>
                 </li>
             </ul>
+
             <form class="d-flex">
                 <input class="form-control me-sm-2" type="search" placeholder="Search">
                 <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>

@@ -1,0 +1,124 @@
+.admin-page {
+    max-width: 900px;
+    margin: 24px auto;
+    padding: 0 16px;
+}
+
+/* Header centré sur mobile */
+.admin-page header {
+    text-align: center;
+}
+
+.admin-page .btn {
+    border-radius: 8px;
+}
+
+.admin-page .card {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.admin-page .badge {
+    border-radius: 6px;
+}
+
+/* Boutons catégories centrés sur mobile */
+.admin-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+/* Sur mobile : largeur fixe pour avoir un bloc propre */
+.admin-tabs .nav-item {
+    width: 130px;
+}
+
+.admin-tabs .btn {
+    width: 100%;
+}
+
+/* Titre section + bouton Ajouter */
+.admin-section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+/* Contenu des cards */
+.admin-card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.admin-card-content {
+    min-width: 0;
+}
+
+/* Boutons Modifier / Supprimer en colonne à droite sur mobile */
+.admin-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.admin-actions .btn {
+    width: 96px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+
+@media screen and (min-width: 768px) {
+
+    .admin-page {
+        margin: 32px auto;
+        padding: 0 24px;
+    }
+
+    /* Header à gauche sur tablette */
+    .admin-page header {
+        text-align: left;
+    }
+
+    /* Catégories à gauche sur tablette */
+    .admin-tabs {
+        justify-content: flex-start;
+    }
+
+    .admin-tabs .nav-item {
+        width: auto;
+    }
+
+    .admin-tabs .btn {
+        width: auto;
+    }
+
+    /* Boutons Modifier / Supprimer en ligne */
+    .admin-actions {
+        flex-direction: row;
+    }
+
+    .admin-actions .btn {
+        width: auto;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+@media screen and (min-width: 992px) {
+
+    .admin-page {
+        margin: 40px auto;
+    }
+
+    .admin-card-body {
+        gap: 24px;
+    }
+}

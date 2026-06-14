@@ -10,9 +10,10 @@
         <link rel="stylesheet" href="{{ asset('styles/register.css') }}">
         <link rel="stylesheet" href="{{ asset('styles/login.css') }}">
         <link rel="stylesheet" href="{{ asset('styles/auth.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/admin.css') }}">
     </head>
 
-    <body>
+    <body class="{% block body_class %}{% endblock %}">
 
         {# pour cacher la nav sur certaines pages avec {% set showNavbar = false %} #}
         {% if showNavbar is not defined or showNavbar %}

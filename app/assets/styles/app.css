@@ -1,9 +1,28 @@
+html,
+body {
+    min-height: 100vh;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
 .navbar {
     min-height: 90px;
-    position: fixed;
-    top: 0;
     width: 100%;
     z-index: 1000;
+}
+
+/* Navbar fixe uniquement sur la page d'accueil */
+body.home-page .navbar {
+    position: fixed;
+    top: 0;
 }
 
 .logo-batark {

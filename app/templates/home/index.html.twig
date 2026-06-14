@@ -2,55 +2,60 @@
 
 {% block title %}Accueil - ARK Community{% endblock %}
 
+{% block body_class %}home-page{% endblock %}
+
 {% block body %}
 
-<section class="home-bg" style="background-image: url('{{ asset('images/jungle.png') }}')">
-    <div class="home-bg-overlay">
-        <div class="container">
-            <div class="overlay-content ">
-                
-                <img src="{{ asset('images/LESBATARK.png') }}" alt="Logo ARK" class="logo-batark">
-                
-                <p>
-                    Rejoignez notre communauté de survivants et vivez l'aventure ARK comme jamais auparavant!
-                </p>
+    <section class="home-page">
 
-                <div class="d-flex gap-3 mt-4 mb-4">
-                    <a href="#" class="btn btn-outline-success btn-lg">Voir les serveurs</a>
+        <section class="home-bg" style="background-image: url('{{ asset('images/jungle.png') }}')">
+        
+            <div class="home-bg-overlay">
+                <div class="container">
+                    <div class="overlay-content ">
+                        
+                        <img src="{{ asset('images/LESBATARK.png') }}" alt="Logo ARK" class="logo-batark">
+                        
+                        <p>
+                            Rejoignez notre communauté de survivants et vivez l'aventure ARK comme jamais auparavant!
+                        </p>
+
+                        <div class="d-flex gap-3 mt-4 mb-4">
+                            <a href="#" class="btn btn-outline-success btn-lg">Voir les serveurs</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
+        </section>
 
-<section class="container py-5">
-    <div class="row g-4">
-        <div class="col-md-3 ">
-            <div class="card text-center border-dark p-4">
-                <h2>1 234</h2>
-                <p>Membres</p>
+        <section class="container py-5">
+            <div class="row g-4">
+                <div class="col-md-3 ">
+                    <div class="card text-center border-dark p-4">
+                        <h2>1 234</h2>
+                        <p>Membres</p>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card text-center border-dark p-4">
+                        <h2>Serveurs</h2>
+                        
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card text-center border-dark p-4">
+                        <h2>Événements</h2>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card text-center border-dark p-4">
+                        <h2>Boutique</h2>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card text-center border-dark p-4">
-                <h2>Serveurs</h2>
-                
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card text-center border-dark p-4">
-                <h2>Événements</h2>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card text-center border-dark p-4">
-                <h2>Boutique</h2>
-            </div>
-        </div>
-    </div>
-</section>
-
+        </section>
+    </section>
 {% endblock %}
