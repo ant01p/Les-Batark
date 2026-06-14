@@ -177,8 +177,33 @@ class Event
         };
     }
 
-    public function getRewardsAsString(): string
+    public function isRanking(): bool
     {
-        return implode(', ', $this->rewards ?? []);
+        return ($this->rewards['type'] ?? 'simple') === 'ranking';
+    }
+
+    public function getReward1(): string
+    {
+        return $this->rewards['1'] ?? '';
+    }
+
+    public function getReward2(): string
+    {
+        return $this->rewards['2'] ?? '';
+    }
+
+    public function getReward3(): string
+    {
+        return $this->rewards['3'] ?? '';
+    }
+
+    public function getRewardSimple(): string
+    {
+        return $this->rewards['value'] ?? '';
+    }
+
+    public function getRewardGeneral(): string
+    {
+        return $this->rewards['general'] ?? '';
     }
 }

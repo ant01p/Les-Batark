@@ -1,0 +1,182 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if event.id is null %}
+        Créer un événement
+    {% else %}
+        Modifier l'événement
+    {% endif %}
+     — Les BATARK
+{% endblock %}
+
+{% block body %}
+<div class="admin-page">
+
+    <div class="row justify-content-center mb-4">
+        <div class="col-lg-8">
+            <div class="d-flex align-items-center gap-3">
+                <a href="{{ path('admin_index') }}" class="btn btn-outline-secondary btn-sm">
+                    Retour
+                </a>
+                <div>
+                    <h1 class="h3 fw-bold text-white mb-0">
+                        {% if event.id is null %}
+                            Nouvel événement
+                        {% else %}
+                            Modifier : {{ event.title }}
+                        {% endif %}
+                    </h1>
+                    <p class="text-muted mb-0 small">Panneau d'administration</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type == 'success' ? 'success' : 'danger' }} alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-primary">
+                <div class="card-body p-4">
+
+                    {{ form_start(form) }}
+
+                    {# Titre #}
+                    <div class="mb-3">
+                        {{ form_label(form.title) }}
+                        {{ form_widget(form.title, {attr: {class: 'form-control', placeholder: 'Ex : Chasse au Trésor Légendaire'}}) }}
+                        {{ form_errors(form.title) }}
+                    </div>
+
+                    {# Lieu #}
+                    <div class="mb-3">
+                        {{ form_label(form.location) }}
+                        {{ form_widget(form.location, {attr: {class: 'form-control', placeholder: 'Ex : The Island - Zone Nord'}}) }}
+                        {{ form_errors(form.location) }}
+                    </div>
+
+                    {# Date & Statut #}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            {{ form_label(form.date) }}
+                            {{ form_widget(form.date, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.date) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_label(form.status) }}
+                            {{ form_widget(form.status, {attr: {class: 'form-select'}}) }}
+                            {{ form_errors(form.status) }}
+                        </div>
+                    </div>
+
+                    {# Durée & Max participants #}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            {{ form_label(form.duration) }}
+                            {{ form_widget(form.duration, {attr: {class: 'form-control', placeholder: 'Ex : 1h30'}}) }}
+                            {{ form_errors(form.duration) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_label(form.maxParticipants) }}
+                            {{ form_widget(form.maxParticipants, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.maxParticipants) }}
+                        </div>
+                    </div>
+
+                    {# Description #}
+                    <div class="mb-3">
+                        {{ form_label(form.description) }}
+                        {{ form_widget(form.description, {attr: {class: 'form-control', placeholder: 'Décrivez l\'événement…'}}) }}
+                        {{ form_errors(form.description) }}
+                    </div>
+
+                    {# Récompenses #}
+                    <hr class="border-secondary my-3">
+                    <p class="fw-semibold text-white mb-3">Récompenses</p>
+
+                    <div class="form-check form-switch mb-3">
+                        {{ form_widget(form.isRankingMode, {attr: {class: 'form-check-input'}}) }}
+                        {{ form_label(form.isRankingMode, null, {label_attr: {class: 'form-check-label'}}) }}
+                    </div>
+
+                    {# Sans classement #}
+                    <div id="reward-simple">
+                        <div class="mb-3">
+                            {{ form_label(form.rewardSimple) }}
+                            {{ form_widget(form.rewardSimple, {attr: {class: 'form-control', placeholder: 'Ex : Arme légendaire, 5000 éléments'}}) }}
+                            {{ form_errors(form.rewardSimple) }}
+                        </div>
+                    </div>
+
+                    {# Avec classement #}
+                    <div id="reward-ranking" style="display:none;">
+                        <div class="mb-3">
+                            {{ form_label(form.reward1) }}
+                            {{ form_widget(form.reward1, {attr: {class: 'form-control', placeholder: 'Ex : Arme légendaire + 500 éléments'}}) }}
+                            {{ form_errors(form.reward1) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.reward2) }}
+                            {{ form_widget(form.reward2, {attr: {class: 'form-control', placeholder: 'Ex : 3000 éléments + Skin exclusif'}}) }}
+                            {{ form_errors(form.reward2) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.reward3) }}
+                            {{ form_widget(form.reward3, {attr: {class: 'form-control', placeholder: 'Ex : 1000 éléments'}}) }}
+                            {{ form_errors(form.reward3) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.rewardGeneral) }}
+                            {{ form_widget(form.rewardGeneral, {attr: {class: 'form-control', placeholder: 'Ex : Titre de champion + accès VIP'}}) }}
+                            {{ form_errors(form.rewardGeneral) }}
+                        </div>
+                    </div>
+
+                    <hr class="border-secondary my-4">
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-outline-success btn-lg mt-3">
+                            {% if event.id is null %}
+                                Créer l'événement
+                            {% else %}
+                                Enregistrer
+                            {% endif %}
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const toggle  = document.getElementById('{{ form.isRankingMode.vars.id }}');
+    const simple  = document.getElementById('reward-simple');
+    const ranking = document.getElementById('reward-ranking');
+
+    function updateRewardFields() {
+        if (toggle.checked) {
+            simple.style.display  = 'none';
+            ranking.style.display = 'block';
+        } else {
+            simple.style.display  = 'block';
+            ranking.style.display = 'none';
+        }
+    }
+
+    toggle.addEventListener('change', updateRewardFields);
+    updateRewardFields();
+</script>
+
+{% endblock %}

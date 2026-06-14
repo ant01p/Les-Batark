@@ -10,6 +10,15 @@
         <p class="text-muted mb-0">Gérez les contenus du site LES-BATARK</p>
     </header>
 
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type == 'success' ? 'success' : 'danger' }} alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
     <ul class="nav admin-tabs mb-4">
         <li class="nav-item">
             <button type="button" class="btn btn-primary active" data-bs-toggle="pill" data-bs-target="#events">
@@ -44,64 +53,41 @@
 
             <div class="admin-section-title">
                 <h2 class="h5 fw-semibold text-white mb-0">Événements</h2>
-                <button type="button" class="btn btn-success">Ajouter</button>
+                <a href="{{ path('admin_event_new') }}" class="btn btn-success">Ajouter</a>
             </div>
 
-            <div class="card border-primary mb-3">
-                <div class="card-body admin-card-body">
-                    <div class="admin-card-content">
-                        <span class="badge bg-warning me-2">À venir</span>
-                        <span class="fw-semibold text-white">Chasse au Trésor Légendaire</span>
-
-                        <p class="text-muted small mb-0 mt-1">
-                            2026-06-20 à 20:00 — The Island - Zone Nord
-                        </p>
-                    </div>
-
-                    <div class="admin-actions">
-                        <button type="button" class="btn btn-primary">Modifier</button>
-                        <button type="button" class="btn btn-danger">Supprimer</button>
-                    </div>
-                </div>
+             {% if events is empty %}
+        <div class="card border-secondary">
+            <div class="card-body text-center text-muted py-5">
+                Aucun événement pour l'instant.
             </div>
-
-            <div class="card border-primary mb-3">
-                <div class="card-body admin-card-body">
-                    <div class="admin-card-content">
-                        <span class="badge bg-success text-dark me-2">En cours</span>
-                        <span class="fw-semibold text-white">Tournoi PVP - Arène de Combat</span>
-
-                        <p class="text-muted small mb-0 mt-1">
-                            2026-06-15 à 19:00 — Arène Centrale
-                        </p>
-                    </div>
-
-                    <div class="admin-actions">
-                        <button type="button" class="btn btn-primary">Modifier</button>
-                        <button type="button" class="btn btn-danger">Supprimer</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card border-primary mb-3">
-                <div class="card-body admin-card-body">
-                    <div class="admin-card-content">
-                        <span class="badge bg-secondary me-2">Terminé</span>
-                        <span class="fw-semibold text-white">Construction Communautaire</span>
-
-                        <p class="text-muted small mb-0 mt-1">
-                            2026-05-20 à 18:00 — The Center - Zone Verte
-                        </p>
-                    </div>
-
-                    <div class="admin-actions">
-                        <button type="button" class="btn btn-primary">Modifier</button>
-                        <button type="button" class="btn btn-danger">Supprimer</button>
-                    </div>
-                </div>
-            </div>
-
         </div>
+    {% else %}
+        {% for event in events %}
+            <div class="card border-primary mb-3">
+                <div class="card-body admin-card-body">
+                    <div class="admin-card-content">
+                        <span class="badge {{ event.statusBadgeClass }} me-2">{{ event.statusLabel }}</span>
+                        <span class="fw-semibold text-white">{{ event.title }}</span>
+                        <p class="text-muted small mb-0 mt-1">
+                            {{ event.date|date('Y-m-d à H:i') }}
+                            {% if event.location %} — {{ event.location }}{% endif %}
+                        </p>
+                    </div>
+                    <div class="admin-actions">
+                        <a href="{{ path('admin_event_edit', {id: event.id}) }}" class="btn btn-primary">Modifier</a>
+                        <form method="post" action="{{ path('admin_event_delete', {id: event.id}) }}"
+                              onsubmit="return confirm('Supprimer cet événement ?')">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_event_' ~ event.id) }}">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+</div>
 
         <div class="tab-pane fade" id="shop">
 

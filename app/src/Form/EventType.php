@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Event;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -58,30 +59,77 @@ class EventType extends AbstractType
                 'required' => false,
                 'attr'     => ['rows' => 4, 'placeholder' => 'Décrivez l\'événement…'],
             ])
-            ->add('rewardsString', TextType::class, [
-                'label'    => 'Récompenses (séparées par des virgules)',
+            ->add('isRankingMode', CheckboxType::class, [
+                'label'    => 'Établir un classement',
                 'mapped'   => false,
                 'required' => false,
-                'attr'     => ['placeholder' => 'Arme légendaire, 5000 points, Skin exclusif'],
+            ])
+            ->add('rewardSimple', TextType::class, [
+                'label'    => 'Récompenses',
+                'mapped'   => false,
+                'required' => false,
+                'attr'     => ['placeholder' => 'Ex : Arme légendaire, 5000 points'],
+            ])
+            ->add('reward1', TextType::class, [
+                'label'    => '🥇 1er',
+                'mapped'   => false,
+                'required' => false,
+                'attr'     => ['placeholder' => 'Ex : Arme légendaire + 5000 points'],
+            ])
+            ->add('reward2', TextType::class, [
+                'label'    => '🥈 2ème',
+                'mapped'   => false,
+                'required' => false,
+                'attr'     => ['placeholder' => 'Ex : 3000 points + Skin exclusif'],
+            ])
+            ->add('reward3', TextType::class, [
+                'label'    => '🥉 3ème',
+                'mapped'   => false,
+                'required' => false,
+                'attr'     => ['placeholder' => 'Ex : 1000 points'],
+            ])
+            ->add('rewardGeneral', TextType::class, [
+                'label'    => 'Récompense générale',
+                'mapped'   => false,
+                'required' => false,
+                'attr'     => ['placeholder' => 'Ex : Titre de champion + 500 points pour tous'],
             ])
         ;
 
-        // Pré-remplir rewardsString à partir du tableau en BDD
+        // Pré-remplir les champs à partir du tableau en BDD
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $entity = $event->getData();
             if ($entity instanceof Event) {
-                $event->getForm()->get('rewardsString')->setData($entity->getRewardsAsString());
+                $form = $event->getForm();
+                $form->get('isRankingMode')->setData($entity->isRanking());
+                $form->get('rewardSimple')->setData($entity->getRewardSimple());
+                $form->get('reward1')->setData($entity->getReward1());
+                $form->get('reward2')->setData($entity->getReward2());
+                $form->get('reward3')->setData($entity->getReward3());
+                $form->get('rewardGeneral')->setData($entity->getRewardGeneral());
             }
         });
 
-        // Reconvertir rewardsString en tableau avant sauvegarde
+        // Reconvertir les champs en tableau avant sauvegarde
         $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
             $form   = $event->getForm();
             $entity = $event->getData();
             if ($entity instanceof Event) {
-                $raw     = $form->get('rewardsString')->getData() ?? '';
-                $rewards = array_filter(array_map('trim', explode(',', $raw)));
-                $entity->setRewards(array_values($rewards));
+                $isRanking = $form->get('isRankingMode')->getData();
+                if ($isRanking) {
+                    $entity->setRewards([
+                        'type'    => 'ranking',
+                        '1'       => trim($form->get('reward1')->getData() ?? ''),
+                        '2'       => trim($form->get('reward2')->getData() ?? ''),
+                        '3'       => trim($form->get('reward3')->getData() ?? ''),
+                        'general' => trim($form->get('rewardGeneral')->getData() ?? ''),
+                    ]);
+                } else {
+                    $entity->setRewards([
+                        'type'  => 'simple',
+                        'value' => trim($form->get('rewardSimple')->getData() ?? ''),
+                    ]);
+                }
             }
         });
     }
