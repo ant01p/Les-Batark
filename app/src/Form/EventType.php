@@ -32,9 +32,14 @@ class EventType extends AbstractType
                 'attr'     => ['placeholder' => 'Ex : The Island - Zone Nord'],
             ])
             ->add('date', DateTimeType::class, [
-                'label'       => 'Date & heure',
+                'label'       => 'Début',
                 'widget'      => 'single_text',
                 'constraints' => [new NotBlank(message: 'La date est obligatoire.')],
+            ])
+            ->add('endDate', DateTimeType::class, [
+                'label'    => 'Fin',
+                'widget'   => 'single_text',
+                'required' => false,
             ])
             ->add('duration', TextType::class, [
                 'label'    => 'Durée',

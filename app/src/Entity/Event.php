@@ -27,6 +27,9 @@ class Event
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $endDate = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $duration = null;
 
@@ -86,6 +89,17 @@ class Event
     public function setDate(\DateTimeInterface $date): static
     {
         $this->date = $date;
+        return $this;
+    }
+
+    public function getEndDate(): ?\DateTimeInterface
+    {
+        return $this->endDate;
+    }
+
+    public function setEndDate(?\DateTimeInterface $endDate): static
+    {
+        $this->endDate = $endDate;
         return $this;
     }
 
