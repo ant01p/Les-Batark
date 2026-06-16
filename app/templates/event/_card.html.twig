@@ -1,0 +1,54 @@
+<div class="d-flex align-items-center gap-2 mb-2">
+    <span class="badge {{ event.statusBadgeClass }}">{{ event.statusLabel }}</span>
+    <span class="event-card-title">{{ event.title }}</span>
+</div>
+
+<div class="event-card-meta d-flex flex-wrap align-items-center gap-2 mb-3 text-info small">
+    <span>{{ event.date|date('d/m/Y à H:i') }}</span>
+    {% if event.endDate %}
+        <span class="event-card-meta-sep">→</span>
+        <span>{{ event.endDate|date('d/m/Y à H:i') }}</span>
+    {% endif %}
+    {% if event.location %}
+        <span class="event-card-meta-sep">—</span>
+        <span>{{ event.location }}</span>
+    {% endif %}
+    {% if event.duration %}
+        <span class="event-card-meta-sep">—</span>
+        <span>{{ event.duration }}</span>
+    {% endif %}
+    {% if event.maxParticipants %}
+        <span class="event-card-meta-sep">—</span>
+        <span>Max {{ event.maxParticipants }} participants</span>
+    {% endif %}
+</div>
+
+{% if event.description %}
+    <p class="event-card-desc">{{ event.description }}</p>
+{% endif %}
+
+{% if event.rewards %}
+    <hr class="border-white border-opacity-10 my-3">
+    <p class="event-card-rewards-title">Récompenses</p>
+
+    {% if event.rewards.type == 'ranking' %}
+        <div>
+            {% if event.rewards['1'] %}
+                <div class="event-card-reward-item"><span class="medals">🥇</span> {{ event.rewards['1'] }}</div>
+            {% endif %}
+            {% if event.rewards['2'] %}
+                <div class="event-card-reward-item"><span class="medals">🥈</span> {{ event.rewards['2'] }}</div>
+            {% endif %}
+            {% if event.rewards['3'] %}
+                <div class="event-card-reward-item"><span class="medals">🥉</span> {{ event.rewards['3'] }}</div>
+            {% endif %}
+            {% if event.rewards.general %}
+                <div class="event-card-reward-general fst-italic mt-2">
+                    {{ event.rewards.general }}
+                </div>
+            {% endif %}
+        </div>
+    {% else %}
+        <p class="event-card-reward-simple">{{ event.rewards.value }}</p>
+    {% endif %}
+{% endif %}

@@ -19,8 +19,13 @@ main {
     z-index: 1000;
 }
 
-/* Navbar fixe uniquement sur la page d'accueil */
+/* Navbar fixe la page d'accueil et events */
 body.home-page .navbar {
+    position: fixed;
+    top: 0;
+}
+
+body.events-page .navbar {
     position: fixed;
     top: 0;
 }

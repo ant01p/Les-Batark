@@ -1,0 +1,138 @@
+.logo-batark-event {
+    height: 300px;
+}
+
+/* ── fixed BG ── */
+.events-bg {
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+
+.events-bg-overlay {
+    min-height: 100vh;
+    padding-top: 110px;
+    padding-bottom: 48px;
+   
+}
+
+.events-section-label {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #a0a0c0;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.text-info {
+    font-size: 18px;
+}
+
+.events-section-label::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Event cards */
+.event-card {
+    background: rgba(0, 0, 0, 0.788);
+    backdrop-filter: blur(14px);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 12px;
+    transition: transform 0.2s, box-shadow 0.25s;
+}
+
+.event-card:hover {
+    transform: translateY(-2px);
+}
+
+/* event Title */
+.event-card-title {
+    font-size: 25px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+/* event Description */
+.event-card-desc {
+    font-size: 18px;
+    color: #c0b8d8;
+    line-height: 1.65;
+    margin-bottom: 12px;
+}
+
+/* Rewards*/
+.event-card-rewards-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #a0a0c0;
+    margin-bottom: 8px;
+}
+
+.event-card-reward-item {
+    font-size: 18px;
+    color: #e0d8f8;
+    padding: 3px 0;
+}
+
+.event-card-reward-simple {
+    font-size: 16px;
+    color: #e0d8f8;
+}
+
+.event-card-reward-general {
+    color: #c0b8d8;
+}
+
+.medals {
+    font-size: 25px;
+}
+
+.event-card .badge {
+    font-size: 16px;
+    padding: 8px 14px;
+    border-radius: 8px;
+}
+
+/* TABLETTE */
+@media (min-width: 768px) {
+
+    .events-title h1 {
+        font-size: 50px;
+    }
+
+    .text-info {
+        font-size: 20px;
+    }
+    
+    .logo-batark-event {
+        height: 400px;
+    }
+
+    .event-card-desc {
+        font-size: 20px;
+        color: #c0b8d8;
+        line-height: 1.65;
+        margin-bottom: 12px;
+    }
+
+}
+
+/* PC */
+@media (min-width: 992px) {
+    .logo-batark-event {
+        height: 500px;
+    }
+}

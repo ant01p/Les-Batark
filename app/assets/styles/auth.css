@@ -157,7 +157,7 @@ input:-webkit-autofill {
 @media (min-width: 768px) {
 
     .auth-frame {
-        padding: 100px 24px 48px;
+        padding: 50px 24px 48px;
     }
 
     .auth-bg {
