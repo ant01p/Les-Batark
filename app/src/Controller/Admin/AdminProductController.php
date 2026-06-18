@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Entity\Product;
 use App\Form\ProductType;
-use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,14 +15,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 final class AdminProductController extends AbstractController
 {
-    #[Route('', name: 'index')]
-    public function index(ProductRepository $productRepository): Response
-    {
-        return $this->render('admin/product/index.html.twig', [
-            'products' => $productRepository->findAll(),
-        ]);
-    }
-
     #[Route('/new', name: 'new')]
     public function new(Request $request, EntityManagerInterface $em): Response
     {
@@ -36,10 +27,10 @@ final class AdminProductController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Produit créé avec succès.');
-            return $this->redirectToRoute('admin_product_index');
+            return $this->redirectToRoute('admin_index');
         }
 
-        return $this->render('admin/product/product_form.html.twig', [
+        return $this->render('admin/product/products_form.html.twig', [
             'form' => $form,
             'product' => $product,
             'mode' => 'create',
@@ -56,10 +47,10 @@ final class AdminProductController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Produit modifié avec succès.');
-            return $this->redirectToRoute('admin_product_index');
+            return $this->redirectToRoute('admin_index');
         }
 
-        return $this->render('admin/product/product_form.html.twig', [
+        return $this->render('admin/product/products_form.html.twig', [
             'form' => $form,
             'product' => $product,
             'mode' => 'edit',
@@ -75,6 +66,6 @@ final class AdminProductController extends AbstractController
             $this->addFlash('success', 'Produit supprimé.');
         }
 
-        return $this->redirectToRoute('admin_product_index');
+        return $this->redirectToRoute('admin_index');
     }
 }

@@ -1,0 +1,35 @@
+<div class="admin-section-title">
+    <h2 class="h5 fw-semibold text-white mb-0">Événements</h2>
+    <a href="{{ path('admin_event_new') }}" class="btn btn-success">Ajouter</a>
+</div>
+
+{% if events is empty %}
+    <div class="card border-secondary">
+        <div class="card-body text-center text-muted py-5">
+            Aucun événement pour l'instant.
+        </div>
+    </div>
+{% else %}
+    {% for event in events %}
+        <div class="card border-primary mb-3">
+            <div class="card-body admin-card-body">
+                <div class="admin-card-content">
+                    <span class="badge {{ event.statusBadgeClass }} me-2">{{ event.statusLabel }}</span>
+                    <span class="fw-semibold text-white">{{ event.title }}</span>
+                    <p class="text-muted small mb-0 mt-1">
+                        {{ event.date|date('Y-m-d à H:i') }}
+                        {% if event.location %} — {{ event.location }}{% endif %}
+                    </p>
+                </div>
+                <div class="admin-actions">
+                    <a href="{{ path('admin_event_edit', {id: event.id}) }}" class="btn btn-primary">Modifier</a>
+                    <form method="post" action="{{ path('admin_event_delete', {id: event.id}) }}"
+                          onsubmit="return confirm('Supprimer cet événement ?')">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete_event_' ~ event.id) }}">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}

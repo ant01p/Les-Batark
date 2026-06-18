@@ -4,7 +4,7 @@ namespace App\Form;
 
 use App\Entity\Product;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,11 +22,10 @@ class ProductType extends AbstractType
                 'label' => 'Description',
                 'required' => false,
             ])
-            ->add('price', IntegerType::class, [
+            ->add('price', MoneyType::class, [
                 'label' => 'Prix',
-            ])
-            ->add('category', TextType::class, [
-                'label' => 'Catégorie',
+                'currency' => 'EUR',
+                'divisor' => 100,
             ])
             ->add('imageUrl', TextType::class, [
                 'label' => 'URL image (optionnel)',
