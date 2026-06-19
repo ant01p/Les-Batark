@@ -66,8 +66,8 @@ class EventType extends AbstractType
             ])
             ->add('isRankingMode', CheckboxType::class, [
                 'label'    => 'Établir un classement',
-                'mapped'   => false,
-                'required' => false,
+                'mapped'   => false, //Sans mapped: false, Symfony essaierait (et échouerait) de trouver une propriété reward1 sur Event.//
+                'required' => false,//Ce champ n'est pas obligatoire, il peut être laissé décoché pour les événements sans classement.//
             ])
             ->add('rewardSimple', TextType::class, [
                 'label'    => 'Récompenses',

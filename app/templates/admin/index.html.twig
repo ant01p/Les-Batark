@@ -12,7 +12,7 @@
 
     {% for type, messages in app.flashes %}
         {% for message in messages %}
-            <div class="alert alert-{{ type == 'success' ? 'success' : 'danger' }} alert-dismissible fade show">
+            <div class="alert alert-{{ type == 'success' ? 'success' : 'danger' }} alert-dismissible fade show text-bold">
                 {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
@@ -21,13 +21,13 @@
 
     <ul class="nav admin-tabs mb-4">
         <li class="nav-item">
-            <button type="button" class="btn btn-primary active" data-bs-toggle="pill" data-bs-target="#events">
+            <button type="button" class="btn btn-primary{{ activeTab == 'events' ? ' active' : '' }}" data-bs-toggle="pill" data-bs-target="#events">
                 Événements
             </button>
         </li>
 
         <li class="nav-item">
-            <button type="button" class="btn btn-primary" data-bs-toggle="pill" data-bs-target="#shop">
+            <button type="button" class="btn btn-primary{{ activeTab == 'shop' ? ' active' : '' }}" data-bs-toggle="pill" data-bs-target="#shop">
                 Boutique
             </button>
         </li>
@@ -49,11 +49,11 @@
 
     <div class="tab-content">
 
-        <div class="tab-pane fade show active" id="events">
+        <div class="tab-pane fade{{ activeTab == 'events' ? ' show active' : '' }}" id="events">
             {% include 'admin/event/events_tab.html.twig' %}
         </div>
 
-        <div class="tab-pane fade" id="shop">
+        <div class="tab-pane fade{{ activeTab == 'shop' ? ' show active' : '' }}" id="shop">
             {% include 'admin/product/products_tab.html.twig' %}
         </div>
 

@@ -30,6 +30,12 @@ class Product
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
+    #[ORM\Column]
+    private ?bool $hasType = null;
+
+    #[ORM\Column]
+    private ?bool $hasQuality = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -91,6 +97,30 @@ class Product
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function hasType(): ?bool
+    {
+        return $this->hasType;
+    }
+
+    public function setHasType(bool $hasType): static
+    {
+        $this->hasType = $hasType;
+
+        return $this;
+    }
+
+    public function hasQuality(): ?bool
+    {
+        return $this->hasQuality;
+    }
+
+    public function setHasQuality(bool $hasQuality): static
+    {
+        $this->hasQuality = $hasQuality;
 
         return $this;
     }

@@ -9,6 +9,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Category;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class ProductType extends AbstractType
 {
@@ -29,6 +32,20 @@ class ProductType extends AbstractType
             ])
             ->add('imageUrl', TextType::class, [
                 'label' => 'URL image (optionnel)',
+                'required' => false,
+            ])
+            ->add('category', EntityType::class, [
+                'class' => Category::class,
+                'choice_label' => 'name',
+                'placeholder' => 'Choisir une catégorie',
+                'label' => 'Catégorie',
+            ])
+            ->add('hasType', CheckboxType::class, [
+                'label' => 'Le client choisit Déjà crafté / Blueprint',
+                'required' => false,
+            ])
+            ->add('hasQuality', CheckboxType::class, [
+                'label' => 'Le client choisit la Qualité',
                 'required' => false,
             ])
         ;

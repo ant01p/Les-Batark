@@ -29,7 +29,7 @@ final class AdminEventController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Événement créé avec succès.');
-            return $this->redirectToRoute('admin_index');
+            return $this->redirectToRoute('admin_index', ['tab' => 'events']);
         }
 
         return $this->render('admin/event/event_form.html.twig', [
@@ -51,7 +51,7 @@ final class AdminEventController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Événement modifié avec succès.');
-            return $this->redirectToRoute('admin_index');
+            return $this->redirectToRoute('admin_index', ['tab' => 'events']);
         }
 
         return $this->render('admin/event/event_form.html.twig', [
@@ -72,6 +72,6 @@ final class AdminEventController extends AbstractController
             $this->addFlash('success', 'Événement supprimé.');
         }
 
-        return $this->redirectToRoute('admin_index');
+        return $this->redirectToRoute('admin_index', ['tab' => 'events']);
     }
 }

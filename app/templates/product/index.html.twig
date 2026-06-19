@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Boutique — Les BATARK{% endblock %}
+
+{% block body_class %}events-page{% endblock %}
+
+{% block body %}
+
+<section class="events-bg" style="background-image: url('{{ asset('images/jungle.png') }}')">
+    <div class="events-bg-overlay">
+        <div class="container">
+
+            <div class="events-header mb-5">
+                <div class="events-logo text-center mb-3">
+                    <img src="{{ asset('images/LESBATARK.png') }}" alt="Logo LES-BATARK" class="logo-batark-event">
+                </div>
+
+                <div class="events-title">
+                    <h1 class="text-white">Boutique</h1>
+                    <p class="text-info mb-0">
+                        {{ total }} produit{{ total > 1 ? 's' : '' }} disponible{{ total > 1 ? 's' : '' }}
+                    </p>
+                </div>
+            </div>
+
+            {% if categories is empty %}
+                <div class="card border-secondary event-card text-center py-5">
+                    Aucun produit disponible pour le moment.
+                </div>
+            {% else %}
+
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    {% for category in categories %}
+                        <a href="{{ path('app_shop', { category: category.id }) }}"
+                           class="btn btn-primary{{ activeCategory and category.id == activeCategory.id ? ' active' : '' }}">
+                            {{ category.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+
+                <hr class="border-secondary mb-4">
+
+                {% if products|length > 0 %}
+                    <div class="row g-3">
+                        {% for product in products %}
+                            <div class="col-6 col-md-4 col-lg-3">
+                                <a href="{{ path('product_show', { id: product.id }) }}" class="text-decoration-none">
+                                    <div class="card border-secondary event-card h-100">
+                                        {% include 'product/_card.html.twig' with {product: product} %}
+                                    </div>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="card border-secondary event-card text-center py-4">
+                        Aucun produit dans cette catégorie pour le moment.
+                    </div>
+                {% endif %}
+
+            {% endif %}
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

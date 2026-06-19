@@ -27,7 +27,7 @@ final class AdminProductController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Produit créé avec succès.');
-            return $this->redirectToRoute('admin_index');
+            return $this->redirectToRoute('admin_index', ['tab' => 'shop']);
         }
 
         return $this->render('admin/product/products_form.html.twig', [
@@ -47,7 +47,7 @@ final class AdminProductController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Produit modifié avec succès.');
-            return $this->redirectToRoute('admin_index');
+            return $this->redirectToRoute('admin_index', ['tab' => 'shop']);
         }
 
         return $this->render('admin/product/products_form.html.twig', [
@@ -66,6 +66,6 @@ final class AdminProductController extends AbstractController
             $this->addFlash('success', 'Produit supprimé.');
         }
 
-        return $this->redirectToRoute('admin_index');
+        return $this->redirectToRoute('admin_index', ['tab' => 'shop']);
     }
 }
