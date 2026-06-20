@@ -52,6 +52,9 @@ class Event
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->status = self::STATUS_UPCOMING;
+        $this->rewards = [
+            'type' => 'simple',
+        ];
     }
 
     public function getId(): ?int
@@ -67,6 +70,7 @@ class Event
     public function setTitle(string $title): static
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -78,6 +82,7 @@ class Event
     public function setLocation(?string $location): static
     {
         $this->location = $location;
+
         return $this;
     }
 
@@ -89,6 +94,7 @@ class Event
     public function setDate(\DateTimeInterface $date): static
     {
         $this->date = $date;
+
         return $this;
     }
 
@@ -100,6 +106,7 @@ class Event
     public function setEndDate(?\DateTimeInterface $endDate): static
     {
         $this->endDate = $endDate;
+
         return $this;
     }
 
@@ -111,6 +118,7 @@ class Event
     public function setDuration(?string $duration): static
     {
         $this->duration = $duration;
+
         return $this;
     }
 
@@ -122,6 +130,7 @@ class Event
     public function setMaxParticipants(?int $maxParticipants): static
     {
         $this->maxParticipants = $maxParticipants;
+
         return $this;
     }
 
@@ -133,6 +142,7 @@ class Event
     public function setStatus(string $status): static
     {
         $this->status = $status;
+
         return $this;
     }
 
@@ -143,7 +153,8 @@ class Event
 
     public function setRewards(?array $rewards): static
     {
-        $this->rewards = $rewards;
+        $this->rewards = $rewards ?? [];
+
         return $this;
     }
 
@@ -155,6 +166,7 @@ class Event
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -166,10 +178,11 @@ class Event
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
-    // ── Helpers ────────────────────────────────────────────────────
+    // ── Helpers statut ─────────────────────────────────────────────
 
     public function getStatusLabel(): string
     {
@@ -177,7 +190,7 @@ class Event
             self::STATUS_UPCOMING => 'À venir',
             self::STATUS_ONGOING  => 'En cours',
             self::STATUS_FINISHED => 'Terminé',
-            default               => $this->status,
+            default               => $this->status ?? '',
         };
     }
 
@@ -191,33 +204,82 @@ class Event
         };
     }
 
+    // ── Helpers récompenses ────────────────────────────────────────
+
     public function isRanking(): bool
     {
         return ($this->rewards['type'] ?? 'simple') === 'ranking';
     }
 
-    public function getReward1(): string
+    public function getIsRankingMode(): bool
     {
-        return $this->rewards['1'] ?? '';
+        return $this->isRanking();
     }
 
-    public function getReward2(): string
+    public function setIsRankingMode(?bool $isRankingMode): static
     {
-        return $this->rewards['2'] ?? '';
+        $this->rewards['type'] = $isRankingMode ? 'ranking' : 'simple';
+
+        return $this;
     }
 
-    public function getReward3(): string
+    public function getRewardSimple(): ?string
     {
-        return $this->rewards['3'] ?? '';
+        return $this->rewards['value'] ?? null;
     }
 
-    public function getRewardSimple(): string
+    public function setRewardSimple(?string $rewardSimple): static
     {
-        return $this->rewards['value'] ?? '';
+        $this->rewards['value'] = $rewardSimple;
+
+        return $this;
     }
 
-    public function getRewardGeneral(): string
+    public function getReward1(): ?string
     {
-        return $this->rewards['general'] ?? '';
+        return $this->rewards['1'] ?? $this->rewards['reward1'] ?? null;
+    }
+
+    public function setReward1(?string $reward1): static
+    {
+        $this->rewards['1'] = $reward1;
+
+        return $this;
+    }
+
+    public function getReward2(): ?string
+    {
+        return $this->rewards['2'] ?? $this->rewards['reward2'] ?? null;
+    }
+
+    public function setReward2(?string $reward2): static
+    {
+        $this->rewards['2'] = $reward2;
+
+        return $this;
+    }
+
+    public function getReward3(): ?string
+    {
+        return $this->rewards['3'] ?? $this->rewards['reward3'] ?? null;
+    }
+
+    public function setReward3(?string $reward3): static
+    {
+        $this->rewards['3'] = $reward3;
+
+        return $this;
+    }
+
+    public function getRewardGeneral(): ?string
+    {
+        return $this->rewards['general'] ?? null;
+    }
+
+    public function setRewardGeneral(?string $rewardGeneral): static
+    {
+        $this->rewards['general'] = $rewardGeneral;
+
+        return $this;
     }
 }

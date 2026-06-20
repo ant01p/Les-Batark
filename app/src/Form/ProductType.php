@@ -30,10 +30,7 @@ class ProductType extends AbstractType
                 'currency' => 'EUR',
                 'divisor' => 100,
             ])
-            ->add('imageUrl', TextType::class, [
-                'label' => 'URL image (optionnel)',
-                'required' => false,
-            ])
+            
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name',

@@ -76,13 +76,6 @@
                         {{ form_errors(form.description) }}
                     </div>
 
-                    {# Image #}
-                    <div class="mb-3">
-                        {{ form_label(form.imageUrl) }}
-                        {{ form_widget(form.imageUrl, {attr: {class: 'form-control', placeholder: 'URL de l\'image (optionnel)'}}) }}
-                        {{ form_errors(form.imageUrl) }}
-                    </div>
-
                     {# hasType #}
                     <div class="mb-3 form-check">
                         {{ form_widget(form.hasType, {attr: {class: 'form-check-input'}}) }}

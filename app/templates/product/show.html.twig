@@ -6,7 +6,7 @@
 
 {% block body %}
 
-<section class="events-bg" style="background-image: url('{{ asset('images/jungle.png') }}')">
+<section class="events-bg" style="background-image: url('{{ asset('images/shop.png') }}')">
     <div class="events-bg-overlay">
         <div class="container">
 
@@ -21,9 +21,9 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="card border-secondary event-card">
-                        {% if product.imageUrl %}
+                        {#{% if product.imageUrl %}
                             <img src="{{ product.imageUrl }}" alt="{{ product.name }}" class="card-img-top">
-                        {% endif %}
+                        {% endif %}#}
 
                         <div class="card-body">
                             <div class="d-flex align-items-center gap-2 mb-2">
@@ -37,7 +37,7 @@
 
                             <p class="text-info fw-bold mb-4">{{ (product.price / 100)|number_format(2, ',', ' ') }} €</p>
 
-                            <form method="post" action="{#{ path('cart_add', { id: product.id }) }#}">
+                            <form method="post" action="{{ path('cart_add', { id: product.id }) }}">
                                 {% if product.hasType %}
                                     <div class="mb-3">
                                         <label class="form-label">Type</label>

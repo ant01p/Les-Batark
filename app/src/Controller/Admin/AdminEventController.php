@@ -44,14 +44,16 @@ final class AdminEventController extends AbstractController
     #[Route('/{id}/edit', name: 'edit')]
     public function edit(Event $event, Request $request, EntityManagerInterface $em): Response
     {
+        dump($event->getRewards());
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
-
+            
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
 
             $this->addFlash('success', 'Événement modifié avec succès.');
             return $this->redirectToRoute('admin_index', ['tab' => 'events']);
+
         }
 
         return $this->render('admin/event/event_form.html.twig', [

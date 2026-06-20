@@ -23,9 +23,6 @@ class Product
     #[ORM\Column]
     private ?int $price = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $imageUrl = null;
-
     #[ORM\ManyToOne(inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
@@ -73,18 +70,6 @@ class Product
     public function setPrice(int $price): static
     {
         $this->price = $price;
-
-        return $this;
-    }
-
-    public function getImageUrl(): ?string
-    {
-        return $this->imageUrl;
-    }
-
-    public function setImageUrl(?string $imageUrl): static
-    {
-        $this->imageUrl = $imageUrl;
 
         return $this;
     }

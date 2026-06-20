@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon panier — Les BATARK{% endblock %}
+
+{% block body_class %}events-page{% endblock %}
+
+{% block body %}
+
+<section class="events-bg" style="background-image: url('{{ asset('images/shop.png') }}')">
+    <div class="events-bg-overlay">
+        <div class="container">
+
+            <div class="row justify-content-center mb-4">
+                <div class="col-lg-8">
+                    <h1 class="text-light mb-0">Mon panier</h1>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ label == 'error' ? 'danger' : label }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+
+                    {% if cart.cartItems|length == 0 %}
+                        <div class="card border-warning event-card">
+                            <div class="card-body text-center">
+                                <p class="mb-3">Ton panier est vide.</p>
+                                <a href="{{ path('app_shop') }}" class="btn btn-outline-success">
+                                    Retour à la boutique
+                                </a>
+                            </div>
+                        </div>
+                    {% else %}
+
+                        {% for item in cart.cartItems %}
+                            <div class="card border-warning event-card mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+
+                                        <div>
+                                            <div class="event-card-title mb-1">{{ item.product.name }}</div>
+                                            {% if item.type %}
+                                                <span class="badge bg-secondary">{{ item.type.name }}</span>
+                                            {% endif %}
+                                            {% if item.quality %}
+                                                <span class="badge bg-secondary">{{ item.quality.name }}</span>
+                                            {% endif %}
+                                            <p class="text-light fw-bold mt-2 mb-0">
+                                                {{ (item.unitPrice / 100)|number_format(2, ',', ' ') }} € / unité
+                                            </p>
+                                        </div>
+
+                                        <div class="d-flex align-items-center gap-3">
+                                            <form method="post" action="{{ path('cart_update_quantity', { id: item.id }) }}" class="d-flex align-items-center gap-2">
+                                                <input
+                                                    type="number"
+                                                    name="quantity"
+                                                    value="{{ item.quantity }}"
+                                                    min="0"
+                                                    class="form-control"
+                                                    style="width: 80px;"
+                                                    onchange="this.form.submit()"
+                                                >
+                                            </form>
+
+                                            <span class="fw-bold">
+                                                {{ ((item.unitPrice * item.quantity) / 100)|number_format(2, ',', ' ') }} €
+                                            </span>
+
+                                            <form method="post" action="{{ path('cart_remove', { id: item.id }) }}">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                    Supprimer
+                                                </button>
+                                            </form>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        <div class="card border-success event-card">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <span class="event-card-title">Total</span>
+                                <span class="text-light fw-bold fs-4">
+                                    {{ (cart.total / 100)|number_format(2, ',', ' ') }} €
+                                </span>
+                            </div>
+                        </div>
+
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}
