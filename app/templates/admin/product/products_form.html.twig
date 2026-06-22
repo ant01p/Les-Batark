@@ -32,14 +32,7 @@
         </div>
     </div>
 
-    {% for type, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-{{ type == 'success' ? 'success' : 'danger' }} alert-dismissible fade show">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        {% endfor %}
-    {% endfor %}
+    {{ include('_shared/_flash.html.twig') }}
 
     <div class="row justify-content-center">
         <div class="col-lg-8">

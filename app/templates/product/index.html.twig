@@ -10,14 +10,7 @@
     <div class="bg-overlay">
         <div class="container">
 
-            {% for label, messages in app.flashes %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show d-flex justify-content-between align-items-center" role="alert">
-                        <span>{{ message }}</span>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
-            {% endfor %}
+            {{ include('_shared/_flash.html.twig') }}
 
             <div class="events-header mb-5">
                 <div class="events-logo text-center mb-3">
