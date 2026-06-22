@@ -30,6 +30,30 @@ body.events-page .navbar {
     top: 0;
 }
 
+/* ── fixed BG ── */
+.bg {
+    margin-top: 90px;
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.bg-overlay {
+    min-height: 100vh;
+    padding-top: 110px;
+    padding-bottom: 48px;
+}
+
+.checkout-bg {
+    min-height: calc(100vh - 195px);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .logo-batark {
     height: 300px;
 }

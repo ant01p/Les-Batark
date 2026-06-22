@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement réussi{% endblock %}
+
+{% block body %}
+<section class="checkout-bg" style="background-image: url('{{ asset('images/shop.png') }}')">
+    <div class="card bg-dark border-success text-center" style="width: 100%; max-width: 500px;">
+        <div class="card-body p-5">
+            <h1 class="text-success mb-3">✅ Paiement confirmé</h1>
+            {% if orderCode is defined %}
+                <p class="mb-1">Merci pour votre commande !</p>
+                <p class="fw-bold">Référence : {{ orderCode }}</p>
+            {% else %}
+                <p>Votre commande a déjà été enregistrée.</p>
+            {% endif %}
+            <a href="{{ path('app_shop') }}" class="btn btn-success mt-3">Retour à la boutique</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

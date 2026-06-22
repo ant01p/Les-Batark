@@ -2,22 +2,6 @@
     height: 300px;
 }
 
-/* ── fixed BG ── */
-.events-bg {
-    background-attachment: fixed;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    min-height: 100vh;
-}
-
-.events-bg-overlay {
-    min-height: 100vh;
-    padding-top: 110px;
-    padding-bottom: 48px;
-   
-}
-
 .events-section-label {
     font-size: 18px;
     font-weight: 700;
