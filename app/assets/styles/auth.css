@@ -118,42 +118,6 @@ input:-webkit-autofill {
     background: #2c2b2b;
 }
 
-/* Bouton Discord */
-.btn-discord {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    padding: 11px;
-    background: #5865F2;
-    border: none;
-    border-radius: 6px;
-    color: white;
-  
-    font-weight: 600;
-    text-decoration: none;
-    box-sizing: border-box;
-    transition: opacity 0.2s;
-}
-
-.btn-discord span {
-    font-size: 16px;
-}
-
-.btn-discord:hover {
-    opacity: 0.85;
-    color: white;
-}
-
-.btn-discord svg {
-    flex-shrink: 0;
-    width: 18px;
-    height: 18px;
-    fill: white;
-    font-size: 18px;
-}
-
 @media (min-width: 768px) {
 
     .auth-frame {
