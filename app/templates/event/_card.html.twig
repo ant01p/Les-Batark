@@ -1,6 +1,6 @@
 <div class="d-flex align-items-center gap-2 mb-2">
     <span class="badge {{ event.statusBadgeClass }}">{{ event.statusLabel }}</span>
-    <span class="event-card-title">{{ event.title }}</span>
+    <span class="card-title">{{ event.title }}</span>
 </div>
 
 <div class="event-card-meta d-flex flex-wrap align-items-center gap-2 mb-3 text-info small">
@@ -24,7 +24,7 @@
 </div>
 
 {% if event.description %}
-    <p class="event-card-desc">{{ event.description }}</p>
+    <p class="card-desc">{{ event.description }}</p>
 {% endif %}
 
 {% if event.rewards %}
@@ -47,7 +47,7 @@
                     {{ event.rewards.general }}
                 </div>
             {% endif %}
-        </div>   
+        </div>
     {% else %}
         <p class="event-card-reward-simple">{{ event.rewards.value }}</p>
     {% endif %}

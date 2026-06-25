@@ -50,14 +50,6 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Règlement</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Serveurs</a>
-                </li>
-
-                <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_events') }}">Événements</a>
                 </li>
 
@@ -67,22 +59,19 @@
 
                 {% if app.user %}
                     <li class="nav-item">
-                        <a class="nav-link position-relative" href="{{ path('cart_index') }}">
-                            Panier
-                            {% if app.user.cart and app.user.cart.totalQuantity > 0 %}
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
-                                    {{ app.user.cart.totalQuantity }}
-                                </span>
-                            {% endif %}
+                        <a class="nav-link" href="{{ path('cart_index') }}">
+                            <span class="position-relative pe-3">
+                                Panier
+                                {% if app.user.cart and app.user.cart.totalQuantity > 0 %}
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+                                        {{ app.user.cart.totalQuantity }}
+                                    </span>
+                                {% endif %}
+                            </span>
                         </a>
                     </li>
                 {% endif %}
             </ul>
-
-            <form class="d-flex">
-                <input class="form-control me-sm-2" type="search" placeholder="Search">
-                <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
         </div>
     </div>
 </nav>

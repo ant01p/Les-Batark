@@ -1,6 +1,10 @@
 {% extends 'base.html.twig' %}
 {% block title %}Connexion - LES-BATARK{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/auth.css') }}">
+{% endblock %}
+
 {% block body %}
 
 <div class="auth-frame">
@@ -17,12 +21,12 @@
 
             <form method="post">
                 <label>Email</label>
-                <input class="email" type="email" id="username" name="_username" placeholder="Entrez votre email"
+                <input class="email form-control" type="email" id="username" name="_username" placeholder="Entrez votre email"
                     value="{{ last_username }}" autocomplete="email" required
                 >
 
                 <label>Mot de passe</label>
-                <input class="password" type="password" id="password" name="_password" placeholder="Entrez votre mot de passe"
+                <input class="password form-control" type="password" id="password" name="_password" placeholder="Entrez votre mot de passe"
                     autocomplete="current-password" required
                 >
 

@@ -7,20 +7,14 @@
 
         <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/vapor/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
-        <link rel="stylesheet" href="{{ asset('styles/register.css') }}">
-        <link rel="stylesheet" href="{{ asset('styles/login.css') }}">
-        <link rel="stylesheet" href="{{ asset('styles/auth.css') }}">
-        <link rel="stylesheet" href="{{ asset('styles/admin.css') }}">
-        <link rel="stylesheet" href="{{ asset('styles/event.css') }}">
+        
+        {% block stylesheets %}{% endblock %}
     </head>
 
     <body class="{% block body_class %}{% endblock %}">
 
-        {# pour cacher la nav sur certaines pages avec {% set showNavbar = false %} #}
-        {% if showNavbar is not defined or showNavbar %}
-            {% include '_shared/_nav.html.twig' %}
-        {% endif %}
-       
+        {% include '_shared/_nav.html.twig' %}
+        
         <main>
             {% block body %}{% endblock %}
         </main>

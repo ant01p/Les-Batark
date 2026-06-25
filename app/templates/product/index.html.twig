@@ -12,12 +12,12 @@
 
             {{ include('_shared/_flash.html.twig') }}
 
-            <div class="events-header mb-5">
-                <div class="events-logo text-center mb-3">
-                    <img src="{{ asset('images/LESBATARK.png') }}" alt="Logo LES-BATARK" class="logo-batark-event">
+            <div class="page-header mb-5">
+                <div class="text-center mb-3">
+                    <img src="{{ asset('images/LESBATARK.png') }}" alt="Logo LES-BATARK" class="logo-batark">
                 </div>
 
-                <div class="events-title">
+                <div class="page-title">
                     <h1 class="text-white">Boutique</h1>
                     <p class="text-info mb-0">
                         {{ total }} produit{{ total > 1 ? 's' : '' }} disponible{{ total > 1 ? 's' : '' }}
@@ -26,7 +26,7 @@
             </div>
 
             {% if categories is empty %}
-                <div class="card border-secondary event-card text-center py-5">
+                <div class="card border-secondary content-card text-center py-5">
                     Aucun produit disponible pour le moment.
                 </div>
             {% else %}
@@ -48,10 +48,10 @@
                             <div class="col-6 col-md-4 col-lg-3">
 
                                 <a href="{{ path('product_show', { id: product.id }) }}" class="text-decoration-none">
-                                    <div class="card border-secondary event-card h-100">
-                                        
+                                    <div class="card border-secondary shop-card h-100">
+
                                         <div class="card-body d-flex flex-column">
-                                            <div class="event-card-title mb-2">{{ product.name }}</div>
+                                            <h2 class="mb-2">{{ product.name }}</h2>
                                             <p class="text-info fw-bold mb-0">{{ (product.price / 100)|number_format(2, ',', ' ') }} €</p>
                                         </div>
                                     </div>
@@ -60,7 +60,7 @@
                         {% endfor %}
                     </div>
                 {% else %}
-                    <div class="card border-secondary event-card text-center py-4">
+                    <div class="card border-secondary content-card text-center py-4">
                         Aucun produit dans cette catégorie pour le moment.
                     </div>
                 {% endif %}

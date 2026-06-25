@@ -2,6 +2,10 @@
 
 {% block title %}Créer un compte - LES-BATARK{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/auth.css') }}">
+{% endblock %}
+
 {% block body %}
 
 <div class="auth-frame">
@@ -9,7 +13,7 @@
         <div class="auth-card border-dark">
            
             <div class="card-header text-center">
-                <h2>Créer un compte</h2>
+                <h1>Créer un compte</h1>
             </div>
 
             {{ form_start(registrationForm, {
@@ -92,7 +96,7 @@
 
             <div class="auth-divider">ou</div>
 
-            <div class="login-auth-link mt-3">
+            <div class="login-register-link mt-3">
                 <p>Déjà un compte ? <a href="{{ path('app_login') }}">Se connecter</a></p>
             </div>
 

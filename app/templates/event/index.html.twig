@@ -4,67 +4,70 @@
 
 {% block body_class %}events-page{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/event.css') }}">
+{% endblock %}
+
 {% block body %}
 
-<section class="events-bg" style="background-image: url('{{ asset('images/jungle.png') }}')">
-    <div class="events-bg-overlay">
-        <div class="container">
-                
-            <div class="events-header mb-5">
+<section class="bg" style="background-image: url('{{ asset('images/jungle.png') }}')">
 
-                <div class="events-logo text-center mb-3">
+    <div class="bg-overlay">
+        <div class="container">
+
+            <div class="page-header mb-5">
+                <div class="text-center mb-3">
                     <img src="{{ asset('images/LESBATARK.png') }}"
                         alt="Logo LES-BATARK"
-                        class="logo-batark-event">
-                    </div>
-
-                    <div class="events-title">
-                        <h1 class="text-white">
-                            Événements
-                        </h1>
-
-                        <p class="text-info mb-0">
-                            {{ total }} événement{{ total > 1 ? 's' : '' }} communautaire{{ total > 1 ? 's' : '' }}
-                        </p>
-                    </div>
+                        class="logo-batark"
+                    >
                 </div>
 
-                {% if total == 0 %}
-                      <div class="card border-secondary event-card text-center py-5">
-                        Aucun événement programmé pour le moment. Revenez bientôt !
+                <div class="page-title">
+                    <h1 class="text-white">
+                        Nos Evènements
+                    </h1>
+
+                    <p class="text-info mb-0">
+                        {{ total }} événement{{ total > 1 ? 's' : '' }} communautaire{{ total > 1 ? 's' : '' }}
+                    </p>
+                </div>
+            </div>
+
+            {% if total == 0 %}
+                <div class="card border-secondary content-card text-center py-5">
+                    Aucun événement programmé pour le moment. Revenez bientôt !
+                </div>
+            {% else %}
+
+            {% if grouped.ongoing is not empty %}
+                <div class="section-label">En cours</div>
+                {% for event in grouped.ongoing %}
+                    <div class="card border-success content-card content-card--ongoing mb-3">
+                        {% include 'event/_card.html.twig' with {event: event} %}
                     </div>
-
-                {% else %}
-
-                {% if grouped.ongoing is not empty %}
-                    <div class="events-section-label">En cours</div>
-                    {% for event in grouped.ongoing %}
-                        <div class="card border-success event-card event-card--ongoing mb-3">
-                            {% include 'event/_card.html.twig' with {event: event} %}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-
-                {% if grouped.upcoming is not empty %}
-                    <div class="events-section-label mt-5">À venir</div>
-                    {% for event in grouped.upcoming %}
-                        <div class="card border-warning event-card event-card--upcoming mb-3">
-                            {% include 'event/_card.html.twig' with {event: event} %}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-
-                {% if grouped.finished is not empty %}
-                    <div class="events-section-label mt-5">Terminés</div>
-                    {% for event in grouped.finished %}
-                        <div class="card border-secondary event-card event-card--finished mb-3">
-                            {% include 'event/_card.html.twig' with {event: event} %}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-
+                {% endfor %}
             {% endif %}
 
+            {% if grouped.upcoming is not empty %}
+                <div class="section-label mt-5">À venir</div>
+                {% for event in grouped.upcoming %}
+                    <div class="card border-warning content-card content-card--upcoming mb-3">
+                        {% include 'event/_card.html.twig' with {event: event} %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if grouped.finished is not empty %}
+                <div class="section-label mt-5">Terminés</div>
+                {% for event in grouped.finished %}
+                    <div class="card border-secondary content-card content-card--finished mb-3">
+                        {% include 'event/_card.html.twig' with {event: event} %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% endif %}
         </div>
     </div>
 </section>

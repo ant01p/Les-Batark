@@ -1,7 +1,7 @@
 .admin-page {
     max-width: 900px;
     margin: 24px auto;
-    padding: 0 16px;
+    padding: 90px 16px 0;
 }
 
 /* Header centré sur mobile */
@@ -79,11 +79,11 @@
     color: #e2e2e2;
 }
 
-@media screen and (min-width: 768px) {
+@media (min-width: 768px) {
 
     .admin-page {
         margin: 32px auto;
-        padding: 0 24px;
+        padding: 90px 24px 0;
     }
 
     /* Header à gauche sur tablette */
@@ -116,7 +116,7 @@
     }
 }
 
-@media screen and (min-width: 992px) {
+@media (min-width: 992px) {
 
     .admin-page {
         margin: 40px auto;

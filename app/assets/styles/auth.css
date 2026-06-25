@@ -118,6 +118,29 @@ input:-webkit-autofill {
     background: #2c2b2b;
 }
 
+/* Alerte d'erreur de connexion */
+.alert-login {
+    background: rgba(220, 53, 69, 0.15);
+    border: 1px solid rgba(220, 53, 69, 0.5);
+    border-radius: 6px;
+    color: #ff6b7a;
+    font-size: 12px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+/* Lien vers l'inscription / connexion */
+.login-register-link {
+    font-size: 18px;
+    margin-bottom: 0;
+    color: #aaa;
+}
+
+.login-register-link a:hover {
+    opacity: 0.75;
+}
+
 @media (min-width: 768px) {
 
     .auth-frame {
@@ -141,6 +164,10 @@ input:-webkit-autofill {
     .auth-card label {
         font-size: 25px;
     }
+
+    .login-register-link {
+        font-size: 25px;
+    }
 }
 
 @media (min-width: 992px) {
@@ -156,10 +183,13 @@ input:-webkit-autofill {
 
     .auth-card {
         padding: 36px 32px;
-        max-width: 500px;
     }
 
     .auth-card label {
+        font-size: 18px;
+    }
+
+    .login-register-link {
         font-size: 18px;
     }
 }

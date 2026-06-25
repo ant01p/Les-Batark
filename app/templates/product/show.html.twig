@@ -12,7 +12,7 @@
 
             <div class="row justify-content-center mb-4">
                 <div class="col-lg-8">
-                    <a href="{{ path('app_shop', { category: product.category.id }) }}" class="btn btn-outline-secondary btn-sm">
+                    <a href="{{ path('app_shop', { category: product.category.id }) }}" class="btn btn-outline-secondary btn-sm mt-4 fs-5">
                         Retour à la boutique
                     </a>
                 </div>
@@ -20,7 +20,7 @@
 
             <div class="row justify-content-center">
                 <div class="col-lg-8">
-                    <div class="card border-secondary event-card">
+                    <div class="card border-secondary content-card">
                         {#{% if product.imageUrl %}
                             <img src="{{ product.imageUrl }}" alt="{{ product.name }}" class="card-img-top">
                         {% endif %}#}
@@ -28,11 +28,11 @@
                         <div class="card-body">
                             <div class="d-flex align-items-center gap-2 mb-2">
                                 <span class="badge bg-secondary">{{ product.category.name }}</span>
-                                <span class="event-card-title">{{ product.name }}</span>
+                                <span class="card-title">{{ product.name }}</span>
                             </div>
 
                             {% if product.description %}
-                                <p class="event-card-desc">{{ product.description }}</p>
+                                <p class="card-desc">{{ product.description }}</p>
                             {% endif %}
 
                             <p class="text-info fw-bold mb-4">{{ (product.price / 100)|number_format(2, ',', ' ') }} €</p>
