@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Symfony\Component\Validator\Constraints\Regex;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -17,20 +18,24 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('pseudo', TextType::class, [
-                'label' => 'Pseudo',
+            ->add('plainPassword', PasswordType::class, [
+                'label' => 'Mot de passe',
+                'mapped' => false,
                 'attr' => [
-                    'autocomplete' => 'username',
+                    'autocomplete' => 'new-password',
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Entrez un pseudo',
+                        'message' => 'Entrez un mot de passe',
                     ]),
                     new Length([
-                        'min' => 3,
-                        'minMessage' => 'Votre pseudo doit contenir au moins {{ limit }} caractères',
-                        'max' => 50,
-                        'maxMessage' => 'Votre pseudo ne peut pas dépasser {{ limit }} caractères',
+                        'min' => 6,
+                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
+                        'max' => 4096,
+                    ]),
+                    new Regex([
+                        'pattern' => '/^(?=.*[A-Z])(?=.*\d).+$/',
+                        'message' => 'Le mot de passe doit contenir au moins une majuscule et un chiffre',
                     ]),
                 ],
             ])
