@@ -39,7 +39,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $pseudo = null;
 
     #[ORM\Column]
-    private bool $isVerified = false;
+    private bool $isVerified = true;
 
     /**
      * @var Collection<int, Order>

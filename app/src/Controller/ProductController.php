@@ -15,8 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class ProductController extends AbstractController
 {
     #[Route('/shop', name: 'app_shop')]
-    public function index(
-        Request $request,CategoryRepository $categoryRepository,
+    public function index(Request $request,CategoryRepository $categoryRepository,
         ProductRepository $productRepository
     ): Response {
         
@@ -40,8 +39,7 @@ class ProductController extends AbstractController
 }
 
     #[Route('/shop/{id}', name: 'product_show')]
-    public function show(
-        Product $product,TypeRepository $typeRepository,
+    public function show(Product $product,TypeRepository $typeRepository,
         QualityRepository $qualityRepository
     ): Response {
         return $this->render('product/show.html.twig', [
