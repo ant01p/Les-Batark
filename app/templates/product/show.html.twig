@@ -21,12 +21,9 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="card border-secondary content-card">
-                        {#{% if product.imageUrl %}
-                            <img src="{{ product.imageUrl }}" alt="{{ product.name }}" class="card-img-top">
-                        {% endif %}#}
 
                         <div class="card-body">
-                            <div class="d-flex align-items-center gap-2 mb-2">
+                            <div class="d-flex flex-column align-items-start gap-2 mb-2">
                                 <span class="badge bg-secondary">{{ product.category.name }}</span>
                                 <span class="card-title">{{ product.name }}</span>
                             </div>
