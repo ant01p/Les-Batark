@@ -27,7 +27,7 @@
                     {{ form_widget(registrationForm.pseudo, {
                         'attr': {
                             'class': 'pseudo form-control',
-                            'placeholder': 'Choisissez un pseudo'
+                            'placeholder': 'votre pseudo Discord'
                         }
                     }) }}
                     {{ form_errors(registrationForm.pseudo) }}
@@ -54,37 +54,6 @@
                     }) }}
                     {{ form_errors(registrationForm.plainPassword) }}
                 </div>
-
-                {% if registrationForm.confirmPassword is defined %}
-                    <div class="mb-3">
-                        {{ form_label(registrationForm.confirmPassword) }}
-                        {{ form_widget(registrationForm.confirmPassword, {
-                            'attr': {
-                                'class': 'password form-control',
-                                'placeholder': 'Confirmez votre mot de passe'
-                            }
-                        }) }}
-                        {{ form_errors(registrationForm.confirmPassword) }}
-                    </div>
-                {% endif %}
-
-                {% if registrationForm.agreeTerms is defined %}
-                    <div class="form-check mt-3">
-                        {{ form_widget(registrationForm.agreeTerms, {
-                            'attr': {
-                                'class': 'form-check-input'
-                            }
-                        }) }}
-
-                        {{ form_label(registrationForm.agreeTerms, null, {
-                            'label_attr': {
-                                'class': 'form-check-label'
-                            }
-                        }) }}
-
-                        {{ form_errors(registrationForm.agreeTerms) }}
-                    </div>
-                {% endif %}
 
                 <div class="d-grid">
                     <button type="submit" class="btn btn-outline-info btn-lg mt-3">
