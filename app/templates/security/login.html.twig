@@ -1,49 +1,46 @@
 {% extends 'base.html.twig' %}
-{% block title %}Connexion - LES-BATARK{% endblock %}
+{% block title %}Connexion — LES-BATARK{% endblock %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('styles/auth.css') }}">
 {% endblock %}
+
+{% block body_class %}login-page{% endblock %}
 
 {% block body %}
 
 <div class="auth-frame">
     <div class="auth-bg" style="background-image: url('{{ asset('images/abe.jpg') }}')">
         <div class="auth-card border-dark">
-            
+
             <div class="card-header text-center">
-                <h1 class="">Se connecter</h1>
+                <h1>Se connecter</h1>
             </div>
 
-            {{ include('_shared/_flash.html.twig') }}
-            
             {% if error %}
                 <div class="alert-login">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
             {% endif %}
 
             <form method="post">
                 <label>Email</label>
-                <input class="email form-control" type="email" id="username" name="_username" placeholder="Entrez votre email"
-                    value="{{ last_username }}" autocomplete="email" required
+                <input class="email form-control" type="email" id="username" name="_username"
+                    placeholder="Entrez votre email" value="{{ last_username }}"
+                    autocomplete="email" required
                 >
 
                 <label>Mot de passe</label>
-                <input class="password form-control" type="password" id="password" name="_password" placeholder="Entrez votre mot de passe"
+                <input class="password form-control" type="password" id="password" name="_password"
+                    placeholder="Entrez votre mot de passe"
                     autocomplete="current-password" required
                 >
 
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                <div class=" d-grid">
+                <div class="d-grid">
                     <button type="submit" class="btn btn-outline-info btn-lg mt-5">Se connecter</button>
                 </div>
             </form>
 
-            <div class="auth-divider">ou</div>
-
-            <div class="login-register-link mt-3">
-                <p>Pas encore de compte ? <a href="{{ path('app_register') }}" class="text-decoration-none text-light">S'inscrire</a></p>
-            </div>
         </div>
     </div>
 </div>
