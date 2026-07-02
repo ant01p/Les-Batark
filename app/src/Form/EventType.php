@@ -71,27 +71,27 @@ class EventType extends AbstractType
             ->add('rewardSimple', TextType::class, [
                 'label'    => 'Récompenses',
                 'required' => false,
-                'attr'     => ['placeholder' => 'Ex : Arme légendaire, 5000 points'],
+                'attr'     => ['placeholder' => 'Ex : Arme légendaire, 5000 éléments'],
             ])
             ->add('reward1', TextType::class, [
                 'label'    => '🥇 1er',
                 'required' => false,
-                'attr'     => ['placeholder' => 'Ex : Arme légendaire + 5000 points'],
+                'attr'     => ['placeholder' => 'Ex : Arme légendaire + 5000 éléments'],
             ])
             ->add('reward2', TextType::class, [
                 'label'    => '🥈 2ème',
                 'required' => false,
-                'attr'     => ['placeholder' => 'Ex : 3000 points + Skin exclusif'],
+                'attr'     => ['placeholder' => 'Ex : 3000 éléments + Skin exclusif'],
             ])
             ->add('reward3', TextType::class, [
                 'label'    => '🥉 3ème',
                 'required' => false,
-                'attr'     => ['placeholder' => 'Ex : 1000 points'],
+                'attr'     => ['placeholder' => 'Ex : 1000 éléments'],
             ])
             ->add('rewardGeneral', TextType::class, [
                 'label'    => 'Récompense générale',
                 'required' => false,
-                'attr'     => ['placeholder' => 'Ex : Titre de champion + 500 points pour tous'],
+                'attr'     => ['placeholder' => 'Ex : récompense de participation'],
             ])
         ;
     }

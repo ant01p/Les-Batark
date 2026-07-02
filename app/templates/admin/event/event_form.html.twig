@@ -48,14 +48,14 @@
                     {# Titre #}
                     <div class="mb-3">
                         {{ form_label(form.title) }}
-                        {{ form_widget(form.title, {attr: {class: 'form-control', placeholder: 'Ex : Chasse au Trésor Légendaire'}}) }}
+                        {{ form_widget(form.title, {attr: {class: 'form-control'}}) }}
                         {{ form_errors(form.title) }}
                     </div>
 
                     {# Lieu #}
                     <div class="mb-3">
                         {{ form_label(form.location) }}
-                        {{ form_widget(form.location, {attr: {class: 'form-control', placeholder: 'Ex : The Island - Zone Nord'}}) }}
+                        {{ form_widget(form.location, {attr: {class: 'form-control'}}) }}
                         {{ form_errors(form.location) }}
                     </div>
 
@@ -84,7 +84,7 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             {{ form_label(form.duration) }}
-                            {{ form_widget(form.duration, {attr: {class: 'form-control', placeholder: 'Ex : 1h30'}}) }}
+                            {{ form_widget(form.duration, {attr: {class: 'form-control'}}) }}
                             {{ form_errors(form.duration) }}
                         </div>
                         <div class="col-md-6">
@@ -97,7 +97,7 @@
                     {# Description #}
                     <div class="mb-3">
                         {{ form_label(form.description) }}
-                        {{ form_widget(form.description, {attr: {class: 'form-control', placeholder: 'Décrivez l\'événement…'}}) }}
+                        {{ form_widget(form.description, {attr: {class: 'form-control'}}) }}
                         {{ form_errors(form.description) }}
                     </div>
 
@@ -114,7 +114,7 @@
                     <div id="reward-simple">
                         <div class="mb-3">
                             {{ form_label(form.rewardSimple) }}
-                            {{ form_widget(form.rewardSimple, {attr: {class: 'form-control', placeholder: 'Ex : Arme légendaire, 5000 éléments'}}) }}
+                            {{ form_widget(form.rewardSimple, {attr: {class: 'form-control'}}) }}
                             {{ form_errors(form.rewardSimple) }}
                         </div>
                     </div>
@@ -123,22 +123,22 @@
                     <div id="reward-ranking" style="display:none;">
                         <div class="mb-3">
                             {{ form_label(form.reward1) }}
-                            {{ form_widget(form.reward1, {attr: {class: 'form-control', placeholder: 'Ex : Arme légendaire + 500 éléments'}}) }}
+                            {{ form_widget(form.reward1, {attr: {class: 'form-control'}}) }}
                             {{ form_errors(form.reward1) }}
                         </div>
                         <div class="mb-3">
                             {{ form_label(form.reward2) }}
-                            {{ form_widget(form.reward2, {attr: {class: 'form-control', placeholder: 'Ex : 3000 éléments + Skin exclusif'}}) }}
+                            {{ form_widget(form.reward2, {attr: {class: 'form-control'}}) }}
                             {{ form_errors(form.reward2) }}
                         </div>
                         <div class="mb-3">
                             {{ form_label(form.reward3) }}
-                            {{ form_widget(form.reward3, {attr: {class: 'form-control', placeholder: 'Ex : 1000 éléments'}}) }}
+                            {{ form_widget(form.reward3, {attr: {class: 'form-control'}}) }}
                             {{ form_errors(form.reward3) }}
                         </div>
                         <div class="mb-3">
                             {{ form_label(form.rewardGeneral) }}
-                            {{ form_widget(form.rewardGeneral, {attr: {class: 'form-control', placeholder: 'Ex : Titre de champion + accès VIP'}}) }}
+                            {{ form_widget(form.rewardGeneral, {attr: {class: 'form-control'}}) }}
                             {{ form_errors(form.rewardGeneral) }}
                         </div>
                     </div>

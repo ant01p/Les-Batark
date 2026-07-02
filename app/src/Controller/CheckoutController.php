@@ -114,6 +114,7 @@ class CheckoutController extends AbstractController
         foreach ($cart->getCartItems() as $item) {
             $orderItem = new OrderItem();
             $orderItem->setProduct($item->getProduct());
+            $orderItem->setProductName($item->getProduct()->getName());
             $orderItem->setType($item->getType());
             $orderItem->setQuality($item->getQuality());
             $orderItem->setQuantity($item->getQuantity());

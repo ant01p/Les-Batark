@@ -18,7 +18,7 @@ class OrderItem
     private ?Order $order = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Product $product = null;
 
     #[ORM\ManyToOne]
@@ -26,6 +26,9 @@ class OrderItem
 
     #[ORM\ManyToOne]
     private ?Quality $quality = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $productName = null;
 
     #[ORM\Column]
     private ?int $quantity = null;
@@ -58,6 +61,18 @@ class OrderItem
     public function setProduct(?Product $product): static
     {
         $this->product = $product;
+
+        return $this;
+    }
+
+    public function getProductName(): ?string
+    {
+        return $this->productName;
+    }
+
+    public function setProductName(string $productName): static
+    {
+        $this->productName = $productName;
 
         return $this;
     }
