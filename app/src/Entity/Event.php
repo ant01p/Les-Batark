@@ -197,10 +197,10 @@ class Event
     public function getStatusBadgeClass(): string
     {
         return match ($this->status) {
-            self::STATUS_UPCOMING => 'bg-warning',
+            self::STATUS_UPCOMING => 'bg-warning text-dark',
             self::STATUS_ONGOING  => 'bg-success text-dark',
-            self::STATUS_FINISHED => 'bg-secondary',
-            default               => 'bg-secondary',
+            self::STATUS_FINISHED => 'bg-secondary text-dark',
+            default               => 'bg-secondary text-dark',
         };
     }
 
