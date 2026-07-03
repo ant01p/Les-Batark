@@ -31,24 +31,24 @@
     <hr class="border-white border-opacity-10 my-3">
     <p class="event-card-rewards-title">Récompenses</p>
 
-    {% if event.rewards.type == 'ranking' %}
+    {% if event.isRanking %}
         <div>
-            {% if event.rewards['1'] %}
-                <div class="event-card-reward-item"><span class="medals">🥇</span> {{ event.rewards['1'] }}</div>
+            {% if event.reward1 %}
+                <div class="event-card-reward-item"><span class="medals">🥇</span> {{ event.reward1 }}</div>
             {% endif %}
-            {% if event.rewards['2'] %}
-                <div class="event-card-reward-item"><span class="medals">🥈</span> {{ event.rewards['2'] }}</div>
+            {% if event.reward2 %}
+                <div class="event-card-reward-item"><span class="medals">🥈</span> {{ event.reward2 }}</div>
             {% endif %}
-            {% if event.rewards['3'] %}
-                <div class="event-card-reward-item"><span class="medals">🥉</span> {{ event.rewards['3'] }}</div>
+            {% if event.reward3 %}
+                <div class="event-card-reward-item"><span class="medals">🥉</span> {{ event.reward3 }}</div>
             {% endif %}
-            {% if event.rewards.general %}
+            {% if event.rewardGeneral %}
                 <div class="event-card-reward-general fst-italic mt-2">
-                    {{ event.rewards.general }}
+                    {{ event.rewardGeneral }}
                 </div>
             {% endif %}
         </div>
     {% else %}
-        <p class="event-card-reward-simple">{{ event.rewards.value }}</p>
+        <p class="event-card-reward-simple">{{ event.rewardSimple }}</p>
     {% endif %}
 {% endif %}
