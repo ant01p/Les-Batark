@@ -22,8 +22,12 @@ class CheckoutController extends AbstractController
     }
 
     #[Route('/commande/demarrer', name: 'checkout_start', methods: ['POST'])]
-    public function start(EntityManagerInterface $em): Response
+    public function start(Request $request, EntityManagerInterface $em): Response
     {
+        if (!$this->isCsrfTokenValid('checkout_start', $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException();
+        }
+
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
         $cart = $user->getCart();

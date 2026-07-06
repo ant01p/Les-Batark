@@ -52,13 +52,8 @@
 
                                         <div class="d-flex align-items-center gap-3">
                                             <form method="post" action="{{ path('cart_update_quantity', { id: item.id }) }}" class="d-flex align-items-center gap-2">
-                                                <input
-                                                    type="number"
-                                                    name="quantity"
-                                                    value="{{ item.quantity }}"
-                                                    min="0"
-                                                    class="form-control"
-                                                    style="width: 80px;"
+                                                <input type="hidden" name="_token" value="{{ csrf_token('cart_update_quantity_' ~ item.id) }}">
+                                                <inputtype="number" name="quantity" value="{{ item.quantity }}" min="0" class="form-control" style="width: 80px;"
                                                     onchange="this.form.submit()"
                                                 >
                                             </form>
@@ -68,6 +63,7 @@
                                             </span>
 
                                             <form method="post" action="{{ path('cart_remove', { id: item.id }) }}">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('cart_remove_' ~ item.id) }}">
                                                 <button type="submit" class="btn btn-outline-danger btn-sm">
                                                     Supprimer
                                                 </button>
@@ -86,6 +82,7 @@
                                     <span class="fs-2 fw-bold text-success">{{ (cart.total / 100)|number_format(2, ',', ' ') }} €</span>
                                 </div>
                                 <form action="{{ path('checkout_start') }}" method="post">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('checkout_start') }}">
                                     <button type="submit" class="btn btn-success btn-lg fs-4 px-5 py-3">
                                         Payer
                                     </button>

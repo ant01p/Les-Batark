@@ -37,6 +37,10 @@ class CartController extends AbstractController
         TypeRepository $typeRepository,
         QualityRepository $qualityRepository
     ): Response {
+        if (!$this->isCsrfTokenValid('cart_add_' . $product->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException();
+        }
+
         $cart = $this->getOrCreateCart($em);
 
         $quantity = max(1, (int) $request->request->get('quantity', 1));
@@ -99,6 +103,10 @@ class CartController extends AbstractController
     {
         $this->denyAccessUnlessOwner($cartItem);
 
+        if (!$this->isCsrfTokenValid('cart_update_quantity_' . $cartItem->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException();
+        }
+
         $quantity = (int) $request->request->get('quantity', 1);
 
         if ($quantity <= 0) {
@@ -113,9 +121,13 @@ class CartController extends AbstractController
     }
 
     #[Route('/panier/supprimer/{id}', name: 'cart_remove', methods: ['POST'])]
-    public function remove(CartItem $cartItem, EntityManagerInterface $em): Response
+    public function remove(CartItem $cartItem, Request $request, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessOwner($cartItem);
+
+        if (!$this->isCsrfTokenValid('cart_remove_' . $cartItem->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException();
+        }
 
         $em->remove($cartItem);
         $em->flush();
