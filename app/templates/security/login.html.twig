@@ -21,6 +21,8 @@
                 <div class="alert-login">Email ou mot de passe invalide.</div>
             {% endif %}
 
+            {{ include('_shared/_flash.html.twig') }}
+
             <form method="post">
                 <label>Email</label>
                 <input class="email form-control" type="email" id="username" name="_username"
