@@ -1,110 +1,82 @@
-# Projet Symfony avec Docker (from scratch)
+# Installation du projet Symfony (docker) Batark
 
 ## Prérequis
 
-* Docker
-* Docker Compose
-* Git
+- Docker
+- Docker Compose
 
-## Initialisation du projet
+## Conteneurs utilisés
 
-1. Créer votre dossier de travail :
+`batark_php` `batark_nginx` `batark_mysql` `batark_phpmyadmin`
+
+## Étapes d'installation
+
+1. Cloner le dépôt
 
 ```bash
-mkdir mon-projet
-cd mon-projet
+git clone https://github.com/ant01p/Les-Batark.git
+cd Les-Batark
 ```
 
-2. Ajouter le socle Docker en déplacant dans ce dossier :
-
-- le dossier docker
-- le fichier docker-compose.yml
-
-3. Gérer les droits
+2. Corriger les permissions (indispensable)
+Le montage de volume Docker écrase les permissions du dossier hôte. À exécuter une seule fois après le clonage :
 
 ```bash
 sudo chown -R $(id -u):$(id -g) ./app
 ```
 
-4. Adapter le docker-compose.yaml
+3. Démarrer les conteneurs
 
-- Renommer les conteneurs
-
-Dans docker-compose.yaml, renommer les conteneurs en remplaçant symfony par un nom approprié à votre projet.
-ex : symfony_php --> mon_super_site_php
-
-- Définir vos identifiants de connexion à mysql (mysql_user, mysql_password)
-- Définir le nom de votre base de données (mysql_database)
-
-5. Initialiser Git :
-
-```bash
-git init
-```
-
-6. Initialisation de GitHub
-
-- Créer un repo sur GitHub
-- Lier le projet local :
-
-```bash
-git remote add origin https://github.com/<user>/<repo>.git
-git branch -M main
-git add .
-git commit -m "Initial commit"
-git push -u origin main
-```
-
-7. Builder et lancer les conteneurs :
+Vérifier que les ports ne sont pas déjà utilisés (8080, 8081, 3306).
 
 ```bash
 docker compose up -d --build
 ```
 
-Si nécessaire arréter les conteneurs qui seraient en conflit.
-Ou arréter tous les conteneurs en une seule commande :
-```bash
-docker stop $(docker ps -q)
-```
-Ou plus radical, supprimer tous les conteneurs en une seule commande :
-```bash
-docker rm -f $(docker ps -qa)
-```
-
-8. Installer Symfony dans le conteneur PHP :
+4. Gérer les droits
 
 ```bash
-docker exec -it <nom_du_conteneur_php> sh
-composer create-project symfony/skeleton .
+sudo chown -R $(id -u):$(id -g) ./app
 ```
 
-Si vous souhaitez installer les principales dépendences
+5. Installer les dépendances Symfony
+
 ```bash
-composer require webapp
+docker exec -it batark_php composer install
 ```
 
-## Configuration
+6. Configurer l'environnement
 
-Créez un fichier `.env.local` et placez-y :
+Créer le fichier `.env.local` :
+
+```bash
+cp app/.env app/.env.local
+```
+
+Vérifier la configuration de la base de données :
 
 ```
-DATABASE_URL="mysql://mysql_user:mysql_password@mysql:3306/mysql_database?serverVersion=8.0.32&charset=utf8mb4"
-MAILER_DSN=smtp://mailhog:1025
+DATABASE_URL="mysql://user:pwd@mysql:3306/batark?serverVersion=8.0.32&charset=utf8mb4"
 MESSENGER_TRANSPORT_DSN=sync://
 ```
 
 ## Lancer le projet
 
-* Application : http://localhost:8080
-* PhpMyAdmin : http://localhost:8081
-* MailHog : http://localhost:8025
+- Application : http://localhost:8080
+- PhpMyAdmin : http://localhost:8081
 
 ## Commandes utiles
 
 Accéder au conteneur PHP :
 
 ```bash
-docker exec -it <nom_du_conteneur_php> sh
+docker exec -it batark_php sh
+```
+
+Voir les logs :
+
+```bash
+docker compose logs -f
 ```
 
 Arrêter les conteneurs :
