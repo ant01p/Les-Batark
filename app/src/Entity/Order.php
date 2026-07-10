@@ -17,9 +17,16 @@ class Order
     #[ORM\Column]
     private ?int $id = null;
 
+    // Nullable : le User peut être supprimé (RGPD), la commande doit survivre (obligation comptable de 10 ans)
     #[ORM\ManyToOne(inversedBy: 'orders')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?User $user = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $customerEmail = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $customerPseudo = null;
 
     #[ORM\Column(length: 20)]
     private ?string $status = null;
@@ -60,6 +67,30 @@ class Order
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getCustomerEmail(): ?string
+    {
+        return $this->customerEmail;
+    }
+
+    public function setCustomerEmail(string $customerEmail): static
+    {
+        $this->customerEmail = $customerEmail;
+
+        return $this;
+    }
+
+    public function getCustomerPseudo(): ?string
+    {
+        return $this->customerPseudo;
+    }
+
+    public function setCustomerPseudo(string $customerPseudo): static
+    {
+        $this->customerPseudo = $customerPseudo;
 
         return $this;
     }

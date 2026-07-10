@@ -108,6 +108,8 @@ class CheckoutController extends AbstractController
 
         $order = new Order();
         $order->setUser($user);
+        $order->setCustomerEmail($user->getEmail());
+        $order->setCustomerPseudo($user->getPseudo());
         $order->setStatus('payee');
         $order->setOrderCode($orderCode);
         $order->setStripePaymentId($session->payment_intent ?? $session->id);

@@ -14,7 +14,7 @@ class CartItem
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'cartItems')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Cart $cart = null;
 
     #[ORM\ManyToOne]
