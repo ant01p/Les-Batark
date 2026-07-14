@@ -15,8 +15,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 final class AdminEventController extends AbstractController
 {
-    // ── Créer un événement ──────────────────────────────────────────
-
+    // ── Créer un événement ──
     #[Route('/new', name: 'new')]
     public function new(Request $request, EntityManagerInterface $em): Response
     {
@@ -39,12 +38,10 @@ final class AdminEventController extends AbstractController
         ]);
     }
 
-    // ── Modifier un événement ───────────────────────────────────────
-
+    // ── Modifier un événement ──
     #[Route('/{id}/edit', name: 'edit')]
     public function edit(Event $event, Request $request, EntityManagerInterface $em): Response
     {
-        dump($event->getRewards());
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
             
@@ -63,8 +60,7 @@ final class AdminEventController extends AbstractController
         ]);
     }
 
-    // ── Supprimer un événement ──────────────────────────────────────
-
+    // ── Supprimer un événement ──
     #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
     public function delete(Event $event, Request $request, EntityManagerInterface $em): Response
     {

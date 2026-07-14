@@ -39,11 +39,11 @@ class CheckoutController extends AbstractController
 
         Stripe::setApiKey($this->stripeSecretKey);
 
-        $lineItems = [];
+        $lineItems = []; // liste des articles à envoyer à Stripe
         foreach ($cart->getCartItems() as $item) {
             $productName = $item->getProduct()->getName();
 
-            $details = [];
+            $details = [];// Construit une description optionnelle type "Blueprint - Légendaire"
             if ($item->getType()) {
                 $details[] = $item->getType()->getName();
             }
@@ -52,6 +52,7 @@ class CheckoutController extends AbstractController
             }
             $description = $details ? implode(' - ', $details) : null;
 
+            // Formate l'article au format attendu par l'API Stripe Checkout
             $lineItems[] = [
                 'price_data' => [
                     'currency' => 'eur',
@@ -65,6 +66,7 @@ class CheckoutController extends AbstractController
             ];
         }
 
+        // Crée la session de paiement Stripe Checkout
         $session = Session::create([
             'mode' => 'payment',
             'payment_method_types' => ['card'],
@@ -74,6 +76,7 @@ class CheckoutController extends AbstractController
             'customer_email' => $user->getEmail(),
         ]);
 
+        // Redirige vers la page de paiement hébergée par Stripe
         return $this->redirect($session->url);
     }
 
@@ -106,6 +109,7 @@ class CheckoutController extends AbstractController
 
         $orderCode = strtoupper(substr(uniqid('CMD'), 0, 12));
 
+         // Crée la commande en base, avec un instantané des infos client (utile même si le compte est supprimé plus tard)
         $order = new Order();
         $order->setUser($user);
         $order->setCustomerEmail($user->getEmail());
@@ -117,6 +121,7 @@ class CheckoutController extends AbstractController
 
         $total = 0;
 
+        // Chaque article du panier devient une ligne de commande figée (snapshot)
         foreach ($cart->getCartItems() as $item) {
             $orderItem = new OrderItem();
             $orderItem->setProduct($item->getProduct());
