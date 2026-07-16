@@ -30,9 +30,8 @@ class CartController extends AbstractController
     }
 
     #[Route('/panier/ajouter/{id}', name: 'cart_add', methods: ['POST'])]
-    public function add(
+    public function add(Request $request,
         Product $product,
-        Request $request,
         EntityManagerInterface $em,
         TypeRepository $typeRepository,
         QualityRepository $qualityRepository
@@ -87,6 +86,7 @@ class CartController extends AbstractController
             $cartItem->setQuality($quality);
             $cartItem->setQuantity($quantity);
             $cartItem->setUnitPrice($product->getPrice());
+
             $em->persist($cartItem);
             $cart->addCartItem($cartItem);
         }
