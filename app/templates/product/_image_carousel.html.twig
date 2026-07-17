@@ -1,0 +1,24 @@
+{% set images = product.orderedImages %}
+
+{% if images|length > 0 %}
+    <div id="carousel-product-{{ product.id }}" class="carousel slide {{ wrapper_class|default('') }}">
+        <div class="carousel-inner">
+            {% for image in images %}
+                <div class="carousel-item {{ loop.first ? 'active' : '' }}">
+                    <img src="{{ asset('uploads/imageProduct/' ~ image.filename) }}" class="d-block w-100 {{ img_class|default('') }}" alt="{{ product.name }}">
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if images|length > 1 %}
+            <button class="carousel-control-prev" type="button" data-bs-target="#carousel-product-{{ product.id }}" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carousel-product-{{ product.id }}" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
+        {% endif %}
+    </div>
+{% else %}
+    <div class="{{ img_class|default('') }} {{ placeholder_class|default('') }}"></div>
+{% endif %}

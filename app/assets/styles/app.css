@@ -71,25 +71,11 @@ body {
     transition: transform 0.2s, box-shadow 0.25s;
 }
 
-.shop-card {
-    background: rgba(0, 0, 0, 0.788);
-    backdrop-filter: blur(14px);
-    border-radius: 16px;
-    transition: transform 0.2s, box-shadow 0.25s;
-}
-
-.shop-card h2 {
-    font-size: 16px;
-    font-weight: 700;
-}
-
-.content-card:hover,
-.shop-card:hover {
+.content-card:hover {
     transform: translateY(-2px);
 }
 
-.content-card .badge,
-.shop-card .badge {
+.content-card .badge {
     font-size: 16px;
     padding: 8px 14px;
     border-radius: 8px;
@@ -145,14 +131,6 @@ body {
         font-size: 2rem;
     }
 
-    .shop-card {
-        padding: 24px 28px;
-    }
-
-    .shop-card h2 {
-        font-size: 20px;
-    }
-
     .page-title h1 {
         font-size: 50px;
     }
@@ -177,7 +155,4 @@ body {
         font-size: 1.8rem;
     }
 
-    .shop-card h2 {
-        font-size: 24px;
-    }
 }

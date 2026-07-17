@@ -9,6 +9,7 @@ services:
     container_name: batark_php
     volumes:
       - ./app:/var/www/html
+      - ./docker/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     depends_on:
       - mysql
 

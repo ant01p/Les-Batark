@@ -1,0 +1,19 @@
+<div class="card border-secondary shop-card h-100">
+
+    {{ include('product/_image_carousel.html.twig', {
+        product: product,
+        wrapper_class: 'shop-card-carousel',
+        img_class: 'shop-card-img',
+        placeholder_class: 'shop-card-img-placeholder',
+    }) }}
+
+    <a href="{{ path('product_show', { id: product.id }) }}" class="text-decoration-none">
+        <div class="card-body d-flex flex-column">
+            <h2 class="mb-2">{{ product.name }}</h2>
+            {% if product.description %}
+                <p class="shop-card-desc text-muted small mb-2">{{ product.description }}</p>
+            {% endif %}
+            <p class="text-info fw-bold mb-0 mt-auto">{{ (product.price / 100)|number_format(2, ',', ' ') }} €</p>
+        </div>
+    </a>
+</div>

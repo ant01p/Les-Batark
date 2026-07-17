@@ -7,6 +7,8 @@ RUN apk add --no-cache mysql-dev git unzip \
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+COPY uploads.ini /usr/local/etc/php/conf.d/uploads.ini
+
 ARG USER_ID=1000
 ARG GROUP_ID=1000
 RUN addgroup -g ${GROUP_ID} appgroup && \

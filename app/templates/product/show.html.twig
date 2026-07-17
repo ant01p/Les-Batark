@@ -2,6 +2,10 @@
 
 {% block title %}{{ product.name }} — Les BATARK{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/product.css') }}">
+{% endblock %}
+
 {% block body_class %}events-page{% endblock %}
 
 {% block body %}
@@ -21,6 +25,13 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="card border-secondary content-card">
+
+                        {{ include('product/_image_carousel.html.twig', {
+                            product: product,
+                            wrapper_class: 'product-show-carousel',
+                            img_class: 'product-show-img',
+                            placeholder_class: 'product-show-img-placeholder',
+                        }) }}
 
                         <div class="card-body">
                             <div class="d-flex flex-column align-items-start gap-2 mb-2">
