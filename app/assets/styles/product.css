@@ -46,7 +46,6 @@
     color: #c0b8d8;
     line-height: 1.5;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }

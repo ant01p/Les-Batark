@@ -45,9 +45,7 @@ class ProductController extends AbstractController
 
         // Si une catégorie existe, on récupère ses produits
         if ($activeCategory !== null) {
-            $products = $productRepository->findBy([
-                'category' => $activeCategory,
-            ]);
+            $products = $productRepository->findAllWithImages($activeCategory);
         }
 
         return $this->render('product/index.html.twig', [
