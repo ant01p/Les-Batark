@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Cart;
 use App\Entity\CartItem;
+use App\Entity\Category;
 use App\Entity\Product;
 use App\Entity\Quality;
 use App\Entity\Type;
@@ -64,13 +65,56 @@ class CartController extends AbstractController
             $quality = $qualityRepository->find($qualityId);
         }
 
-        // Cherche si une ligne identique existe déjà (même produit + type + qualité)
+        $sex = null;
+        $version = null;
+        $stat = null;
+        $option = null;
+        $color = null;
+
+        if ($product->getCategory() && $product->getCategory()->getName() === Category::DINOSAURES_NAME) {
+            if ($product->isSexeActif()) {
+                $sex = $request->request->get('sex');
+                if (!in_array($sex, ['Mâle', 'Femelle'], true)) {
+                    $this->addFlash('error', 'Merci de choisir un sexe.');
+                    return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
+                }
+            }
+
+            $versionsDisponibles = $product->getVersionsDisponibles() ?? [];
+            if (!empty($versionsDisponibles)) {
+                $version = $request->request->get('version');
+                if (!in_array($version, $versionsDisponibles, true)) {
+                    $this->addFlash('error', 'Merci de choisir une version.');
+                    return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
+                }
+            }
+
+            $stat = $request->request->get('stat') ?: null;
+            if ($stat !== null && !in_array($stat, Product::STATS, true)) {
+                $stat = null;
+            }
+
+            $option = $request->request->get('option') ?: null;
+            if ($option !== null && !in_array($option, Product::OPTIONS, true)) {
+                $option = null;
+            }
+
+            $color = trim((string) $request->request->get('color'));
+            $color = $color === '' ? null : $color;
+        }
+
+        // Cherche si une ligne identique existe déjà (même produit + type + qualité + choix dino)
         $existingItem = null;
         foreach ($cart->getCartItems() as $item) {
             if (
                 $item->getProduct() === $product
                 && $item->getType() === $type
                 && $item->getQuality() === $quality
+                && $item->getSex() === $sex
+                && $item->getVersion() === $version
+                && $item->getStat() === $stat
+                && $item->getOption() === $option
+                && $item->getColor() === $color
             ) {
                 $existingItem = $item;
                 break;
@@ -84,6 +128,11 @@ class CartController extends AbstractController
             $cartItem->setProduct($product);
             $cartItem->setType($type);
             $cartItem->setQuality($quality);
+            $cartItem->setSex($sex);
+            $cartItem->setVersion($version);
+            $cartItem->setStat($stat);
+            $cartItem->setOption($option);
+            $cartItem->setColor($color);
             $cartItem->setQuantity($quantity);
             $cartItem->setUnitPrice($product->getPrice());
 

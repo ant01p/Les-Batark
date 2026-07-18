@@ -70,6 +70,56 @@
                                     </div>
                                 {% endif %}
 
+                                {% if product.category.name == constant('App\\Entity\\Category::DINOSAURES_NAME') %}
+                                    {% if product.sexeActif %}
+                                        <div class="mb-3">
+                                            <label class="form-label">Sexe</label>
+                                            <select name="sex" class="form-select" required>
+                                                <option value="">Choisir le sexe</option>
+                                                <option value="Mâle">Mâle</option>
+                                                <option value="Femelle">Femelle</option>
+                                            </select>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if product.versionsDisponibles is not empty %}
+                                        <div class="mb-3">
+                                            <label class="form-label">Version</label>
+                                            <select name="version" class="form-select" required>
+                                                <option value="">Choisir la version</option>
+                                                {% for v in product.versionsDisponibles %}
+                                                    <option value="{{ v }}">{{ v }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    {% endif %}
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Statistique</label>
+                                        <select name="stat" class="form-select">
+                                            <option value="">Choisir la statistique</option>
+                                            {% for s in constant('App\\Entity\\Product::STATS') %}
+                                                <option value="{{ s }}">{{ s }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Option</label>
+                                        <select name="option" class="form-select">
+                                            <option value="">Choisir une option</option>
+                                            {% for o in constant('App\\Entity\\Product::OPTIONS') %}
+                                                <option value="{{ o }}">{{ o }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Couleur</label>
+                                        <input type="text" name="color" class="form-control" placeholder="Ex : Bleu / Violet ou 0-14 / 1-28">
+                                    </div>
+                                {% endif %}
+
                                 <div class="mb-3">
                                     <label class="form-label">Quantité</label>
                                     <input type="number" name="quantity" value="1" min="1" class="form-control" style="max-width: 120px;">

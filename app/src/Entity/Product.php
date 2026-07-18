@@ -11,6 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
 {
+    public const STATS = ['HP', 'Stamina', 'Oxygen', 'Food', 'Weight', 'Melee Damage'];
+    public const OPTIONS = ['Full XP', 'Imprint 100%', 'Imprint 200%', 'Full XP Imprint 100%', 'Full XP Imprint 200%'];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -34,6 +37,12 @@ class Product
 
     #[ORM\Column]
     private ?bool $hasQuality = null;
+
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $versionsDisponibles = [];
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $sexeActif = false;
 
     /**
      * @var Collection<int, ProductImage>
@@ -119,6 +128,30 @@ class Product
     public function setHasQuality(bool $hasQuality): static
     {
         $this->hasQuality = $hasQuality;
+
+        return $this;
+    }
+
+    public function getVersionsDisponibles(): ?array
+    {
+        return $this->versionsDisponibles;
+    }
+
+    public function setVersionsDisponibles(?array $versionsDisponibles): static
+    {
+        $this->versionsDisponibles = $versionsDisponibles;
+
+        return $this;
+    }
+
+    public function isSexeActif(): ?bool
+    {
+        return $this->sexeActif;
+    }
+
+    public function setSexeActif(?bool $sexeActif): static
+    {
+        $this->sexeActif = $sexeActif;
 
         return $this;
     }

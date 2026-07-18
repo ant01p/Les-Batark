@@ -45,6 +45,18 @@
 
                     {{ form_start(form) }}
 
+                    {# category #}
+                    <div class="mb-3">
+                        {{ form_label(form.category) }}
+                        <div class="d-flex flex-wrap gap-2" id="category-capsules">
+                            {% for child in form.category %}
+                                {{ form_widget(child, {attr: {class: 'btn-check', 'data-category-name': child.vars.label}}) }}
+                                <label class="btn btn-outline-primary" for="{{ child.vars.id }}">{{ child.vars.label }}</label>
+                            {% endfor %}
+                        </div>
+                        {{ form_errors(form.category) }}
+                    </div>
+
                     {# Nom #}
                     <div class="mb-3">
                         {{ form_label(form.name) }}
@@ -52,11 +64,31 @@
                         {{ form_errors(form.name) }}
                     </div>
 
-                    {# category #}
-                    <div class="mb-3">
-                        {{ form_label(form.category) }}
-                        {{ form_widget(form.category, {attr: {class: 'form-control',}}) }}
-                        {{ form_errors(form.category) }}
+                    {# Champs spécifiques Dinosaures #}
+                    <div id="dino-fields" class="d-none">
+                        <hr class="border-secondary my-4">
+                        <h5 class="text-white">Configuration Dinosaure</h5>
+
+                        <div class="mb-3">
+                            {{ form_label(form.versionsDisponibles) }}
+                            <div class="d-flex flex-wrap gap-3">
+                                {% for child in form.versionsDisponibles %}
+                                    <div class="form-check">
+                                        {{ form_widget(child, {attr: {class: 'form-check-input'}}) }}
+                                        {{ form_label(child, null, {label_attr: {class: 'form-check-label'}}) }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            {{ form_errors(form.versionsDisponibles) }}
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            {{ form_widget(form.sexeActif, {attr: {class: 'form-check-input'}}) }}
+                            {{ form_label(form.sexeActif) }}
+                            {{ form_errors(form.sexeActif) }}
+                        </div>
+
+                        <hr class="border-secondary my-4">
                     </div>
 
                     {# Prix #}
@@ -73,18 +105,21 @@
                         {{ form_errors(form.description) }}
                     </div>
 
-                    {# hasType #}
-                    <div class="mb-3 form-check">
-                        {{ form_widget(form.hasType, {attr: {class: 'form-check-input'}}) }}
-                        {{ form_label(form.hasType) }}
-                        {{ form_errors(form.hasType) }}
-                    </div>
+                    {# Type / Qualité (non pertinents pour un produit Dinosaures) #}
+                    <div id="type-quality-fields">
+                        {# hasType #}
+                        <div class="mb-3 form-check">
+                            {{ form_widget(form.hasType, {attr: {class: 'form-check-input'}}) }}
+                            {{ form_label(form.hasType) }}
+                            {{ form_errors(form.hasType) }}
+                        </div>
 
-                    {# hasQuality #}
-                    <div class="mb-3 form-check">
-                        {{ form_widget(form.hasQuality, {attr: {class: 'form-check-input'}}) }}
-                        {{ form_label(form.hasQuality) }}
-                        {{ form_errors(form.hasQuality) }}
+                        {# hasQuality #}
+                        <div class="mb-3 form-check">
+                            {{ form_widget(form.hasQuality, {attr: {class: 'form-check-input'}}) }}
+                            {{ form_label(form.hasQuality) }}
+                            {{ form_errors(form.hasQuality) }}
+                        </div>
                     </div>
 
                     <hr class="border-secondary my-4">
@@ -150,6 +185,42 @@
     {{ parent() }}
     <script>
         (function () {
+            const dinoFields = document.getElementById('dino-fields');
+            const typeQualityFields = document.getElementById('type-quality-fields');
+            const categoryRadios = document.querySelectorAll('#category-capsules input[type="radio"]');
+            const DINO_NAME = '{{ constant('App\\Entity\\Category::DINOSAURES_NAME') }}';
+
+            function resetDinoField(el) {
+                if (el.type === 'checkbox' || el.type === 'radio') {
+                    el.checked = false;
+                } else {
+                    el.value = '';
+                }
+            }
+
+            function updateDinoFields() {
+                const checked = document.querySelector('#category-capsules input[type="radio"]:checked');
+                const isDino = checked && checked.dataset.categoryName.trim() === DINO_NAME;
+
+                if (dinoFields) {
+                    dinoFields.classList.toggle('d-none', !isDino);
+                }
+                if (typeQualityFields) {
+                    typeQualityFields.classList.toggle('d-none', isDino);
+                }
+
+                if (!isDino) {
+                    document.querySelectorAll('#dino-fields input, #dino-fields select').forEach(resetDinoField);
+                } else {
+                    document.querySelectorAll('#type-quality-fields input').forEach(resetDinoField);
+                }
+            }
+
+            categoryRadios.forEach(function (radio) {
+                radio.addEventListener('change', updateDinoFields);
+            });
+            updateDinoFields();
+
             const collection = document.getElementById('image-collection');
             const addButton = document.getElementById('add-image-btn');
 

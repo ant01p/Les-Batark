@@ -36,6 +36,21 @@ class OrderItem
     #[ORM\Column]
     private ?int $unitPrice = null;
 
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $sex = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $version = null;
+
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $stat = null;
+
+    #[ORM\Column(name: '`option`', length: 50, nullable: true)]
+    private ?string $option = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $color = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -128,5 +143,65 @@ class OrderItem
     public function getTotalPrice(): int
     {
         return $this->unitPrice * $this->quantity;
+    }
+
+    public function getSex(): ?string
+    {
+        return $this->sex;
+    }
+
+    public function setSex(?string $sex): static
+    {
+        $this->sex = $sex;
+
+        return $this;
+    }
+
+    public function getVersion(): ?string
+    {
+        return $this->version;
+    }
+
+    public function setVersion(?string $version): static
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    public function getStat(): ?string
+    {
+        return $this->stat;
+    }
+
+    public function setStat(?string $stat): static
+    {
+        $this->stat = $stat;
+
+        return $this;
+    }
+
+    public function getOption(): ?string
+    {
+        return $this->option;
+    }
+
+    public function setOption(?string $option): static
+    {
+        $this->option = $option;
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(?string $color): static
+    {
+        $this->color = $color;
+
+        return $this;
     }
 }

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Product;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -21,6 +22,13 @@ class ProductType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('category', EntityType::class, [
+                'class' => Category::class,
+                'choice_label' => 'name',
+                'label' => 'Catégorie',
+                'expanded' => true,
+                'multiple' => false,
+            ])
             ->add('name', TextType::class, [
                 'label' => 'Nom du produit',
             ])
@@ -33,12 +41,20 @@ class ProductType extends AbstractType
                 'currency' => 'EUR',
                 'divisor' => 100,
             ])
-            
-            ->add('category', EntityType::class, [
-                'class' => Category::class,
-                'choice_label' => 'name',
-                'placeholder' => 'Choisir une catégorie',
-                'label' => 'Catégorie',
+            ->add('versionsDisponibles', ChoiceType::class, [
+                'label' => 'Versions proposées à l\'achat',
+                'required' => false,
+                'multiple' => true,
+                'expanded' => true,
+                'choices' => [
+                    'Commun' => 'Commun',
+                    'Aberrant' => 'Aberrant',
+                    'X' => 'X',
+                ],
+            ])
+            ->add('sexeActif', CheckboxType::class, [
+                'label' => 'Le client choisit le sexe',
+                'required' => false,
             ])
             ->add('hasType', CheckboxType::class, [
                 'label' => 'Le client choisit Déjà crafté / Blueprint',

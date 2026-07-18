@@ -50,6 +50,21 @@ class CheckoutController extends AbstractController
             if ($item->getQuality()) {
                 $details[] = $item->getQuality()->getName();
             }
+            if ($item->getSex()) {
+                $details[] = $item->getSex();
+            }
+            if ($item->getVersion()) {
+                $details[] = $item->getVersion();
+            }
+            if ($item->getStat()) {
+                $details[] = $item->getStat();
+            }
+            if ($item->getOption()) {
+                $details[] = $item->getOption();
+            }
+            if ($item->getColor()) {
+                $details[] = $item->getColor();
+            }
             $description = $details ? implode(' - ', $details) : null;
 
             // Formate l'article au format attendu par l'API Stripe Checkout
@@ -128,6 +143,11 @@ class CheckoutController extends AbstractController
             $orderItem->setProductName($item->getProduct()->getName());
             $orderItem->setType($item->getType());
             $orderItem->setQuality($item->getQuality());
+            $orderItem->setSex($item->getSex());
+            $orderItem->setVersion($item->getVersion());
+            $orderItem->setStat($item->getStat());
+            $orderItem->setOption($item->getOption());
+            $orderItem->setColor($item->getColor());
             $orderItem->setQuantity($item->getQuantity());
             $orderItem->setUnitPrice($item->getUnitPrice());
 

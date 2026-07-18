@@ -50,6 +50,16 @@
     overflow: hidden;
 }
 
+/* Ligne produit panier */
+.cart-item-img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+    flex-shrink: 0;
+}
+
 /* Carousel page de détail produit */
 .product-show-img {
     width: 100%;
