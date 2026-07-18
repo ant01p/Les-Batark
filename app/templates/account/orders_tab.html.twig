@@ -1,0 +1,65 @@
+{% if orders is empty %}
+    <div class="card border-secondary">
+        <div class="card-body text-center text-muted py-5">
+            Aucune commande pour l'instant.
+        </div>
+    </div>
+{% else %}
+    {% for order in orders %}
+        <div class="card border-primary mb-3">
+            <div class="card-body admin-card-body">
+                <div class="admin-card-content">
+                    <span class="badge bg-secondary mb-2">Commande #{{ order.orderCode }}</span>
+                    <p class="text-muted small mb-2">{{ order.createdAt|date('d/m/Y à H:i') }}</p>
+
+                    {% for item in order.orderItems %}
+                        <div class="d-flex justify-content-between align-items-start border-top border-secondary pt-2 mt-2">
+                            <div>
+                                <span class="fw-semibold text-white">{{ item.productName }}</span>
+                                <div class="d-flex flex-column">
+                                    <span class="text-light small">Quantité : {{ item.quantity }}</span>
+                                    {% if item.type %}
+                                        <span class="text-light small">Type : {{ item.type.name }}</span>
+                                    {% endif %}
+                                    {% if item.quality %}
+                                        <span class="text-light small">Qualité : {{ item.quality.name }}</span>
+                                    {% endif %}
+                                    {% if item.sex %}
+                                        <span class="text-light small">Sexe : {{ item.sex }}</span>
+                                    {% endif %}
+                                    {% if item.version %}
+                                        <span class="text-light small">Version : {{ item.version }}</span>
+                                    {% endif %}
+                                    {% if item.stat %}
+                                        <span class="text-light small">Statistique : {{ item.stat }}</span>
+                                    {% endif %}
+                                    {% if item.option %}
+                                        <span class="text-light small">Option : {{ item.option }}</span>
+                                    {% endif %}
+                                    {% if item.color %}
+                                        <span class="text-light small">Couleur : {{ item.color }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <span class="fw-bold text-white text-nowrap ms-3">
+                                {{ (item.totalPrice / 100)|number_format(2, ',', ' ') }} €
+                            </span>
+                        </div>
+                    {% endfor %}
+
+                    <p class="fw-bold text-success mt-3 mb-0">
+                        Total : {{ (order.total / 100)|number_format(2, ',', ' ') }} €
+                    </p>
+                </div>
+
+                <div class="admin-actions">
+                    <form method="post" action="{{ path('account_order_finish', {id: order.id}) }}"
+                          onsubmit="return confirm('Marquer cette commande comme terminée ? Elle disparaîtra de cette liste.')">
+                        <input type="hidden" name="_token" value="{{ csrf_token('account_order_finish_' ~ order.id) }}">
+                        <button type="submit" class="btn btn-success">Terminé</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
