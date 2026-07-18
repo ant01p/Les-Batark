@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if category.id is null %}
+        Créer une catégorie
+    {% else %}
+        Modifier la catégorie
+    {% endif %}
+     — Les BATARK
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/admin.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="admin-page">
+
+    <div class="row justify-content-center mb-4">
+        <div class="col-lg-8">
+            <div class="d-flex align-items-center gap-3">
+                <a href="{{ path('admin_index', { tab: 'shop' }) }}" class="btn btn-outline-secondary btn-sm">
+                    Retour
+                </a>
+                <div>
+                    <h1 class="h3 fw-bold text-white mb-0">
+                        {% if category.id is null %}
+                            Nouvelle catégorie
+                        {% else %}
+                            Modifier : {{ category.name }}
+                        {% endif %}
+                    </h1>
+                    <p class="text-muted mb-0 small">Panneau d'administration</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ include('_shared/_flash.html.twig') }}
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-primary">
+                <div class="card-body p-4">
+
+                    {{ form_start(form) }}
+
+                    <div class="mb-3">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name, {attr: {class: 'form-control', placeholder: 'Ex : Dinosaures'}}) }}
+                        {{ form_errors(form.name) }}
+                    </div>
+
+                    <hr class="border-secondary my-4">
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-outline-success btn-lg mt-3">
+                            {% if category.id is null %}
+                                Créer la catégorie
+                            {% else %}
+                                Enregistrer
+                            {% endif %}
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

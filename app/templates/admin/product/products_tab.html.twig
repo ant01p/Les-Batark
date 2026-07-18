@@ -2,23 +2,40 @@
     <h2 class="h5 fw-semibold text-white mb-0">Boutique</h2>
 </div>
 
+ <a href="{{ path('admin_category_new') }}" class="btn btn-success text-dark mb-3">Ajouter une catégorie</a>
+
 {% if categories is not empty %}
     <div class="d-flex flex-wrap gap-2 mb-3">
         <a href="{{ path('admin_index', { tab: 'shop' }) }}"
-           class="btn btn-primary{{ activeCategory is null ? ' active' : '' }}">
+           class="btn btn-primary d-flex align-items-center justify-content-center{{ activeCategory is null ? ' active' : '' }}">
             Toutes
         </a>
         {% for category in categories %}
-            <a href="{{ path('admin_index', { tab: 'shop', category: category.id }) }}"
-               class="btn btn-primary{{ activeCategory and category.id == activeCategory.id ? ' active' : '' }}">
-                {{ category.name }}
-            </a>
+            <div class="d-flex flex-column">
+                <a href="{{ path('admin_index', { tab: 'shop', category: category.id }) }}"
+                   class="btn btn-primary rounded-bottom-0{{ activeCategory and category.id == activeCategory.id ? ' active' : '' }}">
+                    {{ category.name }}
+                </a>
+                <div class="d-flex">
+                    <a href="{{ path('admin_category_edit', {id: category.id}) }}" class="btn btn-warning btn-sm flex-fill rounded-top-0 rounded-end-0" title="Modifier la catégorie">
+                        Modifier
+                    </a>
+                    <button type="submit" form="delete-category-{{ category.id }}" class="btn btn-danger btn-sm flex-fill rounded-top-0 rounded-start-0" title="Supprimer la catégorie">
+                        Suppr.
+                    </button>
+                </div>
+            </div>
+            <form id="delete-category-{{ category.id }}" method="post" action="{{ path('admin_category_delete', {id: category.id}) }}"
+                  onsubmit="return confirm('Supprimer cette catégorie ? Tous les produits associés seront également supprimés définitivement.')" class="d-none">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete_category_' ~ category.id) }}">
+            </form>
         {% endfor %}
     </div>
 {% endif %}
 
-<div class="mb-3">
+<div class="mb-3 d-flex gap-2">
     <a href="{{ path('admin_product_new') }}" class="btn btn-success text-dark">Ajouter un produit</a>
+   
 </div>
 
 {% if products is empty %}
