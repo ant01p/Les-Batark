@@ -1,3 +1,7 @@
+<div class="admin-section-title">
+    <h2 class="h2 fw-semibold text-white mb-0">Commandes</h2>
+</div>
+
 {% if orders is empty %}
     <div class="card border-secondary">
         <div class="card-body text-center text-muted py-5">
@@ -8,7 +12,7 @@
     <div class="row g-3">
         {% for order in orders %}
             <div class="col-md-6 col-xl-4">
-                {% include 'order/_order_card.html.twig' with { order: order, context: 'account' } %}
+                {% include 'order/_order_card.html.twig' with { order: order, context: 'admin' } %}
             </div>
         {% endfor %}
     </div>

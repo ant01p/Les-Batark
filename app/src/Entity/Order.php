@@ -46,6 +46,9 @@ class Order
     #[ORM\Column]
     private bool $finished = false;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $deliveredAt = null;
+
     /**
      * @var Collection<int, OrderItem>
      */
@@ -168,6 +171,23 @@ class Order
         $this->finished = $finished;
 
         return $this;
+    }
+
+    public function getDeliveredAt(): ?\DateTimeImmutable
+    {
+        return $this->deliveredAt;
+    }
+
+    public function setDeliveredAt(?\DateTimeImmutable $deliveredAt): static
+    {
+        $this->deliveredAt = $deliveredAt;
+
+        return $this;
+    }
+
+    public function isDelivered(): bool
+    {
+        return $this->deliveredAt !== null;
     }
 
     /**

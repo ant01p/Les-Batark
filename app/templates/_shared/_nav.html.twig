@@ -24,8 +24,25 @@
                         {% if app.user %}
 
                             {% if is_granted('ROLE_ADMIN') %}
-                                <a class="dropdown-item text-warning" href="{{ path('admin_index') }}">
-                                    Espace administration
+                                {% set currentRoute = app.request.attributes.get('_route') %}
+                                <h6 class="dropdown-header text-warning">Administration</h6>
+                                <a class="dropdown-item{{ currentRoute == 'admin_index' ? ' active' : '' }}" href="{{ path('admin_index') }}">
+                                    <i class="bi bi-speedometer2 me-2"></i>Tableau de bord
+                                </a>
+                                <a class="dropdown-item{{ (currentRoute starts with 'admin_product_' or currentRoute starts with 'admin_category_') ? ' active' : '' }}" href="{{ path('admin_product_index') }}">
+                                    <i class="bi bi-shop me-2"></i>Boutique
+                                </a>
+                                <a class="dropdown-item{{ currentRoute starts with 'admin_order_' ? ' active' : '' }}" href="{{ path('admin_order_index') }}">
+                                    <i class="bi bi-bag-check me-2"></i>Commandes
+                                </a>
+                                <a class="dropdown-item{{ currentRoute starts with 'admin_event_' ? ' active' : '' }}" href="{{ path('admin_event_index') }}">
+                                    <i class="bi bi-calendar-event me-2"></i>Événements
+                                </a>
+                                <a class="dropdown-item{{ currentRoute starts with 'admin_server_' ? ' active' : '' }}" href="{{ path('admin_server_index') }}">
+                                    <i class="bi bi-hdd-network me-2"></i>Serveurs
+                                </a>
+                                <a class="dropdown-item{{ currentRoute starts with 'admin_rule_' ? ' active' : '' }}" href="{{ path('admin_rule_index') }}">
+                                    <i class="bi bi-journal-text me-2"></i>Règlement
                                 </a>
                                 <div class="dropdown-divider"></div>
                             {% endif %}

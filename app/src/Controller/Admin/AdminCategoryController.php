@@ -27,7 +27,7 @@ final class AdminCategoryController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Catégorie créée avec succès.');
-            return $this->redirectToRoute('admin_index', ['tab' => 'shop']);
+            return $this->redirectToRoute('admin_product_index');
         }
 
         return $this->render('admin/category/category_form.html.twig', [
@@ -46,7 +46,7 @@ final class AdminCategoryController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Catégorie modifiée avec succès.');
-            return $this->redirectToRoute('admin_index', ['tab' => 'shop']);
+            return $this->redirectToRoute('admin_product_index');
         }
 
         return $this->render('admin/category/category_form.html.twig', [
@@ -64,6 +64,6 @@ final class AdminCategoryController extends AbstractController
             $this->addFlash('success', 'Catégorie et produits associés supprimés.');
         }
 
-        return $this->redirectToRoute('admin_index', ['tab' => 'shop']);
+        return $this->redirectToRoute('admin_product_index');
     }
 }

@@ -33,6 +33,40 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
+    /**
+     * Nombre d'utilisateurs n'ayant pas le rôle ROLE_ADMIN.
+     */
+    public function countNonAdmin(): int
+    {
+        $rows = $this->createQueryBuilder('u')
+            ->select('u.roles')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        $count = 0;
+        foreach ($rows as $row) {
+            if (!in_array('ROLE_ADMIN', $row['roles'], true)) {
+                ++$count;
+            }
+        }
+
+        return $count;
+    }
+
+    /**
+     * @return User[]
+     */
+    public function findRecentlyRegistered(int $limit): array
+    {
+        return $this->createQueryBuilder('u')
+            ->orderBy('u.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */

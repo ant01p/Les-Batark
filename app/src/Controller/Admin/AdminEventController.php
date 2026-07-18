@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Event;
 use App\Form\EventType;
+use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +16,14 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 final class AdminEventController extends AbstractController
 {
+    #[Route('', name: 'index')]
+    public function index(EventRepository $eventRepository): Response
+    {
+        return $this->render('admin/event/events_index.html.twig', [
+            'events' => $eventRepository->findAllOrderedByDate(),
+        ]);
+    }
+
     #[Route('/new', name: 'new')]
     public function new(Request $request, EntityManagerInterface $em): Response
     {
@@ -27,7 +36,7 @@ final class AdminEventController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Événement créé avec succès.');
-            return $this->redirectToRoute('admin_index', ['tab' => 'events']);
+            return $this->redirectToRoute('admin_event_index');
         }
 
         return $this->render('admin/event/event_form.html.twig', [
@@ -48,7 +57,7 @@ final class AdminEventController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Événement modifié avec succès.');
-            return $this->redirectToRoute('admin_index', ['tab' => 'events']);
+            return $this->redirectToRoute('admin_event_index');
 
         }
 
@@ -69,6 +78,6 @@ final class AdminEventController extends AbstractController
             $this->addFlash('success', 'Événement supprimé.');
         }
 
-        return $this->redirectToRoute('admin_index', ['tab' => 'events']);
+        return $this->redirectToRoute('admin_event_index');
     }
 }

@@ -33,6 +33,29 @@ class EventRepository extends ServiceEntityRepository
         ->getResult()
     ;
 }
+
+    public function countAll(): int
+    {
+        return (int) $this->createQueryBuilder('e')
+            ->select('COUNT(e.id)')
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    /**
+     * @return Event[]
+     */
+    public function findRecentlyCreated(int $limit): array
+    {
+        return $this->createQueryBuilder('e')
+            ->orderBy('e.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     //    /**
     //     * @return Event[] Returns an array of Event objects
     //     */

@@ -1,71 +1,102 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/_layout.html.twig' %}
 
-{% block title %}Admin — LES-BATARK{% endblock %}
+{% block admin_title %}Tableau de bord{% endblock %}
 
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('styles/admin.css') }}">
-{% endblock %}
-
-{% block body %}
-<div class="admin-page">
+{% block admin_content %}
 
     <header class="mb-4">
-        <h1 class="h3 fw-bold text-white mb-1">Panneau d'administration</h1>
+        <h1 class="h2 fw-bold text-white mb-1">Panneau d'administration</h1>
         <p class="text-muted mb-0">Gérez les contenus du site LES-BATARK</p>
     </header>
 
-    {{ include('_shared/_flash.html.twig') }}
-
-    <ul class="nav admin-tabs mb-4">
-        <li class="nav-item">
-            <button type="button" class="btn btn-primary{{ activeTab == 'events' ? ' active' : '' }}" data-bs-toggle="pill" data-bs-target="#events">
-                Événements
-            </button>
-        </li>
-
-        <li class="nav-item">
-            <button type="button" class="btn btn-primary{{ activeTab == 'shop' ? ' active' : '' }}" data-bs-toggle="pill" data-bs-target="#shop">
-                Boutique
-            </button>
-        </li>
-    </ul>
-
-    <hr class="border-secondary mb-4">
-
-    <div class="tab-content">
-
-        <div class="tab-pane fade{{ activeTab == 'events' ? ' show active' : '' }}" id="events">
-            {% include 'admin/event/events_tab.html.twig' %}
-        </div>
-
-        <div class="tab-pane fade{{ activeTab == 'shop' ? ' show active' : '' }}" id="shop">
-            {% include 'admin/product/products_tab.html.twig' %}
-        </div>
-
-        <div class="tab-pane fade" id="servers">
-            <div class="admin-section-title">
-                <h2 class="h5 fw-semibold text-white mb-0">Serveurs</h2>
-                <button type="button" class="btn btn-success">Ajouter</button>
-            </div>
-            <div class="card border-secondary">
-                <div class="card-body text-center text-muted py-5">
-                    Aucun serveur configuré.
+    <div class="row g-3 mb-3">
+        <div class="col-6 col-md-3">
+            <div class="card border-primary h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-people fs-2 text-primary d-block mb-2"></i>
+                    <div class="h4 fw-bold text-white mb-0">{{ playerCount }}</div>
+                    <div class="text-muted small">Joueurs inscrits</div>
                 </div>
             </div>
         </div>
-
-        <div class="tab-pane fade" id="rules">
-            <div class="admin-section-title">
-                <h2 class="h5 fw-semibold text-white mb-0">Règlement</h2>
-                <button type="button" class="btn btn-success">Ajouter</button>
-            </div>
-            <div class="card border-secondary">
-                <div class="card-body text-center text-muted py-5">
-                    Aucune règle définie.
+        <div class="col-6 col-md-3">
+            <div class="card border-primary h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-calendar-event fs-2 text-primary d-block mb-2"></i>
+                    <div class="h4 fw-bold text-white mb-0">{{ eventCount }}</div>
+                    <div class="text-muted small">Événements</div>
                 </div>
             </div>
         </div>
-
+        <div class="col-6 col-md-3">
+            <div class="card border-primary h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-bag-check fs-2 text-primary d-block mb-2"></i>
+                    <div class="h4 fw-bold text-white mb-0">{{ pendingOrderCount }}</div>
+                    <div class="text-muted small">Commandes non livrées</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-primary h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-cash-stack fs-2 text-primary d-block mb-2"></i>
+                    <div class="h4 fw-bold text-white mb-0">{{ (orderRevenue / 100)|number_format(2, ',', ' ') }} €</div>
+                    <div class="text-muted small">Ventes boutique</div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+
+    <div class="row g-3">
+        <div class="col-lg-7">
+            <div class="card border-secondary h-100">
+                <div class="card-body">
+                    <h2 class="h6 fw-semibold text-white mb-3">Activité récente</h2>
+                    {% if recentActivity is empty %}
+                        <p class="text-muted small mb-0">Aucune activité récente.</p>
+                    {% else %}
+                        <ul class="list-unstyled admin-activity-list mb-0">
+                            {% for activity in recentActivity %}
+                                <li class="d-flex align-items-start gap-2">
+                                    <i class="bi {{ activity.icon }} text-primary"></i>
+                                    <div class="flex-grow-1">
+                                        {% if activity.link %}
+                                            <a href="{{ path(activity.link) }}" class="text-white text-decoration-none">{{ activity.label }}</a>
+                                        {% else %}
+                                            <span class="text-white">{{ activity.label }}</span>
+                                        {% endif %}
+                                        <div class="text-muted small">{{ activity.date|date('d/m/Y à H:i') }}</div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card border-secondary h-100">
+                <div class="card-body">
+                    <h2 class="h6 fw-semibold text-white mb-3">Commandes en cours</h2>
+                    {% if pendingOrders is empty %}
+                        <p class="text-muted small mb-0">Aucune commande en attente.</p>
+                    {% else %}
+                        <ul class="list-unstyled admin-pending-orders-list mb-0">
+                            {% for order in pendingOrders %}
+                                <li>
+                                    <a href="{{ path('admin_order_index') }}" class="d-flex justify-content-between text-decoration-none">
+                                        <span class="text-white">#{{ order.orderCode }} — {{ order.customerPseudo }}</span>
+                                        <span class="text-muted">{{ (order.total / 100)|number_format(2, ',', ' ') }} €</span>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

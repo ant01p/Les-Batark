@@ -1,18 +1,20 @@
+{% import '_shared/_confirm_modal.html.twig' as modals %}
+
 <div class="admin-section-title mb-3">
-    <h2 class="h5 fw-semibold text-white mb-0">Boutique</h2>
+    <h2 class="h2 fw-semibold text-white mb-0">Boutique</h2>
 </div>
 
  <a href="{{ path('admin_category_new') }}" class="btn btn-success text-dark mb-3">Ajouter une catégorie</a>
 
 {% if categories is not empty %}
     <div class="d-flex flex-wrap gap-2 mb-3">
-        <a href="{{ path('admin_index', { tab: 'shop' }) }}"
+        <a href="{{ path('admin_product_index') }}"
            class="btn btn-primary d-flex align-items-center justify-content-center{{ activeCategory is null ? ' active' : '' }}">
             Toutes
         </a>
         {% for category in categories %}
             <div class="d-flex flex-column">
-                <a href="{{ path('admin_index', { tab: 'shop', category: category.id }) }}"
+                <a href="{{ path('admin_product_index', { category: category.id }) }}"
                    class="btn btn-primary rounded-bottom-0{{ activeCategory and category.id == activeCategory.id ? ' active' : '' }}">
                     {{ category.name }}
                 </a>
@@ -20,15 +22,15 @@
                     <a href="{{ path('admin_category_edit', {id: category.id}) }}" class="btn btn-warning btn-sm flex-fill rounded-top-0 rounded-end-0" title="Modifier la catégorie">
                         Modifier
                     </a>
-                    <button type="submit" form="delete-category-{{ category.id }}" class="btn btn-danger btn-sm flex-fill rounded-top-0 rounded-start-0" title="Supprimer la catégorie">
+                    <button type="button" class="btn btn-danger btn-sm flex-fill rounded-top-0 rounded-start-0" title="Supprimer la catégorie" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal{{ category.id }}">
                         Suppr.
                     </button>
                 </div>
             </div>
-            <form id="delete-category-{{ category.id }}" method="post" action="{{ path('admin_category_delete', {id: category.id}) }}"
-                  onsubmit="return confirm('Supprimer cette catégorie ? Tous les produits associés seront également supprimés définitivement.')" class="d-none">
+            <form id="delete-category-{{ category.id }}" method="post" action="{{ path('admin_category_delete', {id: category.id}) }}" class="d-none">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete_category_' ~ category.id) }}">
             </form>
+            {{ modals.modal('deleteCategoryModal' ~ category.id, 'Supprimer la catégorie', 'Supprimer cette catégorie ? Tous les produits associés seront également supprimés définitivement.', 'delete-category-' ~ category.id, 'Supprimer', 'danger') }}
         {% endfor %}
     </div>
 {% endif %}
@@ -50,7 +52,7 @@
 
     <div class="row g-3">
         {% for product in products %}
-            <div class="col-md-6 col-lg-4">
+            <div class="col-6 col-md-4 col-lg-3">
 
                 <div class="card border-primary h-100">
                     <div class="card-body d-flex flex-column">
@@ -75,15 +77,15 @@
 
                             <a href="{{ path('admin_product_edit', {id: product.id}) }}" class="btn btn-sm btn-primary flex-fill">Modifier</a>
 
-                            <form method="post" action="{{ path('admin_product_delete', {id: product.id}) }}"
-                                onsubmit="return confirm('Supprimer ce produit ?')" class="flex-fill">
+                            <form method="post" action="{{ path('admin_product_delete', {id: product.id}) }}" class="flex-fill" id="deleteProductForm{{ product.id }}">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete_product_' ~ product.id) }}">
 
-                                <button type="submit" class="btn btn-sm btn-danger w-100">Supprimer</button>
+                                <button type="button" class="btn btn-sm btn-danger w-100" data-bs-toggle="modal" data-bs-target="#deleteProductModal{{ product.id }}">Supprimer</button>
                             </form>
                         </div>
                     </div>
                 </div>
+                {{ modals.modal('deleteProductModal' ~ product.id, 'Supprimer le produit', 'Supprimer ce produit ?', 'deleteProductForm' ~ product.id, 'Supprimer', 'danger') }}
             </div>
         {% endfor %}
     </div>

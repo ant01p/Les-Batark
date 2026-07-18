@@ -1,0 +1,46 @@
+{% set currentRoute = app.request.attributes.get('_route') %}
+
+<nav class="admin-nav-cards">
+    <a href="{{ path('admin_index') }}" class="admin-nav-card{{ currentRoute == 'admin_index' ? ' active' : '' }}">
+        <i class="bi bi-speedometer2"></i>
+        <div>
+            <span class="admin-nav-card-title">Tableau de bord</span>
+            <span class="admin-nav-card-desc">Vue d'ensemble du site</span>
+        </div>
+    </a>
+    <a href="{{ path('admin_product_index') }}" class="admin-nav-card{{ (currentRoute starts with 'admin_product_' or currentRoute starts with 'admin_category_') ? ' active' : '' }}">
+        <i class="bi bi-shop"></i>
+        <div>
+            <span class="admin-nav-card-title">Boutique</span>
+            <span class="admin-nav-card-desc">Gérer les catégories et produits</span>
+        </div>
+    </a>
+    <a href="{{ path('admin_order_index') }}" class="admin-nav-card{{ currentRoute starts with 'admin_order_' ? ' active' : '' }}">
+        <i class="bi bi-bag-check"></i>
+        <div>
+            <span class="admin-nav-card-title">Commandes</span>
+            <span class="admin-nav-card-desc">Suivre et marquer les commandes livrées</span>
+        </div>
+    </a>
+    <a href="{{ path('admin_event_index') }}" class="admin-nav-card{{ currentRoute starts with 'admin_event_' ? ' active' : '' }}">
+        <i class="bi bi-calendar-event"></i>
+        <div>
+            <span class="admin-nav-card-title">Événements</span>
+            <span class="admin-nav-card-desc">Gérer les événements du serveur</span>
+        </div>
+    </a>
+    <a href="{{ path('admin_server_index') }}" class="admin-nav-card{{ currentRoute starts with 'admin_server_' ? ' active' : '' }}">
+        <i class="bi bi-hdd-network"></i>
+        <div>
+            <span class="admin-nav-card-title">Serveurs</span>
+            <span class="admin-nav-card-desc">Gérer les serveurs de jeu</span>
+        </div>
+    </a>
+    <a href="{{ path('admin_rule_index') }}" class="admin-nav-card{{ currentRoute starts with 'admin_rule_' ? ' active' : '' }}">
+        <i class="bi bi-journal-text"></i>
+        <div>
+            <span class="admin-nav-card-title">Règlement</span>
+            <span class="admin-nav-card-desc">Consulter et modifier le règlement</span>
+        </div>
+    </a>
+</nav>

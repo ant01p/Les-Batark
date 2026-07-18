@@ -37,6 +37,97 @@ class OrderRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @return Order[]
+     */
+    public function findAllOrderedByDate(): array
+    {
+        return $this->createQueryBuilder('o')
+            ->addSelect('oi', 'p', 't', 'q')
+            ->leftJoin('o.orderItems', 'oi')
+            ->leftJoin('oi.product', 'p')
+            ->leftJoin('oi.type', 't')
+            ->leftJoin('oi.quality', 'q')
+            ->orderBy('o.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function countAll(): int
+    {
+        return (int) $this->createQueryBuilder('o')
+            ->select('COUNT(o.id)')
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    /**
+     * Somme des totaux (en centimes) de toutes les commandes.
+     */
+    public function sumTotal(): int
+    {
+        return (int) $this->createQueryBuilder('o')
+            ->select('COALESCE(SUM(o.total), 0)')
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    /**
+     * Commandes en attente de livraison, les plus récentes en premier.
+     *
+     * @return Order[]
+     */
+    public function findPending(int $limit): array
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.deliveredAt IS NULL')
+            ->orderBy('o.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function countPending(): int
+    {
+        return (int) $this->createQueryBuilder('o')
+            ->select('COUNT(o.id)')
+            ->andWhere('o.deliveredAt IS NULL')
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    /**
+     * @return Order[]
+     */
+    public function findRecentlyCreated(int $limit): array
+    {
+        return $this->createQueryBuilder('o')
+            ->orderBy('o.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return Order[]
+     */
+    public function findRecentlyDelivered(int $limit): array
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.deliveredAt IS NOT NULL')
+            ->orderBy('o.deliveredAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     //    /**
     //     * @return Order[] Returns an array of Order objects
     //     */

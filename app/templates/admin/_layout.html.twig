@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% block admin_title %}Admin{% endblock %} — LES-BATARK{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/admin.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="admin-page admin-page--shell">
+
+    {{ include('_shared/_flash.html.twig') }}
+
+    <div class="admin-shell">
+        {% include 'admin/_nav_cards.html.twig' %}
+
+        <div class="admin-shell-content">
+            {% block admin_content %}{% endblock %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

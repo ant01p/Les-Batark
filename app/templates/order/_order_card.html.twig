@@ -1,0 +1,94 @@
+{# Attend : order (App\Entity\Order), context ('admin' ou 'account') #}
+{% import '_shared/_confirm_modal.html.twig' as modals %}
+<div class="card border-primary h-100 order-card">
+    <div class="card-body d-flex flex-column">
+
+        <div class="order-items-table-wrapper">
+            <table class="order-items-table">
+                <tbody>
+                    <tr class="order-header-row">
+                        <td colspan="2">
+                            <div class="order-card-header">
+                                <div class="order-card-header-top">
+                                    <span class="badge bg-primary order-card-badge">Commande #{{ order.orderCode }}</span>
+                                    {% if context == 'admin' %}
+                                        {% if order.delivered %}
+                                            <span class="badge bg-success order-card-status-badge">Livrée le {{ order.deliveredAt|date('d/m/Y') }}</span>
+                                        {% else %}
+                                            <span class="badge bg-warning text-dark order-card-status-badge">Non livrée</span>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                                <div class="order-card-header-bottom">
+                                    {% if context == 'admin' %}
+                                        <span class="order-card-customer">{{ order.customerPseudo }} ({{ order.customerEmail }})</span>
+                                    {% endif %}
+                                    <span class="order-card-date">{{ order.createdAt|date('d/m/Y à H:i') }}</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% for item in order.orderItems %}
+                        <tr>
+                            <td>
+                                <span class="order-item-name">{{ item.productName }}</span>
+                                <div class="order-item-details">
+                                    <span>Quantité : <strong>{{ item.quantity }}</strong></span>
+                                    {% if item.type %}
+                                        <span>Type : <strong>{{ item.type.name }}</strong></span>
+                                    {% endif %}
+                                    {% if item.quality %}
+                                        <span>Qualité : <strong>{{ item.quality.name }}</strong></span>
+                                    {% endif %}
+                                    {% if item.sex %}
+                                        <span>Sexe : <strong>{{ item.sex }}</strong></span>
+                                    {% endif %}
+                                    {% if item.version %}
+                                        <span>Version : <strong>{{ item.version }}</strong></span>
+                                    {% endif %}
+                                    {% if item.stat %}
+                                        <span>Statistique : <strong>{{ item.stat }}</strong></span>
+                                    {% endif %}
+                                    {% if item.option %}
+                                        <span>Option : <strong>{{ item.option }}</strong></span>
+                                    {% endif %}
+                                    {% if item.color %}
+                                        <span>Couleur : <strong>{{ item.color }}</strong></span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td class="order-item-price-cell">{{ (item.totalPrice / 100)|number_format(2, ',', ' ') }} €</td>
+                        </tr>
+                    {% endfor %}
+                    <tr class="order-total-row">
+                        <td>Total</td>
+                        <td class="order-item-price-cell">{{ (order.total / 100)|number_format(2, ',', ' ') }} €</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="order-card-actions">
+            {% if context == 'admin' %}
+                {% if not order.delivered %}
+                    <form method="post" action="{{ path('admin_order_deliver', {id: order.id}) }}" id="deliverOrderForm{{ order.id }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('deliver_order_' ~ order.id) }}">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#deliverOrderModal{{ order.id }}">Marquer comme livrée</button>
+                    </form>
+                {% endif %}
+            {% elseif context == 'account' %}
+                <form method="post" action="{{ path('account_order_finish', {id: order.id}) }}" id="finishOrderForm{{ order.id }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('account_order_finish_' ~ order.id) }}">
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#finishOrderModal{{ order.id }}">Terminé</button>
+                </form>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+{% if context == 'admin' and not order.delivered %}
+    {{ modals.modal('deliverOrderModal' ~ order.id, 'Marquer comme livrée', 'Marquer cette commande comme livrée ?', 'deliverOrderForm' ~ order.id, 'Confirmer', 'success') }}
+{% elseif context == 'account' %}
+    {{ modals.modal('finishOrderModal' ~ order.id, 'Marquer comme terminée', 'Marquer cette commande comme terminée ? Elle disparaîtra de cette liste.', 'finishOrderForm' ~ order.id, 'Confirmer', 'success') }}
+{% endif %}

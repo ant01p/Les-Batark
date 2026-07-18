@@ -1,5 +1,7 @@
+{% import '_shared/_confirm_modal.html.twig' as modals %}
+
 <div class="admin-section-title">
-    <h2 class="h5 fw-semibold text-white mb-0">Événements</h2>
+    <h2 class="h2 fw-semibold text-white mb-0">Événements</h2>
     <a href="{{ path('admin_event_new') }}" class="btn btn-success">Ajouter</a>
 </div>
 
@@ -23,13 +25,13 @@
                 </div>
                 <div class="admin-actions">
                     <a href="{{ path('admin_event_edit', {id: event.id}) }}" class="btn btn-primary">Modifier</a>
-                    <form method="post" action="{{ path('admin_event_delete', {id: event.id}) }}"
-                          onsubmit="return confirm('Supprimer cet événement ?')">
+                    <form method="post" action="{{ path('admin_event_delete', {id: event.id}) }}" id="deleteEventForm{{ event.id }}">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete_event_' ~ event.id) }}">
-                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEventModal{{ event.id }}">Supprimer</button>
                     </form>
                 </div>
             </div>
         </div>
+        {{ modals.modal('deleteEventModal' ~ event.id, "Supprimer l'événement", 'Supprimer cet événement ?', 'deleteEventForm' ~ event.id, 'Supprimer', 'danger') }}
     {% endfor %}
 {% endif %}

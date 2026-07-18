@@ -5,6 +5,8 @@ namespace App\Controller\Admin;
 use App\Entity\Product;
 use App\Entity\ProductImage;
 use App\Form\ProductType;
+use App\Repository\CategoryRepository;
+use App\Repository\ProductRepository;
 use App\Service\ImageHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,6 +23,19 @@ final class AdminProductController extends AbstractController
 {
     private const IMAGE_SUBDIR = 'imageProduct';
 
+    #[Route('', name: 'index')]
+    public function index(Request $request, ProductRepository $productRepository, CategoryRepository $categoryRepository): Response
+    {
+        $activeCategoryId = $request->query->getInt('category');
+        $activeCategory = $activeCategoryId > 0 ? $categoryRepository->find($activeCategoryId) : null;
+
+        return $this->render('admin/product/products_index.html.twig', [
+            'products'       => $productRepository->findAllWithImages($activeCategory),
+            'categories'     => $categoryRepository->findAll(),
+            'activeCategory' => $activeCategory,
+        ]);
+    }
+
     #[Route('/new', name: 'new')]
     public function new(Request $request, EntityManagerInterface $em, ImageHandler $imageHandler): Response
     {
@@ -36,7 +51,7 @@ final class AdminProductController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Produit créé avec succès.');
-            return $this->redirectToRoute('admin_index', ['tab' => 'shop']);
+            return $this->redirectToRoute('admin_product_index');
         }
 
         return $this->render('admin/product/products_form.html.twig', [
@@ -60,7 +75,7 @@ final class AdminProductController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Produit modifié avec succès.');
-            return $this->redirectToRoute('admin_index', ['tab' => 'shop']);
+            return $this->redirectToRoute('admin_product_index');
         }
 
         return $this->render('admin/product/products_form.html.twig', [
@@ -138,6 +153,6 @@ final class AdminProductController extends AbstractController
             $this->addFlash('success', 'Produit supprimé.');
         }
 
-        return $this->redirectToRoute('admin_index', ['tab' => 'shop']);
+        return $this->redirectToRoute('admin_product_index');
     }
 }

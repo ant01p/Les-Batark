@@ -1,10 +1,15 @@
+/* ==========================================================================
+   Page admin : conteneur de base (utilisé seul par les pages de formulaire
+   standalone event_form/products_form/category_form, et combiné avec
+   .admin-page--shell par admin/_layout.html.twig pour les pages avec nav)
+   ========================================================================== */
+
 .admin-page {
     max-width: 900px;
     margin: 24px auto;
     padding: 90px 16px 0;
 }
 
-/* Header centré sur mobile */
 .admin-page header {
     text-align: center;
 }
@@ -22,22 +27,130 @@
     border-radius: 6px;
 }
 
-/* Boutons catégories centrés sur mobile */
-.admin-tabs {
+@media (min-width: 768px) {
+    .admin-page {
+        margin: 32px auto;
+        padding: 90px 24px 0;
+    }
+
+    .admin-page header {
+        text-align: left;
+    }
+}
+
+@media (min-width: 992px) {
+    .admin-page {
+        margin: 40px auto;
+    }
+}
+
+/* ==========================================================================
+   Panel admin : colonne de navigation persistante à gauche + contenu à droite
+
+   .admin-page--shell est le modificateur ajouté à côté de .admin-page sur le
+   wrapper de admin/_layout.html.twig, pour les pages qui ont la colonne de
+   nav (Tableau de bord, Boutique, Commandes, Événements, Serveurs, Règlement).
+   Les 3 pages de formulaire standalone (event_form/products_form/category_form)
+   n'ont que .admin-page seule (900px, centrée), sans ce modificateur.
+
+   Tous les réglages de cette mise en page à 2 zones sont regroupés dans le
+   SEUL bloc @media (min-width: 992px) plus bas — 3 valeurs à changer pour
+   ajuster : largeur de la colonne nav, espace nav↔contenu, espace contenu↔bord.
+   ========================================================================== */
+
+.admin-shell {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
+    flex-direction: column;
+    gap: 24px;
 }
 
-/* Sur mobile : largeur fixe pour avoir un bloc propre */
-.admin-tabs .nav-item {
-    width: 130px;
+.admin-nav-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.admin-tabs .btn {
-    width: 100%;
+.admin-nav-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    color: #fff;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.03);
+    transition: background-color .15s ease, border-color .15s ease;
 }
+
+.admin-nav-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+.admin-nav-card.active {
+    background: rgba(var(--bs-primary-rgb), 0.18);
+    border-color: var(--bs-primary);
+}
+
+.admin-nav-card i {
+    font-size: 1.75rem;
+    color: var(--bs-primary);
+    flex-shrink: 0;
+}
+
+.admin-nav-card-title {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.admin-nav-card-desc {
+    display: block;
+    font-size: 0.95rem;
+    color: #adb5bd;
+}
+
+.admin-shell-content {
+    min-width: 0;
+}
+
+.admin-activity-list li,
+.admin-pending-orders-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-activity-list li:last-child,
+.admin-pending-orders-list li:last-child {
+    border-bottom: none;
+}
+
+@media (min-width: 992px) {
+    .admin-page--shell {
+        max-width: none;   /* remplit toute la largeur, jamais d'espace vide à droite */
+    }
+
+    .admin-shell {
+        flex-direction: row;
+        gap: 32px;                 /* espace entre la colonne nav et le contenu */
+    }
+
+    .admin-nav-cards {
+        flex: 0 0 400px;           /* largeur de la colonne nav */
+    }
+
+    .admin-shell-content {
+        flex: 1 1 auto;
+        min-width: 0;
+        padding-right: 32px;       /* petit espace fixe avant le bord droit de la page */
+    }
+}
+
+/* ==========================================================================
+   Cartes de liste réutilisables (événements/produits/commandes/catégories)
+   ========================================================================== */
 
 /* Titre section + bouton Ajouter */
 .admin-section-title {
@@ -74,12 +187,184 @@
     padding-right: 8px;
 }
 
+@media (min-width: 768px) {
+    .admin-actions {
+        flex-direction: row;
+    }
+
+    .admin-actions .btn {
+        width: auto;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+@media (min-width: 992px) {
+    .admin-card-body {
+        gap: 24px;
+    }
+}
+
+/* ==========================================================================
+   Cartes commande (panel admin "Commandes" + compte utilisateur "Mes commandes")
+   templates/order/_order_card.html.twig
+   ========================================================================== */
+
+/* Fond clair + texte foncé pour la carte commande entière (plus lisible,
+   contraste avec le fond sombre du thème Vapor) */
+.order-card {
+    background: #f5f5f7;
+    color: #1a1a1a;
+}
+
+/* Un seul encadré regroupant : numéro de commande + statut livraison (haut),
+   client + date (bas) */
+/* Rangée d'en-tête (numéro de commande, statut, client, date) : fait
+   partie du même tableau que les articles, pas une boîte séparée */
+.order-header-row td {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.order-card-header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.order-card-header-top,
+.order-card-header-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.order-card-badge {
+    font-size: 1.05rem;
+    padding: 0.5em 0.85em;
+    /* le badge peut passer sur 2 lignes plutôt que déborder de l'encadré
+       si le code de commande est trop long pour la largeur disponible */
+    white-space: normal;
+    word-break: break-word;
+}
+
+.order-card-status-badge {
+    font-size: 1.05rem;
+    padding: 0.5em 0.85em;
+}
+
+.order-card-date {
+    color: #6c757d;
+    font-size: 0.95rem;
+}
+
+.order-card-customer {
+    color: #495057;
+}
+
+/* Tableau des articles : cases collées (pas d'espace), coins arrondis */
+.order-items-table-wrapper {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.order-items-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.order-items-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    vertical-align: top;
+}
+
+.order-items-table tr:last-child td {
+    border-bottom: none;
+}
+
+.order-item-name {
+    display: block;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #1a1a1a;
+}
+
+.order-item-details {
+    display: flex;
+    flex-direction: column;
+    margin-top: 4px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #495057;
+}
+
+.order-item-price-cell {
+    text-align: right;
+    white-space: nowrap;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #1a1a1a;
+}
+
+.order-total-row {
+    background: rgba(25, 135, 84, 0.08);
+}
+
+.order-total-row td {
+    font-weight: 700;
+    color: #198754;
+}
+
+.order-card-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+    padding-top: 12px;
+}
+
 .alert {
     font-size: 20px;
     color: #e2e2e2;
 }
 
-/* Upload d'images produit */
+/* Onglets pill (page "Mon compte" côté utilisateur) */
+.admin-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.admin-tabs .nav-item {
+    width: 130px;
+}
+
+.admin-tabs .btn {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .admin-tabs {
+        justify-content: flex-start;
+    }
+
+    .admin-tabs .nav-item {
+        width: auto;
+    }
+
+    .admin-tabs .btn {
+        width: auto;
+    }
+}
+
+/* ==========================================================================
+   Upload d'images produit
+   ========================================================================== */
+
 .image-row-inner {
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -106,55 +391,19 @@
 
 .admin-product-thumb {
     width: 100%;
-    height: 120px;
+    height: 140px;
     object-fit: cover;
     border-radius: 8px;
 }
 
 @media (min-width: 768px) {
-
-    .admin-page {
-        margin: 32px auto;
-        padding: 90px 24px 0;
-    }
-
-    /* Header à gauche sur tablette */
-    .admin-page header {
-        text-align: left;
-    }
-
-    /* Catégories à gauche sur tablette */
-    .admin-tabs {
-        justify-content: flex-start;
-    }
-
-    .admin-tabs .nav-item {
-        width: auto;
-    }
-
-    .admin-tabs .btn {
-        width: auto;
-    }
-
-    /* Boutons Modifier / Supprimer en ligne */
-    .admin-actions {
-        flex-direction: row;
-    }
-
-    .admin-actions .btn {
-        width: auto;
-        padding-left: 16px;
-        padding-right: 16px;
+    .admin-product-thumb {
+        height: 180px;
     }
 }
 
 @media (min-width: 992px) {
-
-    .admin-page {
-        margin: 40px auto;
-    }
-
-    .admin-card-body {
-        gap: 24px;
+    .admin-product-thumb {
+        height: 220px;
     }
 }
