@@ -2,8 +2,8 @@
 
 <div class="admin-section-title">
     <h2 class="h2 fw-semibold text-white mb-0">Événements</h2>
-    <a href="{{ path('admin_event_new') }}" class="btn btn-success">Ajouter</a>
 </div>
+<a href="{{ path('admin_event_new') }}" class="btn btn-success mb-3">Ajouter</a>
 
 {% if events is empty %}
     <div class="card border-secondary">
@@ -12,26 +12,23 @@
         </div>
     </div>
 {% else %}
-    {% for event in events %}
-        <div class="card border-primary mb-3">
-            <div class="card-body admin-card-body">
-                <div class="admin-card-content">
-                    <span class="badge {{ event.statusBadgeClass }} me-2">{{ event.statusLabel }}</span>
-                    <span class="fw-semibold text-white">{{ event.title }}</span>
-                    <p class="text-muted small mb-0 mt-1">
-                        {{ event.date|date('Y-m-d à H:i') }}
-                        {% if event.location %} — {{ event.location }}{% endif %}
-                    </p>
-                </div>
-                <div class="admin-actions">
-                    <a href="{{ path('admin_event_edit', {id: event.id}) }}" class="btn btn-primary">Modifier</a>
-                    <form method="post" action="{{ path('admin_event_delete', {id: event.id}) }}" id="deleteEventForm{{ event.id }}">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete_event_' ~ event.id) }}">
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEventModal{{ event.id }}">Supprimer</button>
-                    </form>
+    <div class="row g-3">
+        {% for event in events %}
+            {% set borderClass = event.status == 'ongoing' ? 'border-success' : (event.status == 'upcoming' ? 'border-warning' : 'border-secondary') %}
+            <div class="col-md-6">
+                <div class="card content-card admin-event-card {{ borderClass }} h-100">
+                    {% include 'event/_card.html.twig' with {event: event, showDescription: false} %}
+
+                    <div class="admin-actions">
+                        <a href="{{ path('admin_event_edit', {id: event.id}) }}" class="btn btn-primary">Modifier</a>
+                        <form method="post" action="{{ path('admin_event_delete', {id: event.id}) }}" id="deleteEventForm{{ event.id }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_event_' ~ event.id) }}">
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEventModal{{ event.id }}">Supprimer</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-        {{ modals.modal('deleteEventModal' ~ event.id, "Supprimer l'événement", 'Supprimer cet événement ?', 'deleteEventForm' ~ event.id, 'Supprimer', 'danger') }}
-    {% endfor %}
+            {{ modals.modal('deleteEventModal' ~ event.id, "Supprimer l'événement", 'Supprimer cet événement ?', 'deleteEventForm' ~ event.id, 'Supprimer', 'danger') }}
+        {% endfor %}
+    </div>
 {% endif %}

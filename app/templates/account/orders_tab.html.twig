@@ -5,11 +5,9 @@
         </div>
     </div>
 {% else %}
-    <div class="row g-3">
-        {% for order in orders %}
-            <div class="col-md-6 col-xl-4">
-                {% include 'order/_order_card.html.twig' with { order: order, context: 'account' } %}
-            </div>
-        {% endfor %}
-    </div>
+    {% for order in orders %}
+        <div class="mb-3">
+            {% include 'order/_order_card.html.twig' with { order: order, context: 'account' } %}
+        </div>
+    {% endfor %}
 {% endif %}

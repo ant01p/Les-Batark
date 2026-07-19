@@ -23,7 +23,7 @@
     {% endif %}
 </div>
 
-{% if event.description %}
+{% if event.description and showDescription|default(true) %}
     <p class="card-desc">{{ event.description }}</p>
 {% endif %}
 
