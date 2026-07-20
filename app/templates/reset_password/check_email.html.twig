@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Email envoyé — LES-BATARK{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/auth.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<div class="auth-frame">
+    <div class="auth-bg" style="background-image: url('{{ asset('images/abe.jpg') }}')">
+        <div class="auth-card border-dark">
+
+            <div class="card-header text-center">
+                <h1>Vérifiez vos emails</h1>
+            </div>
+
+            <p class="login-register-link mb-3">
+                Si un compte existe avec cet email, un lien de réinitialisation vient de vous être envoyé.
+                Ce lien expire dans 1 heure.
+            </p>
+
+            <p class="login-register-link mb-0">
+                Vous ne recevez rien ? Vérifiez vos spams ou
+                <a href="{{ path('app_forgot_password_request') }}">refaites une demande</a>.
+            </p>
+
+            <div class="login-register-link mt-3 text-center">
+                <p><a href="{{ path('app_login') }}">Retour à la connexion</a></p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

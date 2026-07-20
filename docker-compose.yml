@@ -12,6 +12,7 @@ services:
       - ./docker/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     depends_on:
       - mysql
+      - mailhog
 
   nginx:
     image: nginx:alpine
@@ -47,6 +48,15 @@ services:
       PMA_HOST: mysql
     depends_on:
       - mysql
+
+  # Dev only : capture les emails sortants sans les envoyer réellement.
+  # UI web : http://localhost:8025 — SMTP : mailhog:1025 (voir MAILER_DSN dans .env.local)
+  mailhog:
+    image: mailhog/mailhog
+    container_name: batark_mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
 
 
 volumes:

@@ -1,0 +1,22 @@
+<div class="card border-primary">
+    <div class="card-body p-4">
+        <h2 class="h3 fw-semibold text-white mb-3">Modifier mon pseudo</h2>
+
+        <form method="post" action="{{ path('account_change_pseudo') }}">
+            <div class="mb-3">
+                <label for="pseudo">Pseudo</label>
+                <input class="form-control" type="text" id="pseudo" name="pseudo"
+                    value="{{ app.user.pseudo }}" placeholder="votre pseudo Discord" required
+                >
+            </div>
+
+            <input type="hidden" name="_token" value="{{ csrf_token('account_change_pseudo') }}">
+
+            <hr class="border-secondary my-4">
+
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-outline-info btn-lg">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</div>

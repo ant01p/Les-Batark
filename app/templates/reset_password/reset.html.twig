@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+{% import '_shared/_password_field.html.twig' as ui %}
+
+{% block title %}Nouveau mot de passe — LES-BATARK{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/auth.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<div class="auth-frame">
+    <div class="auth-bg" style="background-image: url('{{ asset('images/abe.jpg') }}')">
+        <div class="auth-card border-dark">
+
+            <div class="card-header text-center">
+                <h1>Nouveau mot de passe</h1>
+            </div>
+
+            {{ form_start(resetForm, {
+                'attr': { 'data-turbo': 'false' }
+            }) }}
+
+                <div class="mb-3">
+                    {{ form_label(resetForm.plainPassword.first) }}
+                    {% set new_password_input %}
+                        {{ form_widget(resetForm.plainPassword.first, {
+                            'attr': { 'class': 'password form-control' }
+                        }) }}
+                    {% endset %}
+                    {{ ui.field(new_password_input, resetForm.plainPassword.first.vars.id) }}
+                    {{ form_errors(resetForm.plainPassword.first) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(resetForm.plainPassword.second) }}
+                    {% set confirm_password_input %}
+                        {{ form_widget(resetForm.plainPassword.second, {
+                            'attr': { 'class': 'password form-control' }
+                        }) }}
+                    {% endset %}
+                    {{ ui.field(confirm_password_input, resetForm.plainPassword.second.vars.id) }}
+                    {{ form_errors(resetForm.plainPassword.second) }}
+                    {{ form_errors(resetForm.plainPassword) }}
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-outline-info btn-lg mt-3">Réinitialiser le mot de passe</button>
+                </div>
+
+            {{ form_end(resetForm) }}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {% include '_shared/_password_toggle_script.html.twig' %}
+{% endblock %}

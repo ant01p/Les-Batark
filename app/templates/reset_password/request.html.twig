@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mot de passe oublié — LES-BATARK{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/auth.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<div class="auth-frame">
+    <div class="auth-bg" style="background-image: url('{{ asset('images/abe.jpg') }}')">
+        <div class="auth-card border-dark">
+
+            <div class="card-header text-center">
+                <h1>Mot de passe oublié</h1>
+            </div>
+
+            {% for flash_error in app.flashes('reset_password_error') %}
+                <ul>
+                    <li>{{ flash_error }}</li>
+                </ul>
+            {% endfor %}
+
+            <p class="login-register-link mb-3">
+                Entrez votre email : si un compte existe, un lien pour réinitialiser votre mot de passe vous sera envoyé.
+            </p>
+
+            {{ form_start(requestForm, {
+                'attr': { 'data-turbo': 'false' }
+            }) }}
+
+                <div class="mb-3">
+                    {{ form_label(requestForm.email) }}
+                    {{ form_widget(requestForm.email) }}
+                    {{ form_errors(requestForm.email) }}
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-outline-info btn-lg mt-3">Envoyer le lien</button>
+                </div>
+
+            {{ form_end(requestForm) }}
+
+            <div class="login-register-link mt-3 text-center">
+                <p><a href="{{ path('app_login') }}">Retour à la connexion</a></p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

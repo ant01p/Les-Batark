@@ -1,0 +1,48 @@
+/* Mon compte réutilise auth-frame/auth-bg/auth-card (même image de fond
+   que login/register), avec sa propre largeur pour un contenu plus riche
+   (onglets + liste de commandes) qu'un formulaire. */
+.auth-card {
+    max-width: 700px;
+}
+
+/* Zone dangereuse : fond presque noir, plus opaque que les autres cards imbriquées */
+.auth-card .border-danger {
+    background: rgba(4, 4, 4, 0.95);
+}
+
+/* Formulaires (pseudo / mot de passe) : labels, bouton, lien "oublié" nettement plus grands */
+.auth-card label {
+    font-size: 20px;
+}
+
+.auth-card .btn-outline-info.btn-lg {
+    font-size: 1.35rem;
+}
+
+.auth-card .form-text,
+.auth-card .form-text a {
+    font-size: 1.15rem;
+}
+
+/* Zone dangereuse : avertissement de suppression plus visible (couleur déjà en .text-danger) */
+.auth-card .border-danger .text-danger {
+    font-size: 1.15rem;
+}
+
+/* Onglet commandes : message "aucune commande" à la même taille que l'avertissement rouge */
+.auth-card .border-secondary .card-body {
+    font-size: 1.25rem;
+}
+
+.auth-card .card {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.auth-card .btn {
+    border-radius: 8px;
+}
+
+.auth-card .badge {
+    border-radius: 6px;
+}

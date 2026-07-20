@@ -1,13 +1,13 @@
 {% if orders is empty %}
     <div class="card border-secondary">
-        <div class="card-body text-center text-muted py-5">
+        <div class="card-body text-center text-white py-5">
             Aucune commande pour l'instant.
         </div>
     </div>
 {% else %}
     {% for order in orders %}
         <div class="mb-3">
-            {% include 'order/_order_card.html.twig' with { order: order, context: 'account' } %}
+            {% include 'admin/order/_order_card.html.twig' with { order: order, context: 'account' } %}
         </div>
     {% endfor %}
 {% endif %}

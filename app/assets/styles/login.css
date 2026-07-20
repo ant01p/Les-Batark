@@ -1,0 +1,48 @@
+.login-form label {
+    font-size: 20px;
+}
+
+/* "Se souvenir de moi" (checkbox + label) à gauche, "Mot de passe oublié ?"
+   à droite, sur une seule ligne. */
+.login-form .auth-form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    flex-wrap: nowrap;
+    gap: 8px;
+    font-size: 20px;
+}
+
+/* Sous-conteneur checkbox + label */
+.login-form .auth-form-options .form-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+}
+
+.login-form .auth-form-options .form-check-input,
+.login-form .auth-form-options .form-check-label {
+    margin: 0;
+}
+
+.login-form .auth-form-options .form-check-label,
+.login-form .auth-form-options a {
+    white-space: nowrap;
+}
+
+/* Mobile : texte légèrement réduit pour tenir sur une ligne */
+@media (max-width: 575.98px) {
+    .login-form .auth-form-options {
+        font-size: 14px;
+    }
+}
+
+/* Écran vraiment trop étroit : on autorise le retour à la ligne en dernier recours */
+@media (max-width: 360px) {
+    .login-form .auth-form-options {
+        flex-wrap: wrap;
+    }
+}

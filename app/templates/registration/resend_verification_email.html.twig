@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Renvoyer l'email de vérification — LES-BATARK{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/auth.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<div class="auth-frame">
+    <div class="auth-bg" style="background-image: url('{{ asset('images/abe.jpg') }}')">
+        <div class="auth-card border-dark">
+
+            <div class="card-header text-center">
+                <h1>Renvoyer l'email de vérification</h1>
+            </div>
+
+            <p class="login-register-link mb-3">
+                Entrez votre email : si un compte existe et n'est pas encore vérifié, un nouveau lien de vérification vous sera envoyé.
+            </p>
+
+            {{ form_start(resendForm, {
+                'attr': { 'data-turbo': 'false' }
+            }) }}
+
+                <div class="mb-3">
+                    {{ form_label(resendForm.email) }}
+                    {{ form_widget(resendForm.email) }}
+                    {{ form_errors(resendForm.email) }}
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-outline-info btn-lg mt-3">Renvoyer le lien</button>
+                </div>
+
+            {{ form_end(resendForm) }}
+
+            <div class="login-register-link mt-3 text-center">
+                <p><a href="{{ path('app_login') }}">Retour à la connexion</a></p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

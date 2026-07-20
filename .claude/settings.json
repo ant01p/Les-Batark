@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s http://localhost:8080/assets/styles/login-AcszBtC.css)",
+      "Bash(curl -s http://localhost:8080/assets/styles/auth-1tLkNTl.css)",
+      "Bash(timeout 4 python3 -c \"import playwright; print\\('yes'\\)\")",
+      "Bash(timeout 4 pip3 list)",
+      "Bash(curl -s http://localhost:8080/assets/styles/login-a5ANkU2.css)"
+    ]
+  }
+}

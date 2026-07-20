@@ -9,6 +9,8 @@
 parameters:
     stripe_secret_key: '%env(STRIPE_SECRET_KEY)%'
     uploads_directory: '%kernel.project_dir%/public/uploads'
+    mailer_from_address: '%env(MAILER_FROM_ADDRESS)%'
+    mailer_from_name: '%env(MAILER_FROM_NAME)%'
 
 services:
     # default configuration for services in *this* file
@@ -18,6 +20,8 @@ services:
         bind:
             string $stripeSecretKey: '%stripe_secret_key%'
             string $uploadsDirectory: '%uploads_directory%'
+            string $mailerFromAddress: '%mailer_from_address%'
+            string $mailerFromName: '%mailer_from_name%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

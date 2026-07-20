@@ -1,0 +1,14 @@
+framework:
+    rate_limiter:
+        # Anti-abus sur la demande de reset mot de passe : limite par IP en plus
+        # du throttle par compte déjà géré nativement par reset-password-bundle.
+        password_reset_ip:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '15 minutes'
+
+        # Anti-abus sur le renvoi de l'email de vérification d'inscription.
+        verify_email_ip:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '15 minutes'

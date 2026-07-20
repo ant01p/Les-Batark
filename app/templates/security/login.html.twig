@@ -1,8 +1,12 @@
 {% extends 'base.html.twig' %}
+{% import '_shared/_password_field.html.twig' as ui %}
+{% import '_shared/_discord_button.html.twig' as discord %}
+
 {% block title %}Connexion — LES-BATARK{% endblock %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('styles/auth.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/login.css') }}">
 {% endblock %}
 
 {% block body_class %}login-page{% endblock %}
@@ -17,34 +21,72 @@
                 <h1>Se connecter</h1>
             </div>
 
-            {% if error %}
-                <div class="alert-login">Email ou mot de passe invalide.</div>
+            {% if unverifiedEmail %}
+                <div class="alert alert-danger alert-dismissible fade show d-flex justify-content-between align-items-center mt-4" role="alert">
+                    <span>
+                        Merci de confirmer votre email avant de vous connecter.
+                        <a href="{{ path('app_resend_verification_email', {email: lastUsername}) }}">Renvoyer l'email de vérification</a>
+                    </span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% elseif error %}
+                <div class="alert alert-danger alert-dismissible fade show d-flex justify-content-between align-items-center mt-4" role="alert">
+                    <span>Identifiants incorrects.</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             {% endif %}
 
             {{ include('_shared/_flash.html.twig') }}
 
-            <form method="post">
-                <label>Email</label>
-                <input class="email form-control" type="email" id="username" name="_username"
-                    placeholder="Entrez votre email" value="{{ last_username }}"
-                    autocomplete="email" required
-                >
+            {{ form_start(loginForm, {'attr': {'class': 'login-form'}}) }}
+                {{ form_label(loginForm._username) }}
+                {{ form_widget(loginForm._username, {
+                    'attr': { 'class': 'email form-control' }
+                }) }}
+                {{ form_errors(loginForm._username) }}
 
-                <label>Mot de passe</label>
-                <input class="password form-control" type="password" id="password" name="_password"
-                    placeholder="Entrez votre mot de passe"
-                    autocomplete="current-password" required
-                >
+                {{ form_label(loginForm._password) }}
+                {% set password_input %}
+                    {{ form_widget(loginForm._password, {
+                        'attr': { 'class': 'password form-control' }
+                    }) }}
+                {% endset %}
+                {{ ui.field(password_input, loginForm._password.vars.id) }}
+                {{ form_errors(loginForm._password) }}
 
-                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <div class="auth-form-options mt-2">
+                    <div class="form-check">
+                        {{ form_widget(loginForm._remember_me, {
+                            'attr': { 'class': 'form-check-input' }
+                        }) }}
+                        {{ form_label(loginForm._remember_me, null, {
+                            'label_attr': { 'class': 'form-check-label' }
+                        }) }}
+                    </div>
+                    <a href="{{ path('app_forgot_password_request') }}">Mot de passe oublié ?</a>
+                </div>
+
+                {{ form_widget(loginForm._csrf_token) }}
 
                 <div class="d-grid">
                     <button type="submit" class="btn btn-outline-info btn-lg mt-5">Se connecter</button>
                 </div>
-            </form>
+            {{ form_end(loginForm) }}
+
+            <div class="auth-divider">ou</div>
+
+            {{ discord.button('Se connecter avec Discord', '#') }}
+
+            <div class="login-register-link mt-3 text-center">
+                <p>Pas encore de compte ? <a href="{{ path('app_register') }}">Inscrivez-vous</a></p>
+            </div>
 
         </div>
     </div>
 </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    {% include '_shared/_password_toggle_script.html.twig' %}
 {% endblock %}

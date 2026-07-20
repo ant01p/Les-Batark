@@ -15,6 +15,10 @@
     border-radius: 8px;
     background-size: cover;
     background-position: center;
+    /* scroll par defaut : background-attachment: fixed est passe en jank/non fiable
+       sur mobile (iOS Safari notamment), le parallax est reserve au desktop/tablette
+       via le media query 768px plus bas */
+    background-attachment: scroll;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -23,7 +27,7 @@
 }
 
 .auth-card {
-    background: rgba(41, 40, 40, 0.315);
+    background: rgba(12, 12, 12, 0.623);
     border: 1px solid rgba(157, 78, 221, 0.8);
     border-radius: 12px;
     box-shadow:
@@ -46,13 +50,13 @@
 
 .auth-card label {
     text-align: left;
-    font-size: 18px;
+    font-size: 35px;
     color: #aaa;
     margin-bottom: 4px;
     margin-top: 12px;
 }
 
-.auth-card input {
+.auth-card input:not([type="checkbox"]) {
     padding: 12px;
     background: transparent;
     border: 1px solid #2a2a2a;
@@ -62,7 +66,7 @@
     letter-spacing: 1px;
 }
 
-.auth-card input:focus {
+.auth-card input:not([type="checkbox"]):focus {
     border-color: #00e5ff;
 }
 
@@ -118,16 +122,102 @@ input:-webkit-autofill {
     background: #2c2b2b;
 }
 
-/* Alerte d'erreur de connexion */
-.alert-login {
-    background: rgba(220, 53, 69, 0.15);
-    border: 1px solid rgba(220, 53, 69, 0.5);
+/* Champ mot de passe avec bouton oeil en overlay */
+.password-field {
+    position: relative;
+}
+
+.password-field input {
+    padding-right: 44px;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.password-toggle-btn i {
+    font-size: 20px;
+    pointer-events: none;
+}
+
+.password-toggle-btn:hover,
+.password-toggle-btn:focus {
+    color: #00e5ff;
+}
+
+/* Ligne "se souvenir de moi" / "mot de passe oublié" */
+.auth-form-options {
+    font-size: 18px;
+    color: #aaa;
+}
+
+.auth-form-options .form-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 0;
+}
+
+.auth-form-options .form-check-input {
+    width: 1.3em;
+    height: 1.3em;
+    margin: 0;
+    border-color: #9d4edd;
+}
+
+.auth-form-options .form-check-input:checked {
+    background-color: #9d4edd;
+    border-color: #9d4edd;
+}
+
+.auth-form-options .form-check-input:focus {
+    border-color: #9d4edd;
+    box-shadow: 0 0 0 0.2rem rgba(157, 78, 221, 0.35);
+}
+
+.auth-form-options .form-check-label {
+    color: #aaa;
+}
+
+.auth-form-options a {
+    color: #aaa;
+    text-decoration: none;
+}
+
+.auth-form-options a:hover {
+    color: #00e5ff;
+}
+
+/* Bouton Discord */
+.btn-discord {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px;
+    background: #5865f2;
     border-radius: 6px;
-    color: #ff6b7a;
-    font-size: 12px;
-    padding: 10px 12px;
-    margin-bottom: 12px;
-    text-align: center;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.btn-discord:hover {
+    opacity: 0.85;
+    color: #fff;
 }
 
 /* Lien vers l'inscription / connexion */
@@ -150,6 +240,7 @@ input:-webkit-autofill {
     .auth-bg {
         border-radius: 10px;
         padding: 40px 24px;
+        background-attachment: fixed;
     }
 
     .auth-card {

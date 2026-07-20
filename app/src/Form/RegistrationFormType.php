@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -52,25 +53,34 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
 
-            ->add('plainPassword', PasswordType::class, [
-                'label' => 'Mot de passe',
+            ->add('plainPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
                 'mapped' => false,
-                'attr' => [
-                    'autocomplete' => 'new-password',
+                'invalid_message' => 'Les mots de passe ne correspondent pas',
+                'options' => [
+                    'attr' => [
+                        'autocomplete' => 'new-password',
+                    ],
                 ],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Entrez un mot de passe',
-                    ]),
-                    new Length([
-                        'min' => 12,
-                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
-                    ]),
-                    new Regex([
-                        'pattern' => '/^(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).+$/',
-                        'message' => 'Le mot de passe doit contenir au moins une majuscule, 
-                                    un chiffre et un caractère spécial',
-                    ]),
+                'first_options' => [
+                    'label' => 'Mot de passe',
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => 'Entrez un mot de passe',
+                        ]),
+                        new Length([
+                            'min' => 12,
+                            'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
+                        ]),
+                        new Regex([
+                            'pattern' => '/^(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).+$/',
+                            'message' => 'Le mot de passe doit contenir au moins une majuscule,
+                                        un chiffre et un caractère spécial',
+                        ]),
+                    ],
+                ],
+                'second_options' => [
+                    'label' => 'Confirmez le mot de passe',
                 ],
             ])
         ;
