@@ -1,0 +1,78 @@
+/* ==========================================================================
+   Composant carte : styles "carte" réutilisés sur plusieurs familles de
+   pages (accueil/boutique/événements/admin). Chargé globalement.
+   ========================================================================== */
+
+/* Carte "verre sombre" commune : accueil (.content-card), boutique
+   (.shop-card), panel admin - produits (.admin-product-card) */
+.content-card,
+.shop-card,
+.admin-product-card {
+    background: rgba(0, 0, 0, 0.788);
+    backdrop-filter: blur(14px);
+    border-radius: 16px;
+    transition: transform 0.2s, box-shadow 0.25s;
+}
+
+.content-card:hover,
+.shop-card:hover,
+.admin-product-card:hover {
+    transform: translateY(-2px);
+}
+
+.shop-card,
+.admin-product-card {
+    overflow: hidden;
+}
+
+.content-card {
+    padding: 24px 28px;
+}
+
+/* Badge dans une carte "verre sombre" (accueil / boutique) */
+.content-card .badge,
+.shop-card .badge {
+    font-size: 16px;
+    padding: 8px 14px;
+    border-radius: 8px;
+}
+
+/* Titre et description de carte de contenu */
+.card-title {
+    font-size: 25px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.card-desc {
+    font-size: 18px;
+    color: #c0b8d8;
+    line-height: 1.65;
+    margin-bottom: 12px;
+}
+
+/* Coins arrondis des éléments Bootstrap imbriqués dans les grands
+   conteneurs "carte" (formulaires auth / panel admin) */
+.auth-card .btn,
+.admin-page .btn {
+    border-radius: 8px;
+}
+
+.auth-card .card,
+.admin-page .card {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.auth-card .badge,
+.admin-page .badge {
+    border-radius: 6px;
+}
+
+/* TABLETTE */
+@media (min-width: 768px) {
+    .card-desc {
+        font-size: 20px;
+    }
+}

@@ -14,18 +14,8 @@
     text-align: center;
 }
 
-.admin-page .btn {
-    border-radius: 8px;
-}
-
-.admin-page .card {
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.admin-page .badge {
-    border-radius: 6px;
-}
+/* .admin-page .btn / .card / .badge (arrondis) : voir components/cards.css,
+   partagé avec .auth-card (auth / compte) */
 
 @media (min-width: 768px) {
     .admin-page {
@@ -412,19 +402,8 @@
     }
 }
 
-/* Cartes produit admin : même fond sombre que les cartes boutique publiques */
-.admin-product-card {
-    background: rgba(0, 0, 0, 0.788);
-    backdrop-filter: blur(14px);
-    border-radius: 16px;
-    overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.25s;
-}
-
-.admin-product-card:hover {
-    transform: translateY(-2px);
-}
-
+/* Cartes produit admin : même fond sombre que les cartes boutique publiques
+   (look de base dans components/cards.css) */
 .admin-product-card h3 {
     font-size: 1.05rem;
 }

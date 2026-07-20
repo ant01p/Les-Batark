@@ -66,39 +66,6 @@ main {
     font-size: 1.3rem;
 }
 
-/* Cards de contenu */
-.content-card {
-    background: rgba(0, 0, 0, 0.788);
-    backdrop-filter: blur(14px);
-    border-radius: 16px;
-    padding: 24px 28px;
-    transition: transform 0.2s, box-shadow 0.25s;
-}
-
-.content-card:hover {
-    transform: translateY(-2px);
-}
-
-.content-card .badge {
-    font-size: 16px;
-    padding: 8px 14px;
-    border-radius: 8px;
-}
-
-.card-title {
-    font-size: 25px;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 8px;
-}
-
-.card-desc {
-    font-size: 18px;
-    color: #c0b8d8;
-    line-height: 1.65;
-    margin-bottom: 12px;
-}
-
 /* Étiquettes de section */
 .section-label {
     font-size: 18px;
@@ -140,10 +107,6 @@ main {
     }
 
     .page-title .text-info {
-        font-size: 20px;
-    }
-
-    .card-desc {
         font-size: 20px;
     }
 }

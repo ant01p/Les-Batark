@@ -34,15 +34,5 @@
     font-size: 1.25rem;
 }
 
-.auth-card .card {
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.auth-card .btn {
-    border-radius: 8px;
-}
-
-.auth-card .badge {
-    border-radius: 6px;
-}
+/* .auth-card .btn / .card / .badge (arrondis) : voir components/cards.css,
+   partagé avec .admin-page (panel admin) */

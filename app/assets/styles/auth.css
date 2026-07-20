@@ -40,7 +40,7 @@
     color: white;
 }
 
-.card-header {
+.auth-card .card-header {
     font-weight: 700;
     border-bottom: 2px solid rgb(41, 40, 40);
     padding-bottom: 10px;
@@ -248,7 +248,7 @@ input:-webkit-autofill {
         max-width: 500px;
     }
 
-    .card-header {
+    .auth-card .card-header {
         font-size: 40px;
     }
 

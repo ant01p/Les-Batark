@@ -1,25 +1,7 @@
-/* Carte produit (boutique) */
-.shop-card {
-    background: rgba(0, 0, 0, 0.788);
-    backdrop-filter: blur(14px);
-    border-radius: 16px;
-    overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.25s;
-}
-
-.shop-card:hover {
-    transform: translateY(-2px);
-}
-
+/* Carte produit (boutique) : look de base dans components/cards.css */
 .shop-card h2 {
     font-size: 16px;
     font-weight: 700;
-}
-
-.shop-card .badge {
-    font-size: 16px;
-    padding: 8px 14px;
-    border-radius: 8px;
 }
 
 .shop-card-img {
