@@ -48,6 +48,26 @@
    ajuster : largeur de la colonne nav, espace nav↔contenu, espace contenu↔bord.
    ========================================================================== */
 
+/* Titre commun, au-dessus des deux colonnes (nav + contenu) : évite tout
+   décalage vertical entre elles, qu'un titre ne soit présent que dans l'une
+   des deux */
+.admin-page-header {
+    margin-bottom: 24px;
+}
+
+.admin-page-title {
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+}
+
+@media (min-width: 768px) {
+    .admin-page-title {
+        font-size: 1.75rem;
+    }
+}
+
 .admin-shell {
     display: flex;
     flex-direction: column;
@@ -163,11 +183,10 @@
     min-width: 0;
 }
 
-/* Boutons Modifier / Supprimer en colonne à droite sur mobile */
+/* Boutons Modifier / Supprimer : disposition en ligne portée par les
+   utilitaires Bootstrap (d-flex align-items-center gap-2) posés dans le
+   Twig, quelle que soit la largeur d'écran */
 .admin-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
     flex-shrink: 0;
 }
 
@@ -175,18 +194,6 @@
     width: 96px;
     padding-left: 8px;
     padding-right: 8px;
-}
-
-@media (min-width: 768px) {
-    .admin-actions {
-        flex-direction: row;
-    }
-
-    .admin-actions .btn {
-        width: auto;
-        padding-left: 16px;
-        padding-right: 16px;
-    }
 }
 
 @media (min-width: 992px) {
@@ -199,6 +206,55 @@
    Cartes commande (panel admin "Commandes" + compte utilisateur "Mes commandes")
    templates/order/_order_card.html.twig
    ========================================================================== */
+
+/* Section "Commandes non livrées" / "Commandes livrées" */
+.order-status-section + .order-status-section {
+    margin-top: 32px;
+}
+
+.order-status-section-title {
+    margin-bottom: 12px;
+}
+
+.order-status-section-empty {
+    color: #adb5bd;
+}
+
+/* Grille de cartes en vraies colonnes DOM indépendantes (une colonne = un
+   conteneur flex séparé, rempli par order_masonry_controller.js). Chaque
+   carte garde sa hauteur naturelle et seules les cartes suivantes de SA
+   colonne sont poussées vers le bas quand une carte s'agrandit : les autres
+   colonnes ne bougent jamais. Volontairement PAS de CSS multi-colonnes
+   (column-count) : cette technique rééquilibre/déplace les éléments entre
+   colonnes dès que la hauteur totale du contenu change (donc à chaque
+   ouverture/fermeture d'une carte), ce qui est justement le comportement à
+   éviter. Par défaut (avant que le JS ne distribue les cartes, ou si le JS
+   est indisponible) : une seule colonne empilée, repli sûr. Mêmes seuils que
+   l'ancienne grille Bootstrap (col-md-6 / col-xl-4) : 1 colonne en mobile, 2
+   à partir de 768px, 3 à partir de 1200px (gérés en JS, pas en media query,
+   car le nombre de colonnes détermine comment les cartes sont réparties
+   dans le DOM). */
+.order-cards-masonry {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.order-cards-masonry.is-multi-column {
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.order-cards-masonry-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.order-cards-masonry.is-multi-column > .order-cards-masonry-column {
+    flex: 1 1 0;
+}
 
 /* Fond clair + texte foncé pour la carte commande entière (plus lisible,
    contraste avec le fond sombre du thème Vapor) */
@@ -221,13 +277,20 @@
     gap: 6px;
 }
 
-.order-card-header-top,
-.order-card-header-bottom {
+.order-card-header-top {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 8px;
+}
+
+/* Toujours empilé (email puis date juste en dessous) : jamais côte à côte,
+   même sur grand écran où la carte a assez de place pour les mettre en ligne */
+.order-card-header-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
 .order-card-badge {
@@ -272,10 +335,6 @@
     vertical-align: top;
 }
 
-.order-items-table tr:last-child td {
-    border-bottom: none;
-}
-
 .order-item-name {
     display: block;
     font-weight: 600;
@@ -283,16 +342,15 @@
     color: #1a1a1a;
 }
 
+/* display/flex-direction/gap portés par les utilitaires Bootstrap
+   (d-flex flex-column gap-1) posés directement dans le Twig */
 .order-item-details {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    column-gap: 16px;
-    row-gap: 4px;
     margin-top: 4px;
     font-size: 1.1rem;
     line-height: 1.6;
     color: #495057;
+    max-width: 100%;
+    overflow-x: auto;
 }
 
 .order-item-price-cell {
@@ -308,16 +366,69 @@
 }
 
 .order-total-row td {
+    border-bottom: none;
     font-weight: 700;
     font-size: 1.2rem;
     color: #198754;
 }
 
-.order-card-actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: auto;
-    padding-top: 12px;
+.order-toggle-btn:active {
+    opacity: 0.75;
+}
+
+.order-toggle-label--open {
+    display: none;
+}
+
+.order-toggle-btn[aria-expanded="true"] .order-toggle-label--closed {
+    display: none;
+}
+
+.order-toggle-btn[aria-expanded="true"] .order-toggle-label--open {
+    display: inline;
+}
+
+.order-toggle-icon {
+    font-size: 0.85rem;
+    transition: transform 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.order-toggle-btn[aria-expanded="true"] .order-toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* La piste de grille anime 0fr -> 1fr : hauteur réelle du contenu, pas de
+   max-height fixe, fluide quel que soit le nombre d'articles */
+.order-collapse {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.order-collapse.is-open {
+    grid-template-rows: 1fr;
+}
+
+.order-collapse-inner {
+    overflow: hidden;
+    min-height: 0;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1),
+                transform 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.order-collapse.is-open .order-collapse-inner {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .order-collapse,
+    .order-collapse-inner,
+    .order-toggle-icon {
+        transition-duration: 0.001ms;
+    }
 }
 
 .alert {

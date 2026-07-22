@@ -1,6 +1,6 @@
 {# Attend : order (App\Entity\Order), context ('admin' ou 'account') #}
 {% import '_shared/_confirm_modal.html.twig' as modals %}
-<div class="card border-primary h-100 order-card">
+<div class="card border-primary order-card" data-controller="order-toggle" data-order-masonry-target="item">
     <div class="card-body d-flex flex-column">
 
         <div class="order-items-table-wrapper">
@@ -28,38 +28,52 @@
                             </div>
                         </td>
                     </tr>
-                    {% for item in order.orderItems %}
-                        <tr>
-                            <td>
-                                <span class="order-item-name">{{ item.productName }}</span>
-                                <div class="order-item-details">
-                                    <span>Quantité : <strong>{{ item.quantity }}</strong></span>
-                                    {% if item.type %}
-                                        <span>Type : <strong>{{ item.type.name }}</strong></span>
-                                    {% endif %}
-                                    {% if item.quality %}
-                                        <span>Qualité : <strong>{{ item.quality.name }}</strong></span>
-                                    {% endif %}
-                                    {% if item.sex %}
-                                        <span>Sexe : <strong>{{ item.sex }}</strong></span>
-                                    {% endif %}
-                                    {% if item.version %}
-                                        <span>Version : <strong>{{ item.version }}</strong></span>
-                                    {% endif %}
-                                    {% if item.stat %}
-                                        <span>Statistique : <strong>{{ item.stat }}</strong></span>
-                                    {% endif %}
-                                    {% if item.option %}
-                                        <span>Option : <strong>{{ item.option }}</strong></span>
-                                    {% endif %}
-                                    {% if item.color %}
-                                        <span>Couleur : <strong>{{ item.color }}</strong></span>
-                                    {% endif %}
-                                </div>
-                            </td>
-                            <td class="order-item-price-cell">{{ (item.totalPrice / 100)|number_format(2, ',', ' ') }} €</td>
-                        </tr>
-                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="order-collapse" id="orderCollapse{{ order.id }}" data-order-toggle-target="collapse">
+                <div class="order-collapse-inner">
+                    <table class="order-items-table">
+                        <tbody>
+                            {% for item in order.orderItems %}
+                                <tr>
+                                    <td>
+                                        <span class="order-item-name">{{ item.productName }}</span>
+                                        <div class="order-item-details d-flex flex-column gap-1">
+                                            <span class="text-nowrap">Quantité : <strong>{{ item.quantity }}</strong></span>
+                                            {% if item.type %}
+                                                <span class="text-nowrap">Type : <strong>{{ item.type.name }}</strong></span>
+                                            {% endif %}
+                                            {% if item.quality %}
+                                                <span class="text-nowrap">Qualité : <strong>{{ item.quality.name }}</strong></span>
+                                            {% endif %}
+                                            {% if item.sex %}
+                                                <span class="text-nowrap">Sexe : <strong>{{ item.sex }}</strong></span>
+                                            {% endif %}
+                                            {% if item.version %}
+                                                <span class="text-nowrap">Version : <strong>{{ item.version }}</strong></span>
+                                            {% endif %}
+                                            {% if item.stat %}
+                                                <span class="text-nowrap">Statistique : <strong>{{ item.stat }}</strong></span>
+                                            {% endif %}
+                                            {% if item.option %}
+                                                <span class="text-nowrap">Option : <strong>{{ item.option }}</strong></span>
+                                            {% endif %}
+                                            {% if item.color %}
+                                                <span class="text-nowrap">Couleur : <strong>{{ item.color }}</strong></span>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                    <td class="order-item-price-cell">{{ (item.totalPrice / 100)|number_format(2, ',', ' ') }} €</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <table class="order-items-table">
+                <tbody>
                     <tr class="order-total-row">
                         <td>Total</td>
                         <td class="order-item-price-cell">{{ (order.total / 100)|number_format(2, ',', ' ') }} €</td>
@@ -68,7 +82,18 @@
             </table>
         </div>
 
-        <div class="order-card-actions">
+        <div class="order-card-footer d-flex align-items-center justify-content-between flex-wrap gap-2 mt-auto pt-3">
+            <button type="button"
+                    class="btn btn-link btn-sm text-primary text-decoration-none d-inline-flex align-items-center gap-1 p-1 order-toggle-btn"
+                    data-order-toggle-target="button"
+                    data-action="order-toggle#toggle"
+                    aria-expanded="false"
+                    aria-controls="orderCollapse{{ order.id }}">
+                <span class="order-toggle-label order-toggle-label--closed">Voir le détail</span>
+                <span class="order-toggle-label order-toggle-label--open">Masquer le détail</span>
+                <i class="bi bi-chevron-down order-toggle-icon" aria-hidden="true"></i>
+            </button>
+
             {% if context == 'admin' %}
                 {% if not order.delivered %}
                     <form method="post" action="{{ path('admin_order_deliver', {id: order.id}) }}" id="deliverOrderForm{{ order.id }}">

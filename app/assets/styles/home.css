@@ -1,0 +1,264 @@
+/* ==========================================================================
+   Page d'accueil : hero (CTA), statistiques, fonctionnalités, actualités.
+   Chargé uniquement par home/index.html.twig.
+   ========================================================================== */
+
+/* --- Hero --- */
+.hero-title {
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.75rem;
+    text-align: center;
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    margin-top: 24px;
+    margin-bottom: 8px;
+}
+
+.hero-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 52px;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+    flex: 1 1 220px;
+    max-width: 320px;
+}
+
+@media (min-width: 768px) {
+    .hero-title {
+        font-size: 2.75rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .hero-title {
+        font-size: 3.25rem;
+    }
+}
+
+/* --- Conteneur englobant statistiques + fonctionnalités + actualités : posé
+   directement sur le fond jungle (.bg englobe désormais toute la page, pas
+   seulement le hero), aucun fond Bootstrap ne doit apparaître entre les deux
+   — Bootswatch Vapor donne à <body> un fond violet foncé par défaut
+   (--bs-body-bg), visible dès qu'un élément sans image de fond dépasse la
+   section .bg. Fond sombre semi-transparent pour la lisibilité, pas de flou :
+   les cartes qu'il contient ont déjà chacune leur propre backdrop-filter via
+   .content-card — empiler un second flou sur toute la largeur serait coûteux
+   pour un gain visuel minime.
+
+   Mobile-first : pleine largeur, pas de coins arrondis, juste un padding
+   interne. À partir de 768px : largeur fluide plafonnée, centrée, coins
+   arrondis. */
+.home-content-overlay {
+    background: rgba(0, 0, 0, 0.548);
+    padding: 24px 16px;
+    overflow: hidden;
+}
+
+@media (min-width: 992px) {
+    .home-content-overlay {
+        width: min(1200px, calc(100% - 48px));
+        margin-inline: auto;
+        border-radius: 24px;
+        padding: 40px 40px;
+    }
+}
+
+/* --- Statistiques --- */
+.stats-section {
+    padding-bottom: 32px;
+}
+
+.stat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 100%;
+    padding: 28px 16px;
+}
+
+.stat-icon {
+    font-size: 2rem;
+    color: var(--bs-primary);
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.1;
+}
+
+.stat-label {
+    font-size: 0.95rem;
+    color: #c0b8d8;
+}
+
+@media (min-width: 768px) {
+    .stat-card {
+        padding: 32px 20px;
+    }
+
+    .stat-value {
+        font-size: 2.25rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .stat-card {
+        padding: 36px 24px;
+    }
+}
+
+/* --- Fonctionnalités --- */
+.features-section {
+    padding-bottom: 32px;
+}
+
+.features-title {
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.6rem;
+    margin-bottom: 4px;
+}
+
+.feature-card {
+    display: flex;
+    flex-direction: column;
+    padding: 24px 20px;
+}
+
+/* Bootstrap n'a pas d'équivalent pour "faire remonter la carte au survol" :
+   seule cette transformation est en CSS maison, le reste (bordure, ombre)
+   vient des classes Bootstrap posées dans le Twig */
+@media (hover: hover) and (pointer: fine) {
+    .feature-card-link:hover .feature-card {
+        transform: translateY(-5px);
+    }
+}
+
+.feature-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    font-size: 1.6rem;
+    margin-bottom: 16px;
+    background: rgba(var(--bs-primary-rgb), 0.18);
+    color: var(--bs-primary);
+}
+
+.feature-icon--shop {
+    background: rgba(var(--bs-success-rgb), 0.18);
+    color: var(--bs-success);
+}
+
+.feature-icon--servers {
+    background: rgba(var(--bs-info-rgb), 0.18);
+    color: var(--bs-info);
+}
+
+.feature-card-title {
+    font-size: 1.2rem;
+}
+
+.feature-card-desc {
+    font-size: 0.98rem;
+    margin-bottom: 0;
+}
+
+@media (min-width: 768px) {
+    .features-title {
+        font-size: 2rem;
+    }
+
+    .feature-card {
+        padding: 28px 24px;
+    }
+
+    .feature-card-desc {
+        font-size: 1rem;
+    }
+}
+
+/* --- Actualités --- */
+.news-panel {
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 28px 20px;
+}
+
+.news-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin-bottom: 4px;
+}
+
+.news-card {
+    height: 100%;
+    padding: 18px 20px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.news-date {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--bs-primary);
+    margin-bottom: 8px;
+}
+
+.news-card-title {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.news-card-desc {
+    color: #c0b8d8;
+    font-size: 0.95rem;
+    margin-bottom: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .news-card:hover {
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+}
+
+@media (min-width: 768px) {
+    .news-panel {
+        padding: 36px 32px;
+    }
+
+    .news-title {
+        font-size: 1.75rem;
+    }
+}

@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Serveurs — Les Batark{% endblock %}
+
+{% block body_class %}servers-page{% endblock %}
+
+{% block body %}
+
+<section class="bg" style="background-image: url('{{ asset('images/jungle.png') }}')">
+    <div class="bg-overlay">
+        <div class="container">
+
+            <div class="page-header mb-5">
+                <div class="text-center mb-3">
+                    <img src="{{ asset('images/LESBATARK.png') }}"
+                        alt="Logo LES-BATARK"
+                        class="logo-batark"
+                    >
+                </div>
+
+                <div class="page-title text-center">
+                    <h1 class="text-white">
+                        Nos Serveurs
+                    </h1>
+                </div>
+            </div>
+
+            <div class="card border-secondary content-card text-center py-5">
+                <i class="bi bi-hdd-network display-4 text-primary mb-3"></i>
+                <p class="mb-4">La liste de nos serveurs arrive très bientôt. Revenez prochainement pour découvrir tous les détails de connexion et les paramètres de chaque monde !</p>
+                <a href="{{ path('app_home') }}" class="btn btn-outline-light">Retour à l'accueil</a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

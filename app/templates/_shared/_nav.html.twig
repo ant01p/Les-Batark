@@ -1,98 +1,166 @@
+{% set currentRoute = app.request.attributes.get('_route') %}
+
 <nav class="navbar navbar-expand-lg bg-black" data-bs-theme="dark">
-    <div class="container-fluid d-flex align-items-center">
+    <div class="container-fluid d-flex align-items-center px-3 px-lg-4">
 
         <a class="navbar-brand px-4" href="{{ path('app_home') }}">LES-BATARK</a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mainNavOffcanvas" aria-controls="mainNavOffcanvas" aria-label="Ouvrir le menu">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarColor02">
-            <ul class="navbar-nav me-auto">
+        {# ===== Navigation desktop (>= lg) ===== #}
+        <div class="d-none d-lg-flex align-items-center flex-grow-1">
 
+            <ul class="navbar-nav me-auto gap-lg-4 align-items-lg-center">
+                <li class="nav-item">
+                    <a class="nav-link{{ currentRoute == 'app_home' ? ' active' : '' }}" href="{{ path('app_home') }}">
+                        <i class="bi bi-house-door me-1"></i>Accueil
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link{{ currentRoute == 'app_servers' ? ' active' : '' }}" href="{{ path('app_servers') }}">
+                        <i class="bi bi-hdd-network me-1"></i>Serveurs
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link{{ currentRoute == 'app_events' ? ' active' : '' }}" href="{{ path('app_events') }}">
+                        <i class="bi bi-calendar-event me-1"></i>Événements
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link{{ currentRoute == 'app_rules' ? ' active' : '' }}" href="{{ path('app_rules') }}">
+                        <i class="bi bi-journal-text me-1"></i>Règlement
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link{{ (currentRoute == 'app_shop' or currentRoute == 'product_show') ? ' active' : '' }}" href="{{ path('app_shop') }}">
+                        <i class="bi bi-shop me-1"></i>Boutique
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link{{ currentRoute == 'cart_index' ? ' active' : '' }}" href="{{ path('cart_index') }}">
+                        <span class="position-relative pe-2">
+                            <i class="bi bi-cart3 me-1"></i>Panier
+                            {% if app.user and app.user.cart and app.user.cart.totalQuantity > 0 %}
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+                                    {{ app.user.cart.totalQuantity }}
+                                </span>
+                            {% endif %}
+                        </span>
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                        {% if app.user %}
-                            {{ app.user.pseudo }}
-                        {% else %}
-                            Enregistrement
-                        {% endif %}
+                        <i class="bi bi-person-circle me-1"></i>{{ app.user ? app.user.pseudo : 'Compte' }}
                     </a>
-
-                    <div class="dropdown-menu bg-black">
-
+                    <div class="dropdown-menu dropdown-menu-end bg-black">
                         {% if app.user %}
-
                             {% if is_granted('ROLE_ADMIN') %}
-                                {% set currentRoute = app.request.attributes.get('_route') %}
-                                <h6 class="dropdown-header text-warning">Administration</h6>
-                                <a class="dropdown-item{{ currentRoute == 'admin_index' ? ' active' : '' }}" href="{{ path('admin_index') }}">
-                                    <i class="bi bi-speedometer2 me-2"></i>Tableau de bord
-                                </a>
-                                <a class="dropdown-item{{ (currentRoute starts with 'admin_product_' or currentRoute starts with 'admin_category_') ? ' active' : '' }}" href="{{ path('admin_product_index') }}">
-                                    <i class="bi bi-shop me-2"></i>Boutique
-                                </a>
-                                <a class="dropdown-item{{ currentRoute starts with 'admin_order_' ? ' active' : '' }}" href="{{ path('admin_order_index') }}">
-                                    <i class="bi bi-bag-check me-2"></i>Commandes
-                                </a>
-                                <a class="dropdown-item{{ currentRoute starts with 'admin_event_' ? ' active' : '' }}" href="{{ path('admin_event_index') }}">
-                                    <i class="bi bi-calendar-event me-2"></i>Événements
-                                </a>
-                                <a class="dropdown-item{{ currentRoute starts with 'admin_server_' ? ' active' : '' }}" href="{{ path('admin_server_index') }}">
-                                    <i class="bi bi-hdd-network me-2"></i>Serveurs
-                                </a>
-                                <a class="dropdown-item{{ currentRoute starts with 'admin_rule_' ? ' active' : '' }}" href="{{ path('admin_rule_index') }}">
-                                    <i class="bi bi-journal-text me-2"></i>Règlement
+                                <a class="dropdown-item{{ currentRoute starts with 'admin_' ? ' active' : '' }}" href="{{ path('admin_index') }}">
+                                    <i class="bi bi-speedometer2 me-2"></i>Administration
                                 </a>
                                 <div class="dropdown-divider"></div>
                             {% endif %}
-
-                            <a class="dropdown-item" href="{{ path('account_index') }}">
-                                Mon compte
+                            <a class="dropdown-item{{ currentRoute starts with 'account_' ? ' active' : '' }}" href="{{ path('account_index') }}">
+                                <i class="bi bi-person-badge me-2"></i>Mon compte
                             </a>
-
                             <a class="dropdown-item" href="{{ logout_path() }}">
-                                Déconnexion
+                                <i class="bi bi-box-arrow-right me-2"></i>Déconnexion
                             </a>
-
                         {% else %}
-
                             <a class="dropdown-item" href="{{ path('app_register') }}">
-                                Inscription
+                                <i class="bi bi-person-plus me-2"></i>Inscription
                             </a>
-
                             <a class="dropdown-item" href="{{ path('app_login') }}">
-                                Connexion
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Connexion
                             </a>
-
                         {% endif %}
-
                     </div>
                 </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_events') }}">Événements</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_shop') }}">Boutique</a>
-                </li>
-
-                {% if app.user %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('cart_index') }}">
-                            <span class="position-relative pe-3">
-                                Panier
-                                {% if app.user.cart and app.user.cart.totalQuantity > 0 %}
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
-                                        {{ app.user.cart.totalQuantity }}
-                                    </span>
-                                {% endif %}
-                            </span>
-                        </a>
-                    </li>
-                {% endif %}
             </ul>
+
         </div>
     </div>
 </nav>
+
+{# ===== Menu mobile / tablette (< lg) ===== #}
+<div class="offcanvas offcanvas-end mobile-nav-offcanvas bg-black text-white" tabindex="-1" id="mainNavOffcanvas" aria-labelledby="mainNavOffcanvasLabel">
+
+    <div class="offcanvas-header border-bottom border-secondary-subtle">
+        <span class="offcanvas-title fw-bold" id="mainNavOffcanvasLabel">LES-BATARK</span>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
+    </div>
+
+    <div class="offcanvas-body mobile-nav-body">
+
+        <nav class="mobile-nav-list">
+            {% if app.user and is_granted('ROLE_ADMIN') %}
+                <div class="mobile-nav-section-label">Administration</div>
+                <a class="mobile-nav-link{{ currentRoute == 'admin_index' ? ' active' : '' }}" href="{{ path('admin_index') }}">
+                    <i class="bi bi-speedometer2"></i><span>Tableau de bord</span>
+                </a>
+                <a class="mobile-nav-link{{ (currentRoute starts with 'admin_product_' or currentRoute starts with 'admin_category_') ? ' active' : '' }}" href="{{ path('admin_product_index') }}">
+                    <i class="bi bi-shop"></i><span>Boutique</span>
+                </a>
+                <a class="mobile-nav-link{{ currentRoute starts with 'admin_order_' ? ' active' : '' }}" href="{{ path('admin_order_index') }}">
+                    <i class="bi bi-bag-check"></i><span>Commandes</span>
+                </a>
+                <a class="mobile-nav-link{{ currentRoute starts with 'admin_event_' ? ' active' : '' }}" href="{{ path('admin_event_index') }}">
+                    <i class="bi bi-calendar-event"></i><span>Événements</span>
+                </a>
+                <a class="mobile-nav-link{{ currentRoute starts with 'admin_server_' ? ' active' : '' }}" href="{{ path('admin_server_index') }}">
+                    <i class="bi bi-hdd-network"></i><span>Serveurs</span>
+                </a>
+                <a class="mobile-nav-link{{ currentRoute starts with 'admin_rule_' ? ' active' : '' }}" href="{{ path('admin_rule_index') }}">
+                    <i class="bi bi-journal-text"></i><span>Règlement</span>
+                </a>
+                <hr class="mobile-nav-divider">
+            {% endif %}
+
+            <a class="mobile-nav-link{{ currentRoute == 'app_home' ? ' active' : '' }}" href="{{ path('app_home') }}">
+                <i class="bi bi-house-door"></i><span>Accueil</span>
+            </a>
+            <a class="mobile-nav-link{{ currentRoute == 'app_servers' ? ' active' : '' }}" href="{{ path('app_servers') }}">
+                <i class="bi bi-hdd-network"></i><span>Serveurs</span>
+            </a>
+            <a class="mobile-nav-link{{ currentRoute == 'app_events' ? ' active' : '' }}" href="{{ path('app_events') }}">
+                <i class="bi bi-calendar-event"></i><span>Événements</span>
+            </a>
+            <a class="mobile-nav-link{{ currentRoute == 'app_rules' ? ' active' : '' }}" href="{{ path('app_rules') }}">
+                <i class="bi bi-journal-text"></i><span>Règlement</span>
+            </a>
+            <a class="mobile-nav-link{{ (currentRoute == 'app_shop' or currentRoute == 'product_show') ? ' active' : '' }}" href="{{ path('app_shop') }}">
+                <i class="bi bi-shop"></i><span>Boutique</span>
+            </a>
+            <a class="mobile-nav-link{{ currentRoute == 'cart_index' ? ' active' : '' }}" href="{{ path('cart_index') }}">
+                <i class="bi bi-cart3"></i><span>Panier</span>
+                {% if app.user and app.user.cart and app.user.cart.totalQuantity > 0 %}
+                    <span class="badge rounded-pill bg-success ms-auto">{{ app.user.cart.totalQuantity }}</span>
+                {% endif %}
+            </a>
+        </nav>
+
+        <div class="mobile-nav-user">
+            {% if app.user %}
+                <a class="mobile-nav-link{{ currentRoute starts with 'account_' ? ' active' : '' }}" href="{{ path('account_index') }}">
+                    <i class="bi bi-person-badge"></i><span>Mon compte</span>
+                </a>
+                <a class="mobile-nav-link" href="{{ logout_path() }}">
+                    <i class="bi bi-box-arrow-right"></i><span>Déconnexion</span>
+                </a>
+            {% else %}
+                <a class="mobile-nav-link" href="{{ path('app_register') }}">
+                    <i class="bi bi-person-plus"></i><span>Inscription</span>
+                </a>
+                <a class="mobile-nav-link" href="{{ path('app_login') }}">
+                    <i class="bi bi-box-arrow-in-right"></i><span>Connexion</span>
+                </a>
+            {% endif %}
+        </div>
+
+    </div>
+</div>

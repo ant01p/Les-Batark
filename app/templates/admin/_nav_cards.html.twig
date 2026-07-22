@@ -1,6 +1,6 @@
 {% set currentRoute = app.request.attributes.get('_route') %}
 
-<nav class="admin-nav-cards">
+<nav class="admin-nav-cards d-none d-lg-flex">
     <a href="{{ path('admin_index') }}" class="admin-nav-card{{ currentRoute == 'admin_index' ? ' active' : '' }}">
         <i class="bi bi-speedometer2"></i>
         <div>

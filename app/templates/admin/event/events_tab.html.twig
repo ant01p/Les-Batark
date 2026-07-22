@@ -1,8 +1,5 @@
 {% import '_shared/_confirm_modal.html.twig' as modals %}
 
-<div class="admin-section-title">
-    <h2 class="h2 fw-semibold text-white mb-0">Événements</h2>
-</div>
 <a href="{{ path('admin_event_new') }}" class="btn btn-success mb-3">Ajouter</a>
 
 {% if events is empty %}
@@ -19,9 +16,9 @@
                 <div class="card content-card admin-event-card {{ borderClass }} h-100">
                     {% include 'event/_card.html.twig' with {event: event, showDescription: false} %}
 
-                    <div class="admin-actions">
+                    <div class="admin-actions d-flex align-items-center gap-2">
                         <a href="{{ path('admin_event_edit', {id: event.id}) }}" class="btn btn-primary">Modifier</a>
-                        <form method="post" action="{{ path('admin_event_delete', {id: event.id}) }}" id="deleteEventForm{{ event.id }}">
+                        <form method="post" action="{{ path('admin_event_delete', {id: event.id}) }}" class="m-0" id="deleteEventForm{{ event.id }}">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete_event_' ~ event.id) }}">
                             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEventModal{{ event.id }}">Supprimer</button>
                         </form>

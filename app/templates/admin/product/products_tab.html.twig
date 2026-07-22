@@ -1,10 +1,6 @@
 {% import '_shared/_confirm_modal.html.twig' as modals %}
 
-<div class="admin-section-title mb-3">
-    <h2 class="h2 fw-semibold text-white mb-0">Boutique</h2>
-</div>
-
- <a href="{{ path('admin_category_new') }}" class="btn btn-success text-dark mb-3">Ajouter une catégorie</a>
+<a href="{{ path('admin_category_new') }}" class="btn btn-success text-dark mb-3">Ajouter une catégorie</a>
 
 {% if categories is not empty %}
     <div class="d-flex flex-wrap gap-2 mb-3">
@@ -73,11 +69,11 @@
                             <p class="text-muted mb-3">{{ product.description }}</p>
                         {% endif %}
 
-                        <div class="mt-auto d-flex gap-2">
+                        <div class="mt-auto d-flex flex-column gap-2">
 
-                            <a href="{{ path('admin_product_edit', {id: product.id}) }}" class="btn btn-primary flex-fill">Modifier</a>
+                            <a href="{{ path('admin_product_edit', {id: product.id}) }}" class="btn btn-primary w-100">Modifier</a>
 
-                            <form method="post" action="{{ path('admin_product_delete', {id: product.id}) }}" class="flex-fill" id="deleteProductForm{{ product.id }}">
+                            <form method="post" action="{{ path('admin_product_delete', {id: product.id}) }}" class="m-0" id="deleteProductForm{{ product.id }}">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete_product_' ~ product.id) }}">
 
                                 <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#deleteProductModal{{ product.id }}">Supprimer</button>

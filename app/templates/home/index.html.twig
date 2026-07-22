@@ -4,28 +4,131 @@
 
 {% block body_class %}home-page{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/home.css') }}">
+{% endblock %}
+
 {% block body %}
 
-    <section class="home-page">
+    <section class="bg" style="background-image: url('{{ asset('images/jungle.png') }}')">
+        <div class="bg-overlay">
+            <div class="container">
+                <div class="overlay-content">
+                    {{ include('_shared/_flash.html.twig') }}
 
-        <section class="bg" style="background-image: url('{{ asset('images/jungle.png') }}')">
-        
-            <div class="bg-overlay">
-                <div class="container">
-                    <div class="overlay-content ">
-                        {{ include('_shared/_flash.html.twig') }}
-                        <img src="{{ asset('images/LESBATARK.png') }}" alt="Logo BATARK" class="logo-batark">
-                        
-                        <p>
-                            Rejoignez notre cluster complet et vivez l'aventure ARK comme jamais auparavant!
-                        </p>
+                    <img src="{{ asset('images/LESBATARK.png') }}" alt="Logo BATARK" class="logo-batark">
 
-                        <div class="d-flex gap-3 mt-4 mb-4">
-                            <a href="{{path('app_shop')}}" class="btn btn-outline-success btn-lg">Voir la Boutique</a>
-                        </div>
+                    <h1 class="hero-title">Bienvenue chez Les Batark !</h1>
+
+                    <p>Rejoignez notre communauté de survivants et vivez l'aventure ARK comme jamais auparavant !</p>
+
+                    <div class="hero-actions">
+                        <a href="{{ path('app_register') }}" class="btn btn-primary btn-lg hero-btn">
+                            <i class="bi bi-person-plus"></i>Nous rejoindre
+                        </a>
+                        <a href="{{ path('app_servers') }}" class="btn btn-outline-light btn-lg hero-btn">
+                            <i class="bi bi-hdd-network"></i>Voir les serveurs
+                        </a>
                     </div>
                 </div>
             </div>
-        </section>
+
+            <div class="home-content-overlay mt-5 border-2">
+
+                <section class="stats-section">
+                    <div class="row g-3 g-md-4">
+                        <div class="col-6 col-md-3">
+                            <div class="content-card stat-card border border-2 border-secondary text-center">
+                                <i class="bi bi-people-fill stat-icon"></i>
+                                <div class="stat-value">{{ playerCount }}</div>
+                                <div class="stat-label">Joueurs inscrits</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="content-card stat-card border border-2 border-secondary text-center">
+                                <i class="bi bi-hdd-network stat-icon"></i>
+                                <div class="stat-value">{{ serverCount }}</div>
+                                <div class="stat-label">Serveurs</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="content-card stat-card border border-2 border-secondary text-center">
+                                <i class="bi bi-calendar-event stat-icon"></i>
+                                <div class="stat-value">{{ eventCount }}</div>
+                                <div class="stat-label">Événements</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="content-card stat-card border border-2 border-secondary text-center">
+                                <i class="bi bi-bag-fill stat-icon"></i>
+                                <div class="stat-value">{{ productCount }}</div>
+                                <div class="stat-label">Articles en boutique</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="features-section">
+                    <div class="section-label">Ce que nous offrons</div>
+                    <h2 class="features-title">Découvrez nos fonctionnalités</h2>
+
+                    <div class="row g-3 g-md-4 mt-2">
+                        <div class="col-12 col-md-4">
+                            <a href="{{ path('app_events') }}" class="feature-card-link d-block h-100 text-decoration-none text-reset">
+                                <article class="content-card feature-card border border-2 border-info shadow-sm h-100">
+                                    <div class="feature-icon feature-icon--events"><i class="bi bi-calendar-event"></i></div>
+                                    <div class="card-title feature-card-title">Événements réguliers</div>
+                                    <p class="card-desc feature-card-desc">Participez à des événements communautaires chaque semaine avec des récompenses exclusives.</p>
+                                </article>
+                            </a>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <a href="{{ path('app_shop') }}" class="feature-card-link d-block h-100 text-decoration-none text-reset">
+                                <article class="content-card feature-card border border-2 border-info shadow-sm h-100">
+                                    <div class="feature-icon feature-icon--shop"><i class="bi bi-shop"></i></div>
+                                    <div class="card-title feature-card-title">Boutique</div>
+                                    <p class="card-desc feature-card-desc">Achetez des objets, des boosts et des skins exclusifs pour améliorer votre expérience de jeu.</p>
+                                </article>
+                            </a>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <a href="{{ path('app_servers') }}" class="feature-card-link d-block h-100 text-decoration-none text-reset">
+                                <article class="content-card feature-card border border-2 border-info shadow-sm h-100">
+                                    <div class="feature-icon feature-icon--servers"><i class="bi bi-hdd-network"></i></div>
+                                    <div class="card-title feature-card-title">Serveurs optimisés</div>
+                                    <p class="card-desc feature-card-desc">Découvrez nos serveurs avec des paramètres personnalisés pour une expérience unique.</p>
+                                </article>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="">
+                    <div class="news-panel">
+                        <div class="section-label">Quoi de neuf</div>
+                        <h2 class="news-title"><i class="bi bi-newspaper"></i>Dernières actualités</h2>
+
+                        <div class="row g-3 g-md-4 mt-2">
+                            <div class="col-md-6">
+                                <article class="news-card">
+                                    <span class="news-date">Il y a 2 jours</span>
+                                    <h3 class="news-card-title">Nouvel événement : Chasse au Trésor</h3>
+                                    <p class="news-card-desc">Un événement spécial commence ce weekend avec des récompenses exclusives !</p>
+                                </article>
+                            </div>
+                            <div class="col-md-6">
+                                <article class="news-card">
+                                    <span class="news-date">Il y a 5 jours</span>
+                                    <h3 class="news-card-title">Nouveau serveur PVP disponible</h3>
+                                    <p class="news-card-desc">Rejoignez notre tout nouveau serveur PVP avec des taux améliorés.</p>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
     </section>
+
 {% endblock %}

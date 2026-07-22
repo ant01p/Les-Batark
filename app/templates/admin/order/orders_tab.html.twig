@@ -1,7 +1,3 @@
-<div class="admin-section-title">
-    <h2 class="h2 fw-semibold text-white mb-0">Commandes</h2>
-</div>
-
 {% if orders is empty %}
     <div class="card border-secondary">
         <div class="card-body text-center text-muted py-5">
@@ -9,11 +5,32 @@
         </div>
     </div>
 {% else %}
-    <div class="row g-3">
-        {% for order in orders %}
-            <div class="col-md-6 col-xl-4">
-                {% include 'admin/order/_order_card.html.twig' with { order: order, context: 'admin' } %}
+    {% set undeliveredOrders = orders|filter(o => not o.delivered) %}
+    {% set deliveredOrders = orders|filter(o => o.delivered) %}
+
+    <div class="order-status-section">
+        <h3 class="order-status-section-title h5 fw-semibold text-white mb-0">Commandes non livrées</h3>
+        {% if undeliveredOrders is empty %}
+            <p class="order-status-section-empty">Aucune commande en attente de livraison.</p>
+        {% else %}
+            <div class="order-cards-masonry" data-controller="order-masonry">
+                {% for order in undeliveredOrders %}
+                    {% include 'admin/order/_order_card.html.twig' with { order: order, context: 'admin' } %}
+                {% endfor %}
             </div>
-        {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="order-status-section">
+        <h3 class="order-status-section-title h5 fw-semibold text-white mb-0">Commandes livrées</h3>
+        {% if deliveredOrders is empty %}
+            <p class="order-status-section-empty">Aucune commande livrée pour l'instant.</p>
+        {% else %}
+            <div class="order-cards-masonry" data-controller="order-masonry">
+                {% for order in deliveredOrders %}
+                    {% include 'admin/order/_order_card.html.twig' with { order: order, context: 'admin' } %}
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 {% endif %}

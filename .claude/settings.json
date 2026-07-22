@@ -10,7 +10,32 @@
       "Bash(curl -s \"http://localhost:8080/login\")",
       "Bash(curl -s \"http://localhost:8080/register\")",
       "Bash(curl -s \"http://localhost:8080/shop\")",
-      "Bash(curl -s \"http://localhost:8080/evenements\")"
+      "Bash(curl -s \"http://localhost:8080/evenements\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} -> %{redirect_url}\\\\n\" \"http://localhost:8080/admin/orders\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} -> %{redirect_url}\\\\n\" \"http://localhost:8080/account\")",
+      "Bash(curl -s \"http://localhost:8080/login\" -o /tmp/login.html)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost:8080/assets/controllers/order_toggle_controller-xZSDcVM.js\")",
+      "Bash(curl -s \"http://localhost:8080/assets/controllers/order_toggle_controller-xZSDcVM.js\")",
+      "Bash(awk '/order-card-footer/,/<\\\\/div>\\\\s*$/' /tmp/order4_admin.html)",
+      "Bash(awk '/order-card-footer/,/<\\\\/div>\\\\s*$/' /tmp/order4_account.html)",
+      "Bash(python3 -c ' *)",
+      "Bash(curl -s \"http://localhost:8080/login\" -o /tmp/login2.html)",
+      "Bash(curl -s \"http://localhost:8080/\" -o /tmp/home.html)",
+      "Bash(curl -s \"http://localhost:8080/serveurs\" -o /tmp/servers.html)",
+      "Bash(curl -s \"http://localhost:8080/reglement\" -o /tmp/rules.html)",
+      "Bash(curl -s \"http://localhost:8080/evenements\" -o /tmp/events.html)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"http://localhost:8080/evenements\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"http://localhost:8080/\")",
+      "Bash(curl -s \"http://localhost:8080/\" -o /tmp/home2.html)",
+      "Bash(git -C /home/antoine/Batark status --short app/templates/_shared/_nav.html.twig app/assets/styles/components/navbar.css)",
+      "Bash(curl -s \"https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/vapor/bootstrap.min.css\")",
+      "Bash(git -C /home/antoine/Batark status --short app/templates/home/index.html.twig app/assets/styles/home.css)",
+      "Bash(grep -B3 'private ?\\\\\\\\DateTimeImmutable $createdAt' /home/antoine/Batark/app/src/Entity/User.php)",
+      "Bash(curl -s \"http://localhost:8080/\" -o /tmp/home_news.html)",
+      "Bash(git -C /home/antoine/Batark status --short app/src app/templates app/assets/styles app/migrations)",
+      "Bash(curl -s \"http://localhost:8080/\" -o /tmp/home_reverted.html)",
+      "Bash(git -C /home/antoine/Batark status --short app/src app/templates/home app/assets/styles/home.css app/migrations)",
+      "Bash(git -C /home/antoine/Batark status --short app/src/Entity/Product.php app/migrations/ app/src/Service/)"
     ]
   }
 }
