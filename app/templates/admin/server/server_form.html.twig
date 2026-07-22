@@ -1,0 +1,177 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if server.id is null %}
+        Créer un serveur
+    {% else %}
+        Modifier le serveur
+    {% endif %}
+     — Les BATARK
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/admin.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="admin-page">
+
+    <div class="row justify-content-center mb-4">
+        <div class="col-lg-8">
+            <div class="d-flex align-items-center gap-3">
+                <a href="{{ path('admin_server_index') }}" class="btn btn-outline-secondary btn-sm">
+                    Retour
+                </a>
+                <div>
+                    <h1 class="h3 fw-bold text-white mb-0">
+                        {% if server.id is null %}
+                            Nouveau serveur
+                        {% else %}
+                            Modifier : {{ server.title }}
+                        {% endif %}
+                    </h1>
+                    <p class="text-muted mb-0 small">Panneau d'administration</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ include('_shared/_flash.html.twig') }}
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-primary">
+                <div class="card-body p-4">
+
+                    {{ form_start(form) }}
+
+                    <p class="fw-semibold text-white mb-3">Informations principales</p>
+
+                    <div class="mb-3">
+                        {{ form_label(form.title) }}
+                        {{ form_widget(form.title, {attr: {class: 'form-control'}}) }}
+                        {{ form_errors(form.title) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.gameMode) }}
+                        <div class="d-flex gap-3">
+                            {% for choice in form.gameMode %}
+                                <div class="form-check form-check-inline">
+                                    {{ form_widget(choice, {attr: {class: 'form-check-input'}}) }}
+                                    {{ form_label(choice, null, {label_attr: {class: 'form-check-label'}}) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {{ form_errors(form.gameMode) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.isOnline) }}
+                        <div class="d-flex gap-3">
+                            {% for choice in form.isOnline %}
+                                <div class="form-check form-check-inline">
+                                    {{ form_widget(choice, {attr: {class: 'form-check-input'}}) }}
+                                    {{ form_label(choice, null, {label_attr: {class: 'form-check-label'}}) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {{ form_errors(form.isOnline) }}
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            {{ form_label(form.maxPlayers) }}
+                            {{ form_widget(form.maxPlayers, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.maxPlayers) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_label(form.address) }}
+                            {{ form_widget(form.address, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.address) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.mods) }}
+                        {{ form_widget(form.mods, {attr: {class: 'form-control'}}) }}
+                        {{ form_errors(form.mods) }}
+                    </div>
+
+                    <hr class="border-secondary my-4">
+                    <p class="fw-semibold text-white mb-3">Paramètres du serveur</p>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-12 col-md-6">
+                            {{ form_label(form.harvestRate) }}
+                            {{ form_widget(form.harvestRate, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.harvestRate) }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ form_label(form.tamingSpeed) }}
+                            {{ form_widget(form.tamingSpeed, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.tamingSpeed) }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ form_label(form.matingInterval) }}
+                            {{ form_widget(form.matingInterval, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.matingInterval) }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ form_label(form.maturationSpeed) }}
+                            {{ form_widget(form.maturationSpeed, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.maturationSpeed) }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ form_label(form.incubationSpeed) }}
+                            {{ form_widget(form.incubationSpeed, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.incubationSpeed) }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ form_label(form.itemStackSize) }}
+                            {{ form_widget(form.itemStackSize, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.itemStackSize) }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ form_label(form.wildDinoFoodDrain) }}
+                            {{ form_widget(form.wildDinoFoodDrain, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.wildDinoFoodDrain) }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ form_label(form.maxDinoLevel) }}
+                            {{ form_widget(form.maxDinoLevel, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.maxDinoLevel) }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ form_label(form.maxTekDinoLevel) }}
+                            {{ form_widget(form.maxTekDinoLevel, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.maxTekDinoLevel) }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ form_label(form.maxEggLevel) }}
+                            {{ form_widget(form.maxEggLevel, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.maxEggLevel) }}
+                        </div>
+                    </div>
+
+                    <hr class="border-secondary my-4">
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-outline-success btn-lg mt-3">
+                            {% if server.id is null %}
+                                Créer le serveur
+                            {% else %}
+                                Enregistrer
+                            {% endif %}
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

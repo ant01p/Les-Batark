@@ -50,6 +50,10 @@ class Product
     #[ORM\OneToMany(targetEntity: ProductImage::class, mappedBy: 'product', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $images;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?User $createdBy = null;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
@@ -206,5 +210,17 @@ class Product
         usort($images, fn (ProductImage $a, ProductImage $b) => (int) $b->isMain() <=> (int) $a->isMain());
 
         return $images;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): static
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
     }
 }

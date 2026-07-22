@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Event;
+use App\Entity\User;
 use App\Form\EventType;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,6 +29,11 @@ final class AdminEventController extends AbstractController
     public function new(Request $request, EntityManagerInterface $em): Response
     {
         $event = new Event();
+
+        /** @var User $user */
+        $user = $this->getUser();
+        $event->setCreatedBy($user);
+
         $form  = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
 

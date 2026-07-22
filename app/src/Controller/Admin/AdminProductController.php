@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Product;
 use App\Entity\ProductImage;
+use App\Entity\User;
 use App\Form\ProductType;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
@@ -40,6 +41,11 @@ final class AdminProductController extends AbstractController
     public function new(Request $request, EntityManagerInterface $em, ImageHandler $imageHandler): Response
     {
         $product = new Product();
+
+        /** @var User $user */
+        $user = $this->getUser();
+        $product->setCreatedBy($user);
+
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 

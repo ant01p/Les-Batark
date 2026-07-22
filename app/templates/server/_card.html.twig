@@ -1,0 +1,77 @@
+{% set modeBadgeClass = server.gameMode == 'PVP' ? 'bg-primary' : 'bg-info' %}
+{% set statusBadgeClass = server.isOnline ? 'text-bg-success' : 'text-bg-danger' %}
+{% set statusLabel = server.isOnline ? 'En ligne' : 'Hors ligne' %}
+
+<div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center gap-2 mb-2">
+    <div class="d-flex flex-wrap align-items-center gap-2">
+        <h2 class="card-title text-break">Les BatArk - {{ server.title }}</h2>
+        <span class="badge {{ modeBadgeClass }}">{{ server.gameMode }}</span>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-between gap-2 text-nowrap">
+        <span class="badge {{ statusBadgeClass }}">{{ statusLabel }}</span>
+        <span class="text-secondary">0/{{ server.maxPlayers }}</span>
+    </div>
+</div>
+
+<hr class="border-white border-opacity-10 my-2">
+
+{% if server.address %}
+    <div class="rounded bg-dark bg-opacity-50 p-3 mb-2">
+        <div class="d-flex flex-column flex-md-row justify-content-md-between gap-2">
+            <span class="text-info">Adresse du serveur</span>
+            <span class="font-monospace text-success text-break">{{ server.address }}</span>
+        </div>
+    </div>
+
+    <hr class="border-white border-opacity-10 my-2">
+{% endif %}
+
+{% set params = [
+    {label: 'Taux de récolte', value: server.harvestRate},
+    {label: "Vitesse d'apprivoisement", value: server.tamingSpeed},
+    {label: "Intervalle d'accouplement", value: server.matingInterval},
+    {label: 'Vitesse de maturation', value: server.maturationSpeed},
+    {label: 'Incubation / gestation', value: server.incubationSpeed},
+    {label: "Taille des piles d'objets", value: server.itemStackSize},
+    {label: 'Faim des dinos sauvages', value: server.wildDinoFoodDrain},
+] %}
+{% set levels = [
+    {label: 'Niveau max des dinos', value: server.maxDinoLevel},
+    {label: 'Niveau max des dinos Tek', value: server.maxTekDinoLevel},
+    {label: 'Niveau max des œufs', value: server.maxEggLevel},
+] %}
+
+<div class="row g-2">
+    {% for p in params %}
+        {% if p.value is not null %}
+            <div class="col-12 col-lg-6">
+                <div class="d-flex align-items-center gap-2">
+                    <span>{{ p.label }}</span>
+                    <span class="text-success fw-semibold">x{{ p.value }}</span>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+    {% for l in levels %}
+        {% if l.value is not null %}
+            <div class="col-12 col-lg-6">
+                <div class="d-flex align-items-center gap-2">
+                    <span>{{ l.label }}</span>
+                    <span class="text-success fw-semibold">{{ l.value }}</span>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+{% if server.modsList is not empty %}
+    <hr class="border-white border-opacity-10 my-2">
+
+    <p class="fw-semibold text-white mb-2">Mods installés</p>
+    <div class="d-flex flex-wrap gap-2">
+        {% for mod in server.modsList %}
+            <span class="badge bg-primary">{{ mod }}</span>
+        {% endfor %}
+    </div>
+{% endif %}

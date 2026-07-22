@@ -18,18 +18,29 @@
                     >
                 </div>
 
-                <div class="page-title text-center">
+                <div class="page-title">
                     <h1 class="text-white">
                         Nos Serveurs
                     </h1>
+
+                    <p class="text-info mb-0">
+                        {{ total }} serveur{{ total > 1 ? 's' : '' }} disponible{{ total > 1 ? 's' : '' }}
+                    </p>
                 </div>
             </div>
 
-            <div class="card border-secondary content-card text-center py-5">
-                <i class="bi bi-hdd-network display-4 text-primary mb-3"></i>
-                <p class="mb-4">La liste de nos serveurs arrive très bientôt. Revenez prochainement pour découvrir tous les détails de connexion et les paramètres de chaque monde !</p>
-                <a href="{{ path('app_home') }}" class="btn btn-outline-light">Retour à l'accueil</a>
-            </div>
+            {% if total == 0 %}
+                <div class="card border-secondary content-card text-center py-5">
+                    Aucun serveur configuré pour le moment. Revenez bientôt !
+                </div>
+            {% else %}
+                {% for server in servers %}
+                    {% set borderClass = server.gameMode == 'PVP' ? 'border-primary' : 'border-info' %}
+                    <div class="card {{ borderClass }} content-card mb-3">
+                        {% include 'server/_card.html.twig' with {server: server} %}
+                    </div>
+                {% endfor %}
+            {% endif %}
 
         </div>
     </div>

@@ -1,0 +1,37 @@
+{% import '_shared/_confirm_modal.html.twig' as modals %}
+
+<a href="{{ path('admin_server_new') }}" class="btn btn-success mb-3">Ajouter</a>
+
+{% if servers is empty %}
+    <div class="card border-secondary">
+        <div class="card-body text-center text-muted py-5">
+            Aucun serveur pour l'instant.
+        </div>
+    </div>
+{% else %}
+    <div class="row g-3">
+        {% for server in servers %}
+            {% set borderClass = server.gameMode == 'PVP' ? 'border-primary' : 'border-info' %}
+            <div class="col-md-6">
+                <div class="card content-card admin-server-card {{ borderClass }} h-100">
+                    {% include 'server/_card.html.twig' with {server: server} %}
+
+                    {% if server.createdBy %}
+                        <p class="text-muted small mb-2">Créé par {{ server.createdBy.pseudo }} — {{ server.createdAt|date('d/m/Y') }}</p>
+                    {% else %}
+                        <p class="text-muted small mb-2">Créateur inconnu — {{ server.createdAt|date('d/m/Y') }}</p>
+                    {% endif %}
+
+                    <div class="admin-actions d-flex align-items-center gap-2">
+                        <a href="{{ path('admin_server_edit', {id: server.id}) }}" class="btn btn-primary">Modifier</a>
+                        <form method="post" action="{{ path('admin_server_delete', {id: server.id}) }}" class="m-0" id="deleteServerForm{{ server.id }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_server_' ~ server.id) }}">
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteServerModal{{ server.id }}">Supprimer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {{ modals.modal('deleteServerModal' ~ server.id, 'Supprimer le serveur', 'Supprimer ce serveur ?', 'deleteServerForm' ~ server.id, 'Supprimer', 'danger') }}
+        {% endfor %}
+    </div>
+{% endif %}

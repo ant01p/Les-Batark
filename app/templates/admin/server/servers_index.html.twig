@@ -3,10 +3,5 @@
 {% block admin_title %}Serveurs{% endblock %}
 
 {% block admin_content %}
-    <button type="button" class="btn btn-success mb-3">Ajouter</button>
-    <div class="card border-secondary">
-        <div class="card-body text-center text-muted py-5">
-            Aucun serveur configuré.
-        </div>
-    </div>
+    {% include 'admin/server/servers_tab.html.twig' %}
 {% endblock %}

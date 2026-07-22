@@ -361,6 +361,28 @@
     color: #1a1a1a;
 }
 
+/* Mobile + tablette : le prix passe sous le nom/détails du produit au lieu
+   d'une colonne séparée (tableau converti en blocs empilés) */
+@media (max-width: 991.98px) {
+    .order-items-table,
+    .order-items-table tbody,
+    .order-items-table tr,
+    .order-items-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .order-item-name-cell {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .order-item-price-cell {
+        text-align: left;
+        padding-top: 4px;
+    }
+}
+
 .order-total-row {
     background: rgba(25, 135, 84, 0.08);
 }
@@ -552,6 +574,19 @@
 }
 
 .admin-event-card .admin-actions {
+    margin-top: auto;
+    padding-top: 16px;
+    justify-content: space-between;
+}
+
+/* Cartes serveur admin : même comportement que les cartes événement
+   (actions Modifier/Supprimer toujours en bas de carte) */
+.admin-server-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-server-card .admin-actions {
     margin-top: auto;
     padding-top: 16px;
     justify-content: space-between;

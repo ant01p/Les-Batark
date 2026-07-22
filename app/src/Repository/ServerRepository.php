@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Repository;
+
+use App\Entity\Server;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+
+/**
+ * @extends ServiceEntityRepository<Server>
+ */
+class ServerRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Server::class);
+    }
+
+    public function findAllOrdered(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->orderBy('s.gameMode', 'ASC')
+            ->addOrderBy('s.title', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findAllOrderedWithCreator(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->addSelect('creator')
+            ->leftJoin('s.createdBy', 'creator')
+            ->orderBy('s.gameMode', 'ASC')
+            ->addOrderBy('s.title', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+}

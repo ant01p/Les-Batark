@@ -37,7 +37,7 @@
                         <tbody>
                             {% for item in order.orderItems %}
                                 <tr>
-                                    <td>
+                                    <td class="order-item-name-cell">
                                         <span class="order-item-name">{{ item.productName }}</span>
                                         <div class="order-item-details d-flex flex-column gap-1">
                                             <span class="text-nowrap">Quantité : <strong>{{ item.quantity }}</strong></span>
