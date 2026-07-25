@@ -12,6 +12,9 @@ class Server
     public const MODE_PVE = 'PVE';
     public const MODE_PVP = 'PVP';
 
+    /** Images utilisées quand le serveur n'a pas encore de photos propres renseignées. */
+    private const DEFAULT_IMAGES = ['jungle.png', 'abe.jpg'];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -28,9 +31,6 @@ class Server
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $address = null;
-
-    #[ORM\Column(options: ['default' => true])]
-    private bool $isOnline = true;
 
     #[ORM\Column(type: Types::FLOAT, nullable: true)]
     private ?float $harvestRate = null;
@@ -64,6 +64,9 @@ class Server
 
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $mods = null;
+
+    #[ORM\Column(length: 500, nullable: true)]
+    private ?string $images = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -126,18 +129,6 @@ class Server
     public function setAddress(?string $address): static
     {
         $this->address = $address;
-
-        return $this;
-    }
-
-    public function isOnline(): bool
-    {
-        return $this->isOnline;
-    }
-
-    public function setIsOnline(bool $isOnline): static
-    {
-        $this->isOnline = $isOnline;
 
         return $this;
     }
@@ -284,6 +275,125 @@ class Server
         }
 
         return array_values(array_filter(array_map('trim', explode(',', $this->mods))));
+    }
+
+    public function getImages(): ?string
+    {
+        return $this->images;
+    }
+
+    public function setImages(?string $images): static
+    {
+        $this->images = $images;
+
+        return $this;
+    }
+
+    /**
+     * @return string[] image filenames (relative to public/images/) parsed from the comma-separated raw value
+     */
+    public function getImagesList(): array
+    {
+        if (!$this->images) {
+            return self::DEFAULT_IMAGES;
+        }
+
+        $list = array_values(array_filter(array_map('trim', explode(',', $this->images))));
+
+        return $list ?: self::DEFAULT_IMAGES;
+    }
+
+    public function isPve(): bool
+    {
+        return $this->gameMode !== self::MODE_PVP;
+    }
+
+    /**
+     * Jeton court identifiant la couleur associée au mode de jeu (bleu = PvE, violet = PvP).
+     */
+    public function getAccent(): string
+    {
+        return $this->isPve() ? 'info' : 'primary';
+    }
+
+    public function getBorderClass(): string
+    {
+        return 'border-' . $this->getAccent();
+    }
+
+    public function getModeBadgeClass(): string
+    {
+        return 'bg-' . $this->getAccent();
+    }
+
+    public function getCardModifierClass(): string
+    {
+        return 'server-card--' . ($this->isPve() ? 'pve' : 'pvp');
+    }
+
+    /**
+     * Liste ordonnée des paramètres de jeu à afficher (icône + libellé + valeur formatée),
+     * en ignorant les paramètres non renseignés.
+     *
+     * @return array<int, array{icon: string, label: string, value: string}>
+     */
+    public function getFormattedSettings(): array
+    {
+        $multipliers = [
+            ['icon' => 'bi-hammer', 'label' => 'Récolte', 'value' => $this->harvestRate],
+            ['icon' => 'bi-tools', 'label' => 'Apprivoisement', 'value' => $this->tamingSpeed],
+            ['icon' => 'bi-heart-fill', 'label' => 'Accouplement', 'value' => $this->matingInterval],
+            ['icon' => 'bi-feather', 'label' => 'Maturité', 'value' => $this->maturationSpeed],
+            ['icon' => 'bi-egg-fill', 'label' => 'Incubation', 'value' => $this->incubationSpeed],
+            ['icon' => 'bi-cup-straw', 'label' => 'Faim des dinos', 'value' => $this->wildDinoFoodDrain],
+        ];
+
+        $quantities = [
+            ['icon' => 'bi-boxes', 'label' => "Piles d'objets", 'value' => $this->itemStackSize],
+            ['icon' => 'bi-graph-up-arrow', 'label' => 'Niveau max dino', 'value' => $this->maxDinoLevel],
+            ['icon' => 'bi-cpu-fill', 'label' => 'Niveau max Tek', 'value' => $this->maxTekDinoLevel],
+            ['icon' => 'bi-egg', 'label' => 'Niveau max œuf', 'value' => $this->maxEggLevel],
+        ];
+
+        $settings = [];
+
+        foreach ($multipliers as $multiplier) {
+            if ($multiplier['value'] === null) {
+                continue;
+            }
+
+            $settings[] = [
+                'icon'  => $multiplier['icon'],
+                'label' => $multiplier['label'],
+                'value' => 'x' . self::formatNumber((float) $multiplier['value']),
+            ];
+        }
+
+        foreach ($quantities as $quantity) {
+            if ($quantity['value'] === null) {
+                continue;
+            }
+
+            $settings[] = [
+                'icon'  => $quantity['icon'],
+                'label' => $quantity['label'],
+                'value' => self::formatNumber((float) $quantity['value']),
+            ];
+        }
+
+        return $settings;
+    }
+
+    /**
+     * Formate un nombre sans décimale inutile (5.0 -> "5", 0.2 -> "0.2").
+     */
+    private static function formatNumber(float $value): string
+    {
+        if (fmod($value, 1.0) === 0.0) {
+            return (string) (int) $value;
+        }
+
+        return rtrim(rtrim(number_format($value, 2, '.', ''), '0'), '.');
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable

@@ -1,0 +1,41 @@
+<div class="server-modal" data-server-modal-target="modal">
+    <div class="server-modal-overlay"
+        data-server-modal-target="overlay"
+        data-action="click->server-modal#close">
+    </div>
+
+    <div class="server-modal-shell">
+        <button type="button"
+            class="server-modal-nav server-modal-nav--prev"
+            data-server-modal-target="prevButton"
+            data-action="click->server-modal#prev"
+            aria-label="Serveur précédent">
+            <i class="bi bi-chevron-left"></i>
+        </button>
+
+        <div class="server-modal-card-wrap">
+            <button type="button"
+                class="btn-close btn-close-white server-modal-close"
+                data-server-modal-target="closeButton"
+                data-action="click->server-modal#close"
+                aria-label="Fermer">
+            </button>
+
+            <div class="server-modal-stage" data-server-modal-target="stage">
+                {% for server in servers %}
+                    <div class="server-modal-card" data-server-modal-target="card" data-index="{{ loop.index0 }}">
+                        {% include 'server/_server_card.html.twig' with {server: server, id_prefix: 'modal'} %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <button type="button"
+            class="server-modal-nav server-modal-nav--next"
+            data-server-modal-target="nextButton"
+            data-action="click->server-modal#next"
+            aria-label="Serveur suivant">
+            <i class="bi bi-chevron-right"></i>
+        </button>
+    </div>
+</div>

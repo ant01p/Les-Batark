@@ -13,7 +13,7 @@
     <section class="bg" style="background-image: url('{{ asset('images/jungle.png') }}')">
         <div class="bg-overlay">
             <div class="container">
-                <div class="overlay-content">
+                <div class="overlay-content d-flex flex-column align-items-center text-white">
                     {{ include('_shared/_flash.html.twig') }}
 
                     <img src="{{ asset('images/LESBATARK.png') }}" alt="Logo BATARK" class="logo-batark">
@@ -103,21 +103,21 @@
                     </div>
                 </section>
 
-                <section class="">
+                <section>
                     <div class="news-panel">
                         <div class="section-label">Quoi de neuf</div>
                         <h2 class="news-title"><i class="bi bi-newspaper"></i>Dernières actualités</h2>
 
                         <div class="row g-3 g-md-4 mt-2">
                             <div class="col-md-6">
-                                <article class="news-card">
+                                <article class="news-card content-card border border-2 border-success shadow-sm h-100">
                                     <span class="news-date">Il y a 2 jours</span>
                                     <h3 class="news-card-title">Nouvel événement : Chasse au Trésor</h3>
                                     <p class="news-card-desc">Un événement spécial commence ce weekend avec des récompenses exclusives !</p>
                                 </article>
                             </div>
                             <div class="col-md-6">
-                                <article class="news-card">
+                                <article class="news-card content-card border border-2 border-success shadow-sm h-100">
                                     <span class="news-date">Il y a 5 jours</span>
                                     <h3 class="news-card-title">Nouveau serveur PVP disponible</h3>
                                     <p class="news-card-desc">Rejoignez notre tout nouveau serveur PVP avec des taux améliorés.</p>

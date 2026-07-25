@@ -4,6 +4,10 @@
 
 {% block body_class %}servers-page{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/server.css') }}">
+{% endblock %}
+
 {% block body %}
 
 <section class="bg" style="background-image: url('{{ asset('images/jungle.png') }}')">
@@ -34,12 +38,27 @@
                     Aucun serveur configuré pour le moment. Revenez bientôt !
                 </div>
             {% else %}
-                {% for server in servers %}
-                    {% set borderClass = server.gameMode == 'PVP' ? 'border-primary' : 'border-info' %}
-                    <div class="card {{ borderClass }} content-card mb-3">
-                        {% include 'server/_card.html.twig' with {server: server} %}
+                <div data-controller="server-modal">
+                    <div class="server-grid" data-server-modal-target="grid">
+                        {% set previousMode = null %}
+                        {% for server in servers %}
+                            {% if server.gameMode != previousMode %}
+                                <div class="section-label">{{ server.gameMode }}</div>
+                                {% set previousMode = server.gameMode %}
+                            {% endif %}
+                            <div class="server-trigger"
+                                role="button"
+                                tabindex="0"
+                                data-server-modal-target="trigger"
+                                data-action="click->server-modal#open keydown.enter->server-modal#open keydown.space->server-modal#open"
+                                data-server-modal-index-param="{{ loop.index0 }}">
+                                {% include 'server/_server_card.html.twig' with {server: server, id_prefix: 'list'} %}
+                            </div>
+                        {% endfor %}
                     </div>
-                {% endfor %}
+
+                    {% include 'server/_server_modal.html.twig' with {servers: servers} %}
+                </div>
             {% endif %}
 
         </div>

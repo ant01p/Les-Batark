@@ -1,0 +1,101 @@
+{% set carouselId = 'server-carousel-' ~ id_prefix ~ '-' ~ server.id %}
+{% set images = server.imagesList %}
+{% set settings = server.formattedSettings %}
+{% set mods = server.modsList %}
+{% set modeModifier = server.gameMode == 'PVP' ? 'pvp' : 'pve' %}
+
+<div class="card {{ server.borderClass }} content-card server-card {{ server.cardModifierClass }}">
+
+    {# PC / tablette : titre | slots, badge poussé à droite, sur une seule ligne #}
+    <div class="d-none d-md-flex align-items-start justify-content-between gap-2 mb-3">
+        <div class="server-title-row">
+            <h2 class="card-title mb-0 server-title">Les BatArk - {{ server.title }}</h2>
+            <span class="server-slots-group">
+                <span class="server-title-sep" aria-hidden="true">|</span>
+                <span class="server-players">{{ server.maxPlayers }} slots</span>
+            </span>
+        </div>
+        <span class="badge server-gamemode-badge server-gamemode-badge--{{ modeModifier }}">{{ server.gameMode }}</span>
+    </div>
+
+    {# Mobile : titre seul sur sa ligne, badge + slots juste en dessous #}
+    <div class="d-md-none mb-3">
+        <h2 class="card-title mb-1 server-title">Les BatArk - {{ server.title }}</h2>
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge server-gamemode-badge server-gamemode-badge--{{ modeModifier }}">{{ server.gameMode }}</span>
+            <span class="server-title-sep" aria-hidden="true">|</span>
+            <span class="server-players">{{ server.maxPlayers }} slots</span>
+        </div>
+    </div>
+
+    {% if images is not empty %}
+        <div id="{{ carouselId }}" class="carousel slide server-carousel mb-3">
+            <div class="carousel-inner">
+                {% for image in images %}
+                    <div class="carousel-item {{ loop.first ? 'active' : '' }}">
+                        <img src="{{ asset('images/' ~ image) }}" class="d-block w-100" alt="{{ server.title }} — image {{ loop.index }}">
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if images|length > 1 %}
+                <button class="carousel-control-prev" type="button" data-bs-target="#{{ carouselId }}" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Image précédente</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#{{ carouselId }}" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Image suivante</span>
+                </button>
+            {% endif %}
+
+            {# Toujours affichés (même à 1 image) pour conserver la même hauteur de carte sur toutes les cartes #}
+            <div class="carousel-indicators">
+                {% for image in images %}
+                    <button type="button"
+                        data-bs-target="#{{ carouselId }}"
+                        data-bs-slide-to="{{ loop.index0 }}"
+                        class="{{ loop.first ? 'active' : '' }}"
+                        aria-current="{{ loop.first ? 'true' : 'false' }}"
+                        aria-label="Image {{ loop.index }}">
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <hr class="server-sep">
+
+    <div class="server-section">
+        <p class="server-section-title"><i class="bi bi-gear"></i> Paramètres</p>
+
+        {% if settings is not empty %}
+            <div class="server-settings">
+                {% for setting in settings %}
+                    <div class="server-setting">
+                        <i class="bi {{ setting.icon }} server-setting-icon"></i>
+                        <span class="server-setting-label">{{ setting.label }}</span>
+                        <span class="server-setting-value">{{ setting.value }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-secondary small mb-0">Paramètres non renseignés.</p>
+        {% endif %}
+    </div>
+
+    {% if mods is not empty %}
+        <hr class="server-sep">
+
+        <div class="server-section">
+            <p class="server-section-title"><i class="bi bi-puzzle"></i> Mods installés</p>
+
+            <div class="d-flex flex-wrap gap-2">
+                {% for mod in mods %}
+                    <span class="badge server-mod-badge"><i class="bi bi-puzzle-fill"></i> {{ mod }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+</div>

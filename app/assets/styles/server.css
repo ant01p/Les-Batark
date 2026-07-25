@@ -1,0 +1,441 @@
+/* ==========================================================================
+   Carte serveur (page publique /serveurs)
+   ========================================================================== */
+
+/* Grille : 1 carte par ligne jusqu'à 1699px, 2 cartes par ligne à partir de 1700px */
+.server-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+
+}
+
+/* Étiquette "PVE" / "PVP" : occupe toute la largeur de la grille. Le gap de
+   la grille (1.5rem) s'ajoute déjà à la margin-bottom du label ; on la
+   compense pour retrouver le même écart label -> carte que sur Événements
+   (16px, cf. .section-label dans base.css). */
+.server-grid .section-label {
+    grid-column: 1 / -1;
+    margin-bottom: calc(16px - 1.5rem);
+}
+
+/* Page serveurs : dès que la grille passe à 2 colonnes (1700px), le conteneur
+   Bootstrap standard (bloqué à 960/1140/1320px) devient trop étroit pour que
+   "titre | slots" tienne sur une ligne à côté du badge. On laisse le
+   conteneur suivre la largeur de l'écran jusqu'à ~1900px. */
+@media (min-width: 1700px) {
+    .servers-page .container {
+        max-width: 1900px;
+    }
+
+    .server-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 0 155px;
+    }
+}
+
+/* Titre "Nos Serveurs" : même position que sur Boutique et Événements
+   (largeur standard Bootstrap), même si le conteneur s'élargit juste en
+   dessous pour la grille de cartes. */
+@media (min-width: 1200px) {
+    .servers-page .page-header {
+        max-width: 1140px;
+        margin-inline: auto;
+    }
+}
+
+@media (min-width: 1400px) {
+    .servers-page .page-header {
+        max-width: 1320px;
+    }
+}
+
+.server-card {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 18px;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
+    border-width: 1.5px !important;
+    padding: 20px;
+    cursor: pointer;
+    height: 100%;
+}
+
+.server-card--pve {
+    --server-accent: var(--bs-info);
+}
+
+.server-card--pvp {
+    --server-accent: var(--bs-primary);
+}
+
+.server-trigger:focus-visible .server-card {
+    outline: 2px solid var(--server-accent, var(--bs-primary));
+    outline-offset: 2px;
+}
+
+/* Séparateur discret entre les sections d'une carte */
+.server-sep {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 16px 0;
+}
+
+.server-players {
+    color: var(--text-muted-lavender);
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* Titre | nombre de places : groupés, passent à la ligne librement si ça
+   ne tient pas (le titre n'est jamais tronqué) */
+.server-title-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px;
+}
+
+/* "|" et "X slots" forment un seul bloc : jamais séparés en cas de retour
+   à la ligne, ils passent ensemble sous le titre */
+.server-slots-group {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.server-title-sep {
+    color: rgba(255, 255, 255, 0.25);
+}
+
+/* Le titre reste toujours sur une seule ligne */
+.server-title {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.server-gamemode-badge {
+    flex-shrink: 0;
+    background-color: transparent;
+    border: 1.5px solid;
+    border-radius: 8px;
+}
+
+.server-gamemode-badge--pve {
+    border-color: var(--bs-info);
+    color: var(--bs-info);
+}
+
+.server-gamemode-badge--pvp {
+    border-color: var(--bs-primary);
+    color: var(--bs-primary);
+}
+
+/* Carrousel */
+.server-carousel .carousel-inner,
+.server-carousel .carousel-item img {
+    border-radius: 12px;
+}
+
+.server-carousel .carousel-item img {
+    height: 220px;
+    object-fit: cover;
+}
+
+@media (min-width: 768px) {
+    .server-carousel .carousel-item img {
+        height: 300px;
+    }
+}
+
+@media (min-width: 992px) {
+    .server-carousel .carousel-item img {
+        height: 340px;
+    }
+}
+
+.server-carousel .carousel-indicators {
+    position: static;
+    margin: 10px 0 0;
+}
+
+.server-carousel .carousel-indicators [data-bs-target] {
+    background-color: var(--server-accent, var(--bs-white));
+    opacity: 0.5;
+}
+
+.server-carousel .carousel-indicators .active {
+    opacity: 1;
+}
+
+/* Sections (paramètres / mods) */
+.server-section-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--label-muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Paramètres : grille à colonnes égales, alignées parfaitement en ligne
+   comme en colonne (tablette / PC) */
+.server-settings {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 16px 12px;
+}
+
+.server-setting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 4px 5px;
+    text-align: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.server-setting:last-child {
+    border-right: none;
+}
+
+/* PC : 5 paramètres par ligne */
+@media (min-width: 992px) {
+    .server-settings {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
+
+.server-setting-icon {
+    font-size: 15px;
+    color: var(--label-muted);
+}
+
+.server-setting-label {
+    font-size: 11px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: var(--label-muted);
+    overflow-wrap: break-word;
+}
+
+.server-setting-value {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--bs-success);
+}
+
+/* Mods */
+.server-mod-badge {
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid var(--server-accent, rgba(255, 255, 255, 0.25));
+    color: var(--text-muted-lavender-light);
+    font-weight: 500;
+    font-size: 13px;
+    padding: 6px 10px;
+    border-radius: 8px;
+}
+
+.server-mod-badge .bi {
+    color: var(--server-accent, var(--text-muted-lavender-light));
+    margin-right: 4px;
+}
+
+/* Fond des cartes flouté/assombri quand la vue agrandie est ouverte */
+.server-grid.is-dimmed .server-trigger {
+    filter: blur(5px) brightness(0.55);
+    pointer-events: none;
+    transition: filter 0.25s ease;
+}
+
+/* MOBILE : grille 2 colonnes pour les paramètres */
+@media (max-width: 575.98px) {
+    .server-settings {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 4px;
+    }
+
+    .server-setting {
+        border-right: none;
+        padding: 0;
+    }
+}
+
+/* ==========================================================================
+   Vue agrandie (modale personnalisée)
+   ========================================================================== */
+
+body.server-modal-scroll-lock {
+    overflow: hidden;
+}
+
+.server-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1055;
+}
+
+.server-modal.is-open {
+    display: block;
+}
+
+.server-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.server-modal.is-open .server-modal-overlay {
+    opacity: 1;
+}
+
+.server-modal-shell {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: calc(100vw - 24px);
+}
+
+.server-modal-nav {
+    flex: 0 0 auto;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(0, 0, 0, 0.6);
+    color: var(--bs-white);
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.server-modal-nav:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.85);
+    transform: scale(1.05);
+}
+
+.server-modal-nav:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.server-modal-card-wrap {
+    position: relative;
+    width: min(700px, 90vw);
+}
+
+.server-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 3;
+    background-color: rgba(0, 0, 0, 0.55);
+    border-radius: 50%;
+    padding: 8px;
+}
+
+.server-modal-stage {
+    display: grid;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 18px;
+    animation: server-modal-pop 0.25s ease;
+}
+
+@keyframes server-modal-pop {
+    from {
+        opacity: 0;
+        transform: scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.server-modal-card {
+    grid-area: 1 / 1;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateX(0);
+    transition: transform 0.32s ease, opacity 0.32s ease;
+}
+
+.server-modal-card .server-card {
+    cursor: default;
+}
+
+.server-modal-card.is-active {
+    position: relative;
+    z-index: 2;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(0);
+}
+
+.server-modal-card.is-enter-right {
+    position: relative;
+    z-index: 2;
+    visibility: visible;
+    opacity: 0;
+    transform: translateX(48px);
+}
+
+.server-modal-card.is-enter-left {
+    position: relative;
+    z-index: 2;
+    visibility: visible;
+    opacity: 0;
+    transform: translateX(-48px);
+}
+
+.server-modal-card.is-exit-left {
+    position: relative;
+    z-index: 1;
+    visibility: visible;
+    opacity: 0;
+    transform: translateX(-48px);
+}
+
+.server-modal-card.is-exit-right {
+    position: relative;
+    z-index: 1;
+    visibility: visible;
+    opacity: 0;
+    transform: translateX(48px);
+}
+
+@media (max-width: 767.98px) {
+    .server-modal-nav {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+
+    .server-modal-shell {
+        gap: 6px;
+        max-width: calc(100vw - 8px);
+    }
+
+    .server-modal-card-wrap {
+        width: min(92vw, 92vw);
+    }
+}

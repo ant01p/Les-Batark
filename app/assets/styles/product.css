@@ -25,7 +25,7 @@
 }
 
 .shop-card-desc {
-    color: #c0b8d8;
+    color: var(--text-muted-lavender);
     line-height: 1.5;
     display: -webkit-box;
     -webkit-box-orient: vertical;

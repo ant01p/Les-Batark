@@ -1,6 +1,4 @@
 {% set modeBadgeClass = server.gameMode == 'PVP' ? 'bg-primary' : 'bg-info' %}
-{% set statusBadgeClass = server.isOnline ? 'text-bg-success' : 'text-bg-danger' %}
-{% set statusLabel = server.isOnline ? 'En ligne' : 'Hors ligne' %}
 
 <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center gap-2 mb-2">
     <div class="d-flex flex-wrap align-items-center gap-2">
@@ -8,10 +6,7 @@
         <span class="badge {{ modeBadgeClass }}">{{ server.gameMode }}</span>
     </div>
 
-    <div class="d-flex align-items-center justify-content-between gap-2 text-nowrap">
-        <span class="badge {{ statusBadgeClass }}">{{ statusLabel }}</span>
-        <span class="text-secondary">0/{{ server.maxPlayers }}</span>
-    </div>
+    <span class="text-secondary">{{ server.maxPlayers }} slots</span>
 </div>
 
 <hr class="border-white border-opacity-10 my-2">

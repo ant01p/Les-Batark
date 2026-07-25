@@ -56,7 +56,7 @@
 }
 
 .admin-page-title {
-    color: #fff;
+    color: var(--bs-white);
     font-weight: 700;
     font-size: 1.5rem;
     margin-bottom: 4px;
@@ -87,7 +87,7 @@
     padding: 18px 20px;
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 12px;
-    color: #fff;
+    color: var(--bs-white);
     text-decoration: none;
     background: rgba(255, 255, 255, 0.03);
     transition: background-color .15s ease, border-color .15s ease;
@@ -95,7 +95,7 @@
 
 .admin-nav-card:hover {
     background: rgba(255, 255, 255, 0.08);
-    color: #fff;
+    color: var(--bs-white);
 }
 
 .admin-nav-card.active {
@@ -113,7 +113,7 @@
     display: block;
     font-size: 1.1rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--bs-white);
 }
 
 .admin-nav-card-desc {
@@ -171,18 +171,6 @@
     margin-bottom: 16px;
 }
 
-/* Contenu des cards */
-.admin-card-body {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-}
-
-.admin-card-content {
-    min-width: 0;
-}
-
 /* Boutons Modifier / Supprimer : disposition en ligne portée par les
    utilitaires Bootstrap (d-flex align-items-center gap-2) posés dans le
    Twig, quelle que soit la largeur d'écran */
@@ -194,12 +182,6 @@
     width: 96px;
     padding-left: 8px;
     padding-right: 8px;
-}
-
-@media (min-width: 992px) {
-    .admin-card-body {
-        gap: 24px;
-    }
 }
 
 /* ==========================================================================
@@ -549,7 +531,7 @@
 .admin-product-card .admin-product-price {
     font-size: 1.05rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--bs-white);
     white-space: nowrap;
 }
 

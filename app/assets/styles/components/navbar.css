@@ -3,9 +3,24 @@
    Chargé globalement (présent sur toutes les pages), à côté de cards.css.
    ========================================================================== */
 
-/* Liens horizontaux (>= lg) : indicateur d'état actif */
+/* Liens desktop (>= lg) : icône au-dessus, texte centré en dessous
+   uniquement quand la place manque (992-1199px). Dès qu'il y a assez de
+   place (>= 1200px), icône (+ badge) à gauche et texte à droite. */
 .navbar-nav .nav-link {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    text-align: center;
+}
+
+/* Compte : toujours en ligne (jamais empilé), quelle que soit la largeur */
+.navbar-nav .nav-link.nav-link--inline {
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    text-align: left;
 }
 
 .navbar-nav .nav-link.active {
@@ -23,10 +38,29 @@
     background: var(--bs-primary);
 }
 
+/* Badge de quantité du panier : petit badge en ligne, à droite de l'icône
+   panier, jamais superposé au texte "Panier" */
+.cart-badge {
+    font-size: 0.7rem;
+    padding: 0.25em 0.5em;
+    color: var(--bs-black);
+}
+
 /* Confort de lecture/clic des liens desktop : un peu plus grands et plus
-   espacés, sans surdimensionner la navbar */
+   espacés, sans surdimensionner la navbar. Espacement réduit juste après le
+   passage en mode desktop (992-1199px), où la place manque pour tous les
+   liens + le panier ; élargi à partir de 1200px où il y a plus de place. */
 @media (min-width: 992px) {
     .navbar-nav .nav-link {
+        padding-inline: 10px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .navbar-nav .nav-link {
+        flex-direction: row;
+        gap: 6px;
+        text-align: left;
         font-size: 1.05rem;
         padding-inline: 18px;
     }
@@ -55,8 +89,16 @@
 }
 
 /* Menu mobile / tablette (offcanvas, < lg) */
+/* Bootstrap étire l'offcanvas sur toute la hauteur de l'écran (top:0 +
+   bottom:0) par défaut. On le fait plutôt s'ajuster au contenu (liens +
+   section compte), sans espace vide en bas, avec un plafond à 100vh pour
+   les longues listes (scroll interne géré par .mobile-nav-list). */
 .mobile-nav-offcanvas {
     width: min(320px, 85vw);
+    top: 0;
+    bottom: auto;
+    height: auto;
+    max-height: 100vh;
 }
 
 .mobile-nav-body {
@@ -84,7 +126,7 @@
     border-radius: 12px;
     border: 1px solid transparent;
     background: rgba(255, 255, 255, 0.03);
-    color: #fff;
+    color: var(--bs-white);
     font-size: 1.05rem;
     text-decoration: none;
     transition: background-color .15s ease, border-color .15s ease;

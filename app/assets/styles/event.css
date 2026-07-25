@@ -4,23 +4,23 @@
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: #a0a0c0;
+    color: var(--label-muted);
     margin-bottom: 8px;
 }
 
 .event-card-reward-item {
     font-size: 18px;
-    color: #e0d8f8;
+    color: var(--text-muted-lavender-light);
     padding: 3px 0;
 }
 
 .event-card-reward-simple {
     font-size: 16px;
-    color: #e0d8f8;
+    color: var(--text-muted-lavender-light);
 }
 
 .event-card-reward-general {
-    color: #c0b8d8;
+    color: var(--text-muted-lavender);
 }
 
 .medals {

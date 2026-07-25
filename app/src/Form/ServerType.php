@@ -52,20 +52,18 @@ class ServerType extends AbstractType
                 'required' => false,
                 'attr'     => ['placeholder' => 'Ex : ark-pve-island.server.com:27015'],
             ])
-            ->add('isOnline', ChoiceType::class, [
-                'label'    => 'Statut',
-                'choices'  => [
-                    'En ligne'   => true,
-                    'Hors ligne' => false,
-                ],
-                'expanded' => true,
-                'multiple' => false,
-            ])
             ->add('mods', TextType::class, [
                 'label'       => 'Mods installés',
                 'required'    => false,
                 'attr'        => ['placeholder' => 'Ex : Awesome SpyGlass, Dino Storage, Structures Plus', 'maxlength' => 100],
                 'constraints' => [new Length(max: 100, maxMessage: 'La liste des mods ne peut pas dépasser {{ limit }} caractères.')],
+            ])
+            ->add('images', TextType::class, [
+                'label'       => 'Images du serveur',
+                'required'    => false,
+                'help'        => "Noms de fichiers séparés par des virgules, dans public/images/ (ex : the-island-1.jpg, the-island-2.jpg). Prévoir une image panoramique en premier.",
+                'attr'        => ['placeholder' => 'Ex : the-island-1.jpg, the-island-2.jpg, the-island-3.jpg', 'maxlength' => 500],
+                'constraints' => [new Length(max: 500, maxMessage: 'La liste des images ne peut pas dépasser {{ limit }} caractères.')],
             ])
 
             // Paramètres du serveur

@@ -26,7 +26,7 @@
 }
 
 .content-card {
-    padding: 24px 28px;
+    padding: 15px 15px;
 }
 
 /* Badge dans une carte "verre sombre" (accueil / boutique) */
@@ -41,13 +41,13 @@
 .card-title {
     font-size: 25px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--bs-white);
     margin-bottom: 8px;
 }
 
 .card-desc {
     font-size: 18px;
-    color: #c0b8d8;
+    color: var(--text-muted-lavender);
     line-height: 1.65;
     margin-bottom: 12px;
 }
