@@ -104,26 +104,34 @@
                 </section>
 
                 <section>
-                    <div class="news-panel">
+                    <div class="news-panel" data-controller="news">
                         <div class="section-label">Quoi de neuf</div>
                         <h2 class="news-title"><i class="bi bi-newspaper"></i>Dernières actualités</h2>
 
-                        <div class="row g-3 g-md-4 mt-2">
-                            <div class="col-md-6">
-                                <article class="news-card content-card border border-2 border-success shadow-sm h-100">
-                                    <span class="news-date">Il y a 2 jours</span>
-                                    <h3 class="news-card-title">Nouvel événement : Chasse au Trésor</h3>
-                                    <p class="news-card-desc">Un événement spécial commence ce weekend avec des récompenses exclusives !</p>
-                                </article>
+                        {% if newsItems is empty %}
+                            <p class="news-card-desc mb-0">Aucune actualité pour le moment.</p>
+                        {% else %}
+                            <div class="row g-3 g-md-4 mt-2">
+                                {% for item in newsItems %}
+                                    <div class="col-md-6" data-news-target="item">
+                                        <a href="{{ item.url }}" class="d-block h-100 text-decoration-none text-reset">
+                                            <article class="news-card content-card border border-2 border-success shadow-sm h-100">
+                                                <span class="news-date">{{ item.dateLabel }}</span>
+                                                <h3 class="news-card-title">{{ item.title }}</h3>
+                                                <p class="news-card-desc">{{ item.description }}</p>
+                                            </article>
+                                        </a>
+                                    </div>
+                                {% endfor %}
                             </div>
-                            <div class="col-md-6">
-                                <article class="news-card content-card border border-2 border-success shadow-sm h-100">
-                                    <span class="news-date">Il y a 5 jours</span>
-                                    <h3 class="news-card-title">Nouveau serveur PVP disponible</h3>
-                                    <p class="news-card-desc">Rejoignez notre tout nouveau serveur PVP avec des taux améliorés.</p>
-                                </article>
-                            </div>
-                        </div>
+
+                            {% if newsItems|length > 4 %}
+                                <div class="text-center mt-3">
+                                    <button type="button" class="btn btn-outline-light d-none" data-news-target="moreButton" data-action="news#showMore">Voir plus</button>
+                                    <button type="button" class="btn btn-outline-light d-none" data-news-target="lessButton" data-action="news#showLess">Voir moins</button>
+                                </div>
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </section>
 

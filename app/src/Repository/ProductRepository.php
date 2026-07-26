@@ -43,6 +43,19 @@ class ProductRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @return Product[]
+     */
+    public function findRecentlyCreated(int $limit): array
+    {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     //    /**
     //     * @return Product[] Returns an array of Product objects
     //     */
