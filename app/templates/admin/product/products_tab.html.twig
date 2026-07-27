@@ -69,14 +69,14 @@
                             <p class="text-muted mb-3">{{ product.description }}</p>
                         {% endif %}
 
-                        <div class="mt-auto d-flex flex-column gap-2">
+                        <div class="admin-actions mt-auto d-flex align-items-center justify-content-between">
 
-                            <a href="{{ path('admin_product_edit', {id: product.id}) }}" class="btn btn-primary w-100">Modifier</a>
+                            <a href="{{ path('admin_product_edit', {id: product.id}) }}" class="btn btn-primary" title="Modifier" aria-label="Modifier"><i class="bi bi-pencil-fill"></i></a>
 
                             <form method="post" action="{{ path('admin_product_delete', {id: product.id}) }}" class="m-0" id="deleteProductForm{{ product.id }}">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete_product_' ~ product.id) }}">
 
-                                <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#deleteProductModal{{ product.id }}">Supprimer</button>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProductModal{{ product.id }}" title="Supprimer" aria-label="Supprimer"><i class="bi bi-trash-fill"></i></button>
                             </form>
                         </div>
                     </div>

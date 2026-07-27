@@ -19,6 +19,8 @@ class ServerRepository extends ServiceEntityRepository
     public function findAllOrdered(): array
     {
         return $this->createQueryBuilder('s')
+            ->addSelect('images')
+            ->leftJoin('s.images', 'images')
             ->orderBy('s.gameMode', 'ASC')
             ->addOrderBy('s.title', 'ASC')
             ->getQuery()
@@ -30,7 +32,9 @@ class ServerRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('s')
             ->addSelect('creator')
+            ->addSelect('images')
             ->leftJoin('s.createdBy', 'creator')
+            ->leftJoin('s.images', 'images')
             ->orderBy('s.gameMode', 'ASC')
             ->addOrderBy('s.title', 'ASC')
             ->getQuery()

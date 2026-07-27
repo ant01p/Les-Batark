@@ -1,5 +1,5 @@
 {% set carouselId = 'server-carousel-' ~ id_prefix ~ '-' ~ server.id %}
-{% set images = server.imagesList %}
+{% set images = server.displayImagePaths %}
 {% set settings = server.formattedSettings %}
 {% set mods = server.modsList %}
 {% set modeModifier = server.gameMode == 'PVP' ? 'pvp' : 'pve' %}
@@ -33,7 +33,7 @@
             <div class="carousel-inner">
                 {% for image in images %}
                     <div class="carousel-item {{ loop.first ? 'active' : '' }}">
-                        <img src="{{ asset('images/' ~ image) }}" class="d-block w-100" alt="{{ server.title }} — image {{ loop.index }}">
+                        <img src="{{ asset(image) }}" class="d-block w-100" alt="{{ server.title }} — image {{ loop.index }}">
                     </div>
                 {% endfor %}
             </div>

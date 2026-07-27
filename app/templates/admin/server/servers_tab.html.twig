@@ -23,10 +23,10 @@
                     {% endif %}
 
                     <div class="admin-actions d-flex align-items-center gap-2">
-                        <a href="{{ path('admin_server_edit', {id: server.id}) }}" class="btn btn-primary">Modifier</a>
+                        <a href="{{ path('admin_server_edit', {id: server.id}) }}" class="btn btn-primary" title="Modifier" aria-label="Modifier"><i class="bi bi-pencil-fill"></i></a>
                         <form method="post" action="{{ path('admin_server_delete', {id: server.id}) }}" class="m-0" id="deleteServerForm{{ server.id }}">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete_server_' ~ server.id) }}">
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteServerModal{{ server.id }}">Supprimer</button>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteServerModal{{ server.id }}" title="Supprimer" aria-label="Supprimer"><i class="bi bi-trash-fill"></i></button>
                         </form>
                     </div>
                 </div>

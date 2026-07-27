@@ -85,12 +85,38 @@
                         {{ form_errors(form.mods) }}
                     </div>
 
+                    {# Photos #}
                     <div class="mb-3">
-                        {{ form_label(form.images) }}
-                        {{ form_widget(form.images, {attr: {class: 'form-control'}}) }}
-                        {% if form.images.vars.help %}
-                            <div class="form-text">{{ form.images.vars.help }}</div>
+                        <label class="form-label">Photos</label>
+
+                        {% if server.images is defined and server.images|length > 0 %}
+                            <div class="row g-2 mb-3" id="existing-images">
+                                {% for image in server.images %}
+                                    <div class="col-6 col-md-4 image-row" data-image-id="{{ image.id }}">
+                                        <div class="image-row-inner">
+                                            <img src="{{ asset('uploads/imageServer/' ~ image.filename) }}" alt="" class="image-thumb">
+
+                                            <div class="form-check mt-2">
+                                                <input type="radio" name="mainImage" value="existing_{{ image.id }}"
+                                                    class="form-check-input main-image-radio"
+                                                    id="main-existing-{{ image.id }}"
+                                                    {{ image.isMain ? 'checked' : '' }}>
+                                                <label class="form-check-label small" for="main-existing-{{ image.id }}">Image principale</label>
+                                            </div>
+
+                                            <input type="checkbox" name="deleteImages[]" value="{{ image.id }}" class="d-none delete-image-checkbox">
+                                            <button type="button" class="btn btn-sm btn-outline-danger w-100 mt-1 delete-image-btn">Supprimer</button>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         {% endif %}
+
+                        <div class="row g-2" id="image-collection"
+                            data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}"
+                            data-index="0"></div>
+
+                        <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="add-image-btn">+ Ajouter une photo</button>
                         {{ form_errors(form.images) }}
                     </div>
 
@@ -170,4 +196,98 @@
     </div>
 
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        (function () {
+            const collection = document.getElementById('image-collection');
+            const addButton = document.getElementById('add-image-btn');
+
+            function buildPreview() {
+                const preview = document.createElement('img');
+                preview.className = 'image-thumb image-preview d-none';
+                preview.alt = '';
+                return preview;
+            }
+
+            function wireFileInput(fileInput, preview) {
+                fileInput.classList.add('form-control', 'image-file-input');
+                fileInput.addEventListener('change', function () {
+                    const file = fileInput.files[0];
+                    if (!file) {
+                        preview.classList.add('d-none');
+                        preview.removeAttribute('src');
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        preview.src = event.target.result;
+                        preview.classList.remove('d-none');
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            if (addButton && collection) {
+                addButton.addEventListener('click', function () {
+                    const index = parseInt(collection.dataset.index, 10);
+                    const html = collection.dataset.prototype.replace(/__image_name__/g, index);
+
+                    const wrapper = document.createElement('div');
+                    wrapper.innerHTML = html;
+                    const fileInput = wrapper.querySelector('input[type="file"]');
+
+                    const row = document.createElement('div');
+                    row.className = 'col-6 col-md-4 image-row new-image-row';
+
+                    const inner = document.createElement('div');
+                    inner.className = 'image-row-inner';
+
+                    const preview = buildPreview();
+                    wireFileInput(fileInput, preview);
+
+                    const radioWrap = document.createElement('div');
+                    radioWrap.className = 'form-check mt-2';
+                    radioWrap.innerHTML =
+                        '<input type="radio" name="mainImage" value="new_' + index + '" class="form-check-input main-image-radio" id="main-new-' + index + '">' +
+                        '<label class="form-check-label small" for="main-new-' + index + '">Image principale</label>';
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'btn btn-sm btn-outline-danger w-100 mt-1';
+                    removeBtn.textContent = 'Supprimer';
+                    removeBtn.addEventListener('click', function () {
+                        row.remove();
+                    });
+
+                    inner.appendChild(preview);
+                    inner.appendChild(fileInput);
+                    inner.appendChild(radioWrap);
+                    inner.appendChild(removeBtn);
+                    row.appendChild(inner);
+                    collection.appendChild(row);
+
+                    collection.dataset.index = index + 1;
+                });
+            }
+
+            document.querySelectorAll('.delete-image-btn').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    const row = button.closest('.image-row');
+                    const checkbox = row.querySelector('.delete-image-checkbox');
+                    const radio = row.querySelector('.main-image-radio');
+                    const marked = row.classList.toggle('marked-for-deletion');
+
+                    checkbox.checked = marked;
+                    radio.disabled = marked;
+                    if (marked) {
+                        radio.checked = false;
+                    }
+                    button.textContent = marked ? 'Annuler' : 'Supprimer';
+                });
+            });
+        })();
+    </script>
 {% endblock %}

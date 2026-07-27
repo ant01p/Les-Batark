@@ -2,12 +2,14 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\AdminActivityLog;
 use App\Entity\Product;
 use App\Entity\ProductImage;
 use App\Entity\User;
 use App\Form\ProductType;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
+use App\Service\AdminActivityLogger;
 use App\Service\ImageHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -38,7 +40,7 @@ final class AdminProductController extends AbstractController
     }
 
     #[Route('/new', name: 'new')]
-    public function new(Request $request, EntityManagerInterface $em, ImageHandler $imageHandler): Response
+    public function new(Request $request, EntityManagerInterface $em, ImageHandler $imageHandler, AdminActivityLogger $activityLogger): Response
     {
         $product = new Product();
 
@@ -56,6 +58,7 @@ final class AdminProductController extends AbstractController
             $em->persist($product);
             $em->flush();
 
+            $activityLogger->log(actor: $user, action: AdminActivityLog::ACTION_PRODUCT_CREATED, subjectType: AdminActivityLog::SUBJECT_PRODUCT, subjectId: $product->getId(), subjectLabel: $product->getName());
             $this->addFlash('success', 'Produit créé avec succès.');
             return $this->redirectToRoute('admin_product_index');
         }
@@ -68,7 +71,7 @@ final class AdminProductController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'edit')]
-    public function edit(Product $product, Request $request, EntityManagerInterface $em, ImageHandler $imageHandler): Response
+    public function edit(Product $product, Request $request, EntityManagerInterface $em, ImageHandler $imageHandler, AdminActivityLogger $activityLogger): Response
     {
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
@@ -80,6 +83,7 @@ final class AdminProductController extends AbstractController
 
             $em->flush();
 
+            $activityLogger->log(actor: $this->getUser(), action: AdminActivityLog::ACTION_PRODUCT_UPDATED, subjectType: AdminActivityLog::SUBJECT_PRODUCT, subjectId: $product->getId(), subjectLabel: $product->getName());
             $this->addFlash('success', 'Produit modifié avec succès.');
             return $this->redirectToRoute('admin_product_index');
         }
@@ -151,11 +155,16 @@ final class AdminProductController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
-    public function delete(Product $product, Request $request, EntityManagerInterface $em): Response
+    public function delete(Product $product, Request $request, EntityManagerInterface $em, AdminActivityLogger $activityLogger): Response
     {
         if ($this->isCsrfTokenValid('delete_product_' . $product->getId(), $request->request->get('_token'))) {
+            $id = $product->getId();
+            $label = $product->getName();
+
             $em->remove($product);
             $em->flush();
+
+            $activityLogger->log(actor: $this->getUser(), action: AdminActivityLog::ACTION_PRODUCT_DELETED, subjectType: AdminActivityLog::SUBJECT_PRODUCT, subjectId: $id, subjectLabel: $label);
             $this->addFlash('success', 'Produit supprimé.');
         }
 

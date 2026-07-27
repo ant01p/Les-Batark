@@ -17,10 +17,10 @@
                     {% include 'event/_card.html.twig' with {event: event, showDescription: false} %}
 
                     <div class="admin-actions d-flex align-items-center gap-2">
-                        <a href="{{ path('admin_event_edit', {id: event.id}) }}" class="btn btn-primary">Modifier</a>
+                        <a href="{{ path('admin_event_edit', {id: event.id}) }}" class="btn btn-primary" title="Modifier" aria-label="Modifier"><i class="bi bi-pencil-fill"></i></a>
                         <form method="post" action="{{ path('admin_event_delete', {id: event.id}) }}" class="m-0" id="deleteEventForm{{ event.id }}">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete_event_' ~ event.id) }}">
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEventModal{{ event.id }}">Supprimer</button>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEventModal{{ event.id }}" title="Supprimer" aria-label="Supprimer"><i class="bi bi-trash-fill"></i></button>
                         </form>
                     </div>
                 </div>

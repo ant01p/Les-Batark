@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ServerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -65,9 +67,6 @@ class Server
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $mods = null;
 
-    #[ORM\Column(length: 500, nullable: true)]
-    private ?string $images = null;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -75,9 +74,16 @@ class Server
     #[ORM\JoinColumn(nullable: false)]
     private ?User $createdBy = null;
 
+    /**
+     * @var Collection<int, ServerImage>
+     */
+    #[ORM\OneToMany(targetEntity: ServerImage::class, mappedBy: 'server', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $images;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -277,30 +283,72 @@ class Server
         return array_values(array_filter(array_map('trim', explode(',', $this->mods))));
     }
 
-    public function getImages(): ?string
+    /**
+     * @return Collection<int, ServerImage>
+     */
+    public function getImages(): Collection
     {
         return $this->images;
     }
 
-    public function setImages(?string $images): static
+    public function addImage(ServerImage $image): static
     {
-        $this->images = $images;
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->setServer($this);
+        }
 
         return $this;
     }
 
-    /**
-     * @return string[] image filenames (relative to public/images/) parsed from the comma-separated raw value
-     */
-    public function getImagesList(): array
+    public function removeImage(ServerImage $image): static
     {
-        if (!$this->images) {
-            return self::DEFAULT_IMAGES;
+        if ($this->images->removeElement($image)) {
+            if ($image->getServer() === $this) {
+                $image->setServer(null);
+            }
         }
 
-        $list = array_values(array_filter(array_map('trim', explode(',', $this->images))));
+        return $this;
+    }
 
-        return $list ?: self::DEFAULT_IMAGES;
+    public function getMainImage(): ?ServerImage
+    {
+        foreach ($this->images as $image) {
+            if ($image->isMain()) {
+                return $image;
+            }
+        }
+
+        return $this->images->first() ?: null;
+    }
+
+    /**
+     * @return ServerImage[] images ordered with the main image first
+     */
+    public function getOrderedImages(): array
+    {
+        $images = $this->images->toArray();
+
+        usort($images, fn (ServerImage $a, ServerImage $b) => (int) $b->isMain() <=> (int) $a->isMain());
+
+        return $images;
+    }
+
+    /**
+     * @return string[] chemins relatifs (depuis public/) des images à afficher sur la
+     * fiche publique : photos uploadées si présentes, sinon les images par défaut
+     */
+    public function getDisplayImagePaths(): array
+    {
+        if (!$this->images->isEmpty()) {
+            return array_map(
+                static fn (ServerImage $image): string => 'uploads/imageServer/' . $image->getFilename(),
+                $this->getOrderedImages(),
+            );
+        }
+
+        return array_map(static fn (string $filename): string => 'images/' . $filename, self::DEFAULT_IMAGES);
     }
 
     public function isPve(): bool

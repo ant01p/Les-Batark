@@ -1,0 +1,105 @@
+{% extends 'admin/_layout.html.twig' %}
+
+{% block admin_title %}Activité récente{% endblock %}
+
+{% block admin_subtitle %}
+    <p class="text-muted mb-0">Historique des actions réalisées dans le panneau d'administration</p>
+{% endblock %}
+
+{% block admin_content %}
+
+    <div class="card border-secondary mb-3">
+        <div class="card-body">
+            <form method="get" class="row g-2 align-items-end">
+                <div class="col-6 col-md-3">
+                    <label class="form-label small text-muted mb-1" for="filter-actor">Administrateur</label>
+                    <select id="filter-actor" name="actor" class="form-select">
+                        <option value="">Tous</option>
+                        {% for admin in actors %}
+                            <option value="{{ admin.id }}"{{ filters.actor == admin.id ? ' selected' : '' }}>{{ admin.pseudo }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-6 col-md-3">
+                    <label class="form-label small text-muted mb-1" for="filter-action">Type d'action</label>
+                    <select id="filter-action" name="action" class="form-select">
+                        <option value="">Toutes</option>
+                        {% for value, label in actionChoices %}
+                            <option value="{{ value }}"{{ filters.action == value ? ' selected' : '' }}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-6 col-md-3">
+                    <label class="form-label small text-muted mb-1" for="filter-subject">Section</label>
+                    <select id="filter-subject" name="subject" class="form-select">
+                        <option value="">Toutes</option>
+                        {% for value, label in subjectTypeChoices %}
+                            <option value="{{ value }}"{{ filters.subject == value ? ' selected' : '' }}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-6 col-md-3">
+                    <label class="form-label small text-muted mb-1" for="filter-q">Élément ou membre concerné</label>
+                    <input type="text" id="filter-q" name="q" class="form-control" placeholder="Nom du produit, serveur, membre…" value="{{ filters.q }}">
+                </div>
+                <div class="col-6 col-md-3">
+                    <label class="form-label small text-muted mb-1" for="filter-from">Du</label>
+                    <input type="date" id="filter-from" name="from" class="form-control" value="{{ filters.from }}">
+                </div>
+                <div class="col-6 col-md-3">
+                    <label class="form-label small text-muted mb-1" for="filter-to">Au</label>
+                    <input type="date" id="filter-to" name="to" class="form-control" value="{{ filters.to }}">
+                </div>
+                <div class="col-12 col-md-6 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Filtrer</button>
+                    <a href="{{ path('admin_activity_index') }}" class="btn btn-outline-light">Réinitialiser</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border-secondary">
+        <div class="card-body">
+            {% if logs is empty %}
+                <p class="text-muted small mb-0">Aucune activité ne correspond à ces filtres.</p>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col">Date/heure</th>
+                                <th scope="col">Administrateur</th>
+                                <th scope="col">Action</th>
+                                <th scope="col">Élément concerné</th>
+                                <th scope="col">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in logs %}
+                                <tr>
+                                    <td class="text-nowrap">{{ log.createdAt|date('d/m/Y à H:i') }}</td>
+                                    <td>{{ log.actorLabel }}</td>
+                                    <td><span class="badge {{ log.badgeClass }}">{{ actionChoices[log.action] ?? log.action }}</span></td>
+                                    <td>{{ log.subjectLabel ?? '—' }}</td>
+                                    <td>{{ log.actionLabel }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {% if hasMore or canShowLess %}
+                    <div class="d-flex justify-content-center gap-2 mt-3">
+                        {% if hasMore %}
+                            <a class="btn btn-outline-light" href="{{ path('admin_activity_index', app.request.query.all|merge({limit: limit + 20})) }}">Voir plus</a>
+                        {% endif %}
+                        {% if canShowLess %}
+                            <a class="btn btn-outline-light" href="{{ path('admin_activity_index', app.request.query.all|merge({limit: limit - 20})) }}">Voir moins</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

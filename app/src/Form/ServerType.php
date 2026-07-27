@@ -5,12 +5,15 @@ namespace App\Form;
 use App\Entity\Server;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Choice;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
@@ -58,12 +61,26 @@ class ServerType extends AbstractType
                 'attr'        => ['placeholder' => 'Ex : Awesome SpyGlass, Dino Storage, Structures Plus', 'maxlength' => 100],
                 'constraints' => [new Length(max: 100, maxMessage: 'La liste des mods ne peut pas dépasser {{ limit }} caractères.')],
             ])
-            ->add('images', TextType::class, [
-                'label'       => 'Images du serveur',
-                'required'    => false,
-                'help'        => "Noms de fichiers séparés par des virgules, dans public/images/ (ex : the-island-1.jpg, the-island-2.jpg). Prévoir une image panoramique en premier.",
-                'attr'        => ['placeholder' => 'Ex : the-island-1.jpg, the-island-2.jpg, the-island-3.jpg', 'maxlength' => 500],
-                'constraints' => [new Length(max: 500, maxMessage: 'La liste des images ne peut pas dépasser {{ limit }} caractères.')],
+            ->add('images', CollectionType::class, [
+                'label'          => false,
+                'mapped'         => false,
+                'required'       => false,
+                'entry_type'     => FileType::class,
+                'entry_options'  => [
+                    'label'       => false,
+                    'required'    => false,
+                    'constraints' => [
+                        new File(
+                            maxSize: '20M',
+                            mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+                            mimeTypesMessage: 'Merci de choisir une image valide (jpeg, png, webp, gif).',
+                        ),
+                    ],
+                ],
+                'allow_add'      => true,
+                'allow_delete'   => true,
+                'prototype'      => true,
+                'prototype_name' => '__image_name__',
             ])
 
             // Paramètres du serveur

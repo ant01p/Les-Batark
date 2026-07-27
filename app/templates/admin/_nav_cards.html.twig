@@ -43,4 +43,11 @@
             <span class="admin-nav-card-desc">Consulter et modifier le règlement</span>
         </div>
     </a>
+    <a href="{{ path('admin_activity_index') }}" class="admin-nav-card{{ currentRoute starts with 'admin_activity_' ? ' active' : '' }}">
+        <i class="bi bi-clock-history"></i>
+        <div>
+            <span class="admin-nav-card-title">Activité récente</span>
+            <span class="admin-nav-card-desc">Historique des actions d'administration</span>
+        </div>
+    </a>
 </nav>
