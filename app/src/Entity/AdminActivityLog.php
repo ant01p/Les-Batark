@@ -24,9 +24,12 @@ class AdminActivityLog
     public const ACTION_CATEGORY_CREATED = 'category_created';
     public const ACTION_CATEGORY_UPDATED = 'category_updated';
     public const ACTION_CATEGORY_DELETED = 'category_deleted';
+    public const ACTION_ORDER_CREATED = 'order_created';
     public const ACTION_ORDER_DELIVERED = 'order_delivered';
 
-    // ── Réservées pour la future gestion des membres (non émises pour l'instant) ──
+    // ── Gestion des membres ──
+    public const ACTION_MEMBER_REGISTERED = 'member_registered';
+    public const ACTION_MEMBER_PSEUDO_CHANGED = 'member_pseudo_changed';
     public const ACTION_MEMBER_PERMISSION_GRANTED = 'member_permission_granted';
     public const ACTION_MEMBER_PERMISSION_REVOKED = 'member_permission_revoked';
     public const ACTION_MEMBER_PROMOTED_ADMIN = 'member_promoted_admin';
@@ -36,6 +39,21 @@ class AdminActivityLog
     public const ACTION_MEMBER_REACTIVATED = 'member_reactivated';
     public const ACTION_MEMBER_ANONYMIZED = 'member_anonymized';
     public const ACTION_MEMBER_DELETED = 'member_deleted';
+    public const ACTION_MEMBER_SELF_DELETED = 'member_self_deleted';
+
+    /**
+     * Actions auto-service (le membre agit sur son propre compte/achat), utilisées pour
+     * classer chaque ligne en "Admin" ou "Membre" dans le filtre "Auteur" (isAdminAction()) —
+     * tout ce qui n'est pas dans cette liste est considéré comme une action admin.
+     *
+     * @var list<string>
+     */
+    public const SELF_SERVICE_ACTIONS = [
+        self::ACTION_MEMBER_REGISTERED,
+        self::ACTION_MEMBER_PSEUDO_CHANGED,
+        self::ACTION_MEMBER_SELF_DELETED,
+        self::ACTION_ORDER_CREATED,
+    ];
 
     public const SUBJECT_PRODUCT = 'product';
     public const SUBJECT_SERVER = 'server';
@@ -198,7 +216,10 @@ class AdminActivityLog
             self::ACTION_CATEGORY_CREATED => sprintf('La catégorie « %s » a été créée', $this->subjectLabel),
             self::ACTION_CATEGORY_UPDATED => sprintf('La catégorie « %s » a été modifiée', $this->subjectLabel),
             self::ACTION_CATEGORY_DELETED => sprintf('La catégorie « %s » a été supprimée', $this->subjectLabel),
+            self::ACTION_ORDER_CREATED => sprintf('La commande %s a été passée', $this->subjectLabel),
             self::ACTION_ORDER_DELIVERED => sprintf('La commande %s a été marquée comme livrée', $this->subjectLabel),
+            self::ACTION_MEMBER_REGISTERED => sprintf('« %s » s\'est inscrit sur le site', $this->subjectLabel),
+            self::ACTION_MEMBER_PSEUDO_CHANGED => sprintf('« %s » a changé de pseudo%s', $this->subjectLabel, $this->detail ? sprintf(' (%s)', $this->detail) : ''),
             self::ACTION_MEMBER_PERMISSION_GRANTED => sprintf('Une permission a été attribuée à « %s »%s', $this->subjectLabel, $this->detail ? sprintf(' (%s)', $this->detail) : ''),
             self::ACTION_MEMBER_PERMISSION_REVOKED => sprintf('Une permission a été retirée à « %s »%s', $this->subjectLabel, $this->detail ? sprintf(' (%s)', $this->detail) : ''),
             self::ACTION_MEMBER_PROMOTED_ADMIN => sprintf('« %s » a été promu administrateur', $this->subjectLabel),
@@ -208,38 +229,50 @@ class AdminActivityLog
             self::ACTION_MEMBER_REACTIVATED => sprintf('Le compte de « %s » a été réactivé', $this->subjectLabel),
             self::ACTION_MEMBER_ANONYMIZED => sprintf('Le compte de « %s » a été anonymisé', $this->subjectLabel),
             self::ACTION_MEMBER_DELETED => sprintf('Le compte de « %s » a été supprimé', $this->subjectLabel),
+            self::ACTION_MEMBER_SELF_DELETED => sprintf('Le compte de « %s » a été supprimé', $this->subjectLabel),
             default => $this->subjectLabel !== null ? sprintf('Action « %s » sur « %s »', $this->action, $this->subjectLabel) : (string) $this->action,
         };
+    }
+
+    /**
+     * True si cette ligne représente une action admin (CRUD boutique/serveurs/événements,
+     * modération d'un membre...), false si c'est une action auto-service (le membre agit
+     * sur son propre compte/achat) — voir SELF_SERVICE_ACTIONS. Utilisé par le filtre
+     * "Auteur" (Admin/Membre) de la page Activité récente et son badge dans le tableau.
+     */
+    public function isAdminAction(): bool
+    {
+        return !in_array($this->action, self::SELF_SERVICE_ACTIONS, true);
     }
 
     /**
      * Classe de badge Bootstrap dérivée du suffixe/mot-clé de l'action plutôt que d'un
      * match par constante (même idiome que Server::getAccent()/getModeBadgeClass()) :
      * les futures actions membres héritent d'un badge cohérent sans toucher l'entité.
+     * Texte toujours en noir (text-dark), quelle que soit la couleur de fond.
      */
     public function getBadgeClass(): string
     {
         return match (true) {
             str_ends_with($this->action ?? '', '_created'),
-            str_ends_with($this->action ?? '', '_delivered') => 'bg-success',
-            str_ends_with($this->action ?? '', '_updated') => 'bg-primary',
-            str_ends_with($this->action ?? '', '_deleted') => 'bg-danger',
+            str_ends_with($this->action ?? '', '_delivered'),
+            str_ends_with($this->action ?? '', '_registered') => 'bg-success text-dark',
+            str_ends_with($this->action ?? '', '_updated'),
+            str_ends_with($this->action ?? '', '_changed') => 'bg-primary text-dark',
+            str_ends_with($this->action ?? '', '_deleted') => 'bg-danger text-dark',
             str_contains($this->action ?? '', 'suspend'),
             str_contains($this->action ?? '', 'revoked'),
             str_contains($this->action ?? '', 'demoted') => 'bg-warning text-dark',
             str_contains($this->action ?? '', 'reactivat'),
             str_contains($this->action ?? '', 'granted'),
-            str_contains($this->action ?? '', 'promoted') => 'bg-info',
-            str_contains($this->action ?? '', 'anonymiz') => 'bg-secondary',
-            default => 'bg-secondary',
+            str_contains($this->action ?? '', 'promoted') => 'bg-info text-dark',
+            str_contains($this->action ?? '', 'anonymiz') => 'bg-secondary text-dark',
+            default => 'bg-secondary text-dark',
         };
     }
 
     /**
-     * Actions actuellement émises, pour le badge court dans le tableau et le filtre
-     * déroulant. ⚠️ À compléter manuellement le jour où de vrais appels au logger sont
-     * ajoutés pour la gestion des membres (contrairement à getActionLabel()/getBadgeClass()
-     * qui couvrent déjà ces actions automatiquement).
+     * Actions actuellement émises, pour le badge court dans le tableau et le filtre déroulant.
      *
      * @return array<string, string>
      */
@@ -258,7 +291,20 @@ class AdminActivityLog
             self::ACTION_CATEGORY_CREATED => 'Catégorie créée',
             self::ACTION_CATEGORY_UPDATED => 'Catégorie modifiée',
             self::ACTION_CATEGORY_DELETED => 'Catégorie supprimée',
+            self::ACTION_ORDER_CREATED => 'Commande créée',
             self::ACTION_ORDER_DELIVERED => 'Commande livrée',
+            self::ACTION_MEMBER_REGISTERED => 'Membre inscrit',
+            self::ACTION_MEMBER_PSEUDO_CHANGED => 'Pseudo modifié',
+            self::ACTION_MEMBER_PERMISSION_GRANTED => 'Permission accordée',
+            self::ACTION_MEMBER_PERMISSION_REVOKED => 'Permission retirée',
+            self::ACTION_MEMBER_PROMOTED_ADMIN => 'Promu administrateur',
+            self::ACTION_MEMBER_PROMOTED_SUPER_ADMIN => 'Promu super-administrateur',
+            self::ACTION_MEMBER_DEMOTED => 'Administrateur rétrogradé',
+            self::ACTION_MEMBER_SUSPENDED => 'Compte suspendu',
+            self::ACTION_MEMBER_REACTIVATED => 'Compte réactivé',
+            self::ACTION_MEMBER_ANONYMIZED => 'Compte anonymisé',
+            self::ACTION_MEMBER_DELETED => 'Compte supprimé (admin)',
+            self::ACTION_MEMBER_SELF_DELETED => 'Compte supprimé (membre)',
         ];
     }
 
@@ -273,6 +319,7 @@ class AdminActivityLog
             self::SUBJECT_EVENT => 'Événements',
             self::SUBJECT_CATEGORY => 'Catégories',
             self::SUBJECT_ORDER => 'Commandes',
+            self::SUBJECT_MEMBER => 'Membres',
         ];
     }
 }

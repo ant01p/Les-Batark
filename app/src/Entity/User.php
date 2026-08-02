@@ -17,6 +17,41 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[UniqueEntity(fields: ['pseudo'], message: 'Ce pseudo est déjà pris.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    /**
+     * Rôles administratifs attribuables depuis la fiche membre, avec leur libellé lisible.
+     * ROLE_ADMIN et ROLE_SUPER_ADMIN y figurent aussi : ce sont des rôles comme les autres,
+     * simplement placés plus haut dans ROLE_LEVELS et security.yaml#role_hierarchy.
+     *
+     * @var array<string, string>
+     */
+    public const MANAGEABLE_ROLES = [
+        'ROLE_ADMIN_EVENTS' => 'Gestion des événements',
+        'ROLE_ADMIN_SHOP' => 'Gestion de la boutique',
+        'ROLE_ADMIN_ORDERS' => 'Gestion des commandes',
+        'ROLE_ADMIN_SERVERS' => 'Gestion des serveurs',
+        'ROLE_ADMIN_RULES' => 'Gestion du règlement',
+        'ROLE_ADMIN_MEMBERS' => 'Gestion des membres',
+        'ROLE_ADMIN' => 'Administrateur (tous les droits)',
+        'ROLE_SUPER_ADMIN' => 'Super-administrateur',
+    ];
+
+    /**
+     * Niveau de chaque rôle administratif, utilisé pour interdire à un administrateur
+     * d'attribuer un rôle supérieur à son propre niveau d'autorisation.
+     *
+     * @var array<string, int>
+     */
+    public const ROLE_LEVELS = [
+        'ROLE_ADMIN_EVENTS' => 1,
+        'ROLE_ADMIN_SHOP' => 1,
+        'ROLE_ADMIN_ORDERS' => 1,
+        'ROLE_ADMIN_SERVERS' => 1,
+        'ROLE_ADMIN_RULES' => 1,
+        'ROLE_ADMIN_MEMBERS' => 1,
+        'ROLE_ADMIN' => 2,
+        'ROLE_SUPER_ADMIN' => 3,
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -54,6 +89,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $suspendedAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $anonymizedAt = null;
 
     public function __construct()
     {
@@ -216,5 +257,58 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function getSuspendedAt(): ?\DateTimeImmutable
+    {
+        return $this->suspendedAt;
+    }
+
+    public function setSuspendedAt(?\DateTimeImmutable $suspendedAt): static
+    {
+        $this->suspendedAt = $suspendedAt;
+
+        return $this;
+    }
+
+    public function isSuspended(): bool
+    {
+        return $this->suspendedAt !== null;
+    }
+
+    public function getAnonymizedAt(): ?\DateTimeImmutable
+    {
+        return $this->anonymizedAt;
+    }
+
+    public function setAnonymizedAt(?\DateTimeImmutable $anonymizedAt): static
+    {
+        $this->anonymizedAt = $anonymizedAt;
+
+        return $this;
+    }
+
+    public function isAnonymized(): bool
+    {
+        return $this->anonymizedAt !== null;
+    }
+
+    /**
+     * Rôles réellement stockés (sans le ROLE_USER garanti par getRoles()), utilisé par la
+     * gestion des permissions pour calculer les rôles ajoutés/retirés sans jamais y toucher.
+     *
+     * @return list<string>
+     */
+    public function getAssignedRoles(): array
+    {
+        return $this->roles;
+    }
+
+    /**
+     * True si ce membre détient au moins un rôle administratif géré depuis la fiche membre.
+     */
+    public function isAdministrator(): bool
+    {
+        return array_intersect($this->roles, array_keys(self::MANAGEABLE_ROLES)) !== [];
     }
 }

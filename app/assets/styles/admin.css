@@ -14,6 +14,14 @@
     text-align: center;
 }
 
+/* Pages avec la colonne de nav (.admin-page--shell, cf. admin/_layout.html.twig) :
+   titre + sous-titre toujours à gauche, y compris sous 768px — seules les 3 pages
+   de formulaire standalone (event_form/products_form/category_form) restent
+   centrées sur mobile via la règle .admin-page header ci-dessus */
+.admin-page--shell .admin-page-header {
+    text-align: left;
+}
+
 /* .admin-page .btn / .card / .badge (arrondis) : voir components/cards.css,
    partagé avec .auth-card (auth / compte) */
 
@@ -46,6 +54,9 @@
    Tous les réglages de cette mise en page à 2 zones sont regroupés dans le
    SEUL bloc @media (min-width: 992px) plus bas — 3 valeurs à changer pour
    ajuster : largeur de la colonne nav, espace nav↔contenu, espace contenu↔bord.
+   Seuil à 992px : sous cette largeur le menu admin est déjà accessible via le
+   burger de la navbar (_shared/_nav.html.twig), la colonne nav reste donc
+   masquée (d-none sur .admin-nav-cards) et le bouton replier/déplier aussi.
    ========================================================================== */
 
 /* Titre commun, au-dessus des deux colonnes (nav + contenu) : évite tout
@@ -55,11 +66,33 @@
     margin-bottom: 24px;
 }
 
+/* flex-wrap: nowrap (implicite) : le titre et le bouton restent toujours sur
+   la même ligne, jamais l'un sous l'autre — le sous-titre (juste en dessous,
+   hors de ce conteneur flex) commence donc toujours immédiatement sous le
+   titre, quel que soit le format d'écran */
+.admin-page-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 16px;
+}
+
+/* Bouton présent seulement à partir de 992px (voir .admin-nav-toggle plus bas) :
+   sous ce seuil la colonne de nav est de toute façon masquée (d-none), rien à replier —
+   le menu admin passe alors par le burger de la navbar */
+.admin-nav-toggle {
+    flex-shrink: 0;
+}
+
 .admin-page-title {
     color: var(--bs-white);
     font-weight: 700;
     font-size: 1.5rem;
     margin-bottom: 4px;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 @media (min-width: 768px) {
@@ -152,15 +185,22 @@
 
         /* Défilement vertical quand les nav cards dépassent la hauteur disponible :
            colonne fixe en hauteur (viewport moins navbar fixe + marges + en-tête de
-           page), scrollbar fine séparée des cartes par un padding-right pour ne
+           page), scrollbar fine séparée des cartes par un padding-left pour ne
            jamais les chevaucher. overflow-y:auto gère nativement souris/trackpad/
-           tactile, pas besoin de JS. */
+           tactile, pas besoin de JS. direction:rtl place la scrollbar à gauche de la
+           colonne (au lieu du bord droit par défaut) ; direction:ltr sur chaque carte
+           remet son propre contenu dans le bon sens. */
         max-height: calc(100vh - 250px);
         overflow-y: auto;
         overflow-x: hidden;
-        padding-right: 8px;
+        direction: rtl;
+        padding-left: 8px;
         scrollbar-width: thin;
         scrollbar-color: rgba(var(--bs-primary-rgb), .5) rgba(255, 255, 255, .05);
+    }
+
+    .admin-nav-cards .admin-nav-card {
+        direction: ltr;
     }
 
     .admin-nav-cards::-webkit-scrollbar {
@@ -185,6 +225,24 @@
         flex: 1 1 auto;
         min-width: 0;
         padding-right: 32px;       /* petit espace fixe avant le bord droit de la page */
+    }
+
+    /* Même padding-right que .admin-shell-content ci-dessus : le bouton
+       .admin-nav-toggle (aligné à droite du header) tombe pile au-dessus du
+       bord droit du contenu, au lieu de dépasser de 32px */
+    .admin-page-header {
+        padding-right: 32px;
+    }
+
+    /* Repli de la colonne nav (bouton .admin-nav-toggle, cf. admin_shell_controller.js) :
+       .admin-nav-cards a un display forcé en !important par l'utilitaire Bootstrap
+       d-md-flex, on doit donc le surcharger avec !important ici aussi pour le masquer */
+    .admin-shell--nav-collapsed .admin-nav-cards {
+        display: none !important;
+    }
+
+    .admin-shell--nav-collapsed .admin-shell-content {
+        flex: 1 1 100%;
     }
 }
 
@@ -582,6 +640,17 @@
     font-size: 1.05rem;
 }
 
+/* Mise en valeur des catégories une fois un mode Modifier/Supprimer activé
+   (voir category_picker_controller.js) : box-shadow plutôt que border pour
+   suivre le border-radius du bouton sans décaler sa taille */
+.admin-category-btn--edit-mode {
+    box-shadow: 0 0 0 3px var(--bs-warning);
+}
+
+.admin-category-btn--delete-mode {
+    box-shadow: 0 0 0 3px var(--bs-danger);
+}
+
 /* Cartes événement admin : actions Modifier/Supprimer toujours en bas de
    carte (même hauteur sur une ligne de 2), Modifier à gauche / Supprimer à droite */
 .admin-event-card {
@@ -606,4 +675,24 @@
     margin-top: auto;
     padding-top: 16px;
     justify-content: space-between;
+}
+
+/* Ligne cliquable du tableau des membres : le lien .stretched-link d'une cellule
+   s'étire sur toute la ligne grâce à ce position: relative (voir Bootstrap stretched-link) */
+.member-row {
+    position: relative;
+    cursor: pointer;
+}
+
+/* Cartes stat cliquables du tableau de bord (Joueurs inscrits, Événements…) :
+   .card est déjà position: relative par défaut dans Bootstrap, donc le
+   .stretched-link posé sur le libellé suffit à étirer le clic sur toute la carte */
+.admin-stat-card--link {
+    cursor: pointer;
+    transition: border-color .15s ease, background-color .15s ease;
+}
+
+.admin-stat-card--link:hover {
+    border-color: var(--bs-primary);
+    background: rgba(255, 255, 255, 0.03);
 }

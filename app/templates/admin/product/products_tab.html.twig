@@ -1,35 +1,42 @@
 {% import '_shared/_confirm_modal.html.twig' as modals %}
 
-<a href="{{ path('admin_category_new') }}" class="btn btn-success text-dark mb-3">Ajouter une catégorie</a>
+<div class="mb-3" data-controller="category-picker">
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+        <a href="{{ path('admin_category_new') }}" class="btn btn-success text-dark">Ajouter une catégorie</a>
+        {% if categories is not empty %}
+            <button type="button" class="btn btn-warning btn-sm text-dark" data-category-picker-target="editButton" data-action="click->category-picker#toggleEdit">
+                Modifier une catégorie
+            </button>
+            <button type="button" class="btn btn-danger btn-sm text-dark" data-category-picker-target="deleteButton" data-action="click->category-picker#toggleDelete">
+                Supprimer une catégorie
+            </button>
+            <span class="small text-muted" data-category-picker-target="hint"></span>
+        {% endif %}
+    </div>
 
-{% if categories is not empty %}
-    <div class="d-flex flex-wrap gap-2 mb-3">
-        <a href="{{ path('admin_product_index') }}"
-           class="btn btn-primary admin-category-btn d-flex align-items-center justify-content-center{{ activeCategory is null ? ' active' : '' }}">
-            Toutes
-        </a>
-        {% for category in categories %}
-            <div class="d-flex flex-column">
+    {% if categories is not empty %}
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{{ path('admin_product_index') }}"
+               class="btn btn-primary admin-category-btn d-flex align-items-center justify-content-center{{ activeCategory is null ? ' active' : '' }}">
+                Toutes
+            </a>
+            {% for category in categories %}
                 <a href="{{ path('admin_product_index', { category: category.id }) }}"
-                   class="btn btn-primary admin-category-btn rounded-bottom-0{{ activeCategory and category.id == activeCategory.id ? ' active' : '' }}">
+                   class="btn btn-primary admin-category-btn{{ activeCategory and category.id == activeCategory.id ? ' active' : '' }}"
+                   data-category-picker-target="category"
+                   data-action="click->category-picker#pick"
+                   data-edit-url="{{ path('admin_category_edit', {id: category.id}) }}"
+                   data-delete-modal="deleteCategoryModal{{ category.id }}">
                     {{ category.name }}
                 </a>
-                <div class="d-flex">
-                    <a href="{{ path('admin_category_edit', {id: category.id}) }}" class="btn btn-warning btn-sm flex-fill rounded-top-0 rounded-end-0" title="Modifier la catégorie">
-                        Modifier
-                    </a>
-                    <button type="button" class="btn btn-danger btn-sm flex-fill rounded-top-0 rounded-start-0" title="Supprimer la catégorie" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal{{ category.id }}">
-                        Suppr.
-                    </button>
-                </div>
-            </div>
-            <form id="delete-category-{{ category.id }}" method="post" action="{{ path('admin_category_delete', {id: category.id}) }}" class="d-none">
-                <input type="hidden" name="_token" value="{{ csrf_token('delete_category_' ~ category.id) }}">
-            </form>
-            {{ modals.modal('deleteCategoryModal' ~ category.id, 'Supprimer la catégorie', 'Supprimer cette catégorie ? Tous les produits associés seront également supprimés définitivement.', 'delete-category-' ~ category.id, 'Supprimer', 'danger') }}
-        {% endfor %}
-    </div>
-{% endif %}
+                <form id="delete-category-{{ category.id }}" method="post" action="{{ path('admin_category_delete', {id: category.id}) }}" class="d-none">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_category_' ~ category.id) }}">
+                </form>
+                {{ modals.modal('deleteCategoryModal' ~ category.id, 'Supprimer la catégorie', 'Supprimer cette catégorie ? Tous les produits associés seront également supprimés définitivement.', 'delete-category-' ~ category.id, 'Supprimer', 'danger') }}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
 
 <div class="mb-3 d-flex gap-2">
     <a href="{{ path('admin_product_new') }}" class="btn btn-success text-dark">Ajouter un produit</a>
@@ -60,7 +67,7 @@
 
                         <span class="badge bg-secondary align-self-start mb-2">{{ product.category.name }}</span>
 
-                        <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="d-flex flex-column align-items-start gap-1 flex-md-row justify-content-md-between align-items-md-center mb-2">
                             <h3 class="h6 fw-semibold text-white mb-0">{{ product.name }}</h3>
                             <span class="admin-product-price">{{ (product.price / 100)|number_format(2) }} €</span>
                         </div>

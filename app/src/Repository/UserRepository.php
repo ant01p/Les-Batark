@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -55,6 +56,28 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
+     * Nombre d'utilisateurs détenant un rôle donné, utilisé pour protéger le dernier
+     * super-administrateur (rétrogradation, suspension, suppression).
+     */
+    public function countByRole(string $role): int
+    {
+        $rows = $this->createQueryBuilder('u')
+            ->select('u.roles')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        $count = 0;
+        foreach ($rows as $row) {
+            if (in_array($role, $row['roles'], true)) {
+                ++$count;
+            }
+        }
+
+        return $count;
+    }
+
+    /**
      * @return User[]
      */
     public function findRecentlyRegistered(int $limit): array
@@ -65,6 +88,71 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    /**
+     * Membres pour le panneau d'administration : recherche libre (pseudo/email) + limite SQL réelle.
+     *
+     * @param 'member'|'admin'|null $type
+     *
+     * @return User[]
+     */
+    public function findFilteredMembers(?string $q, ?string $type, int $limit): array
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->orderBy('u.createdAt', 'DESC')
+            ->addOrderBy('u.id', 'DESC')
+            ->setMaxResults($limit)
+        ;
+
+        return $this->applyMemberFilters($qb, $q, $type)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * Nombre total de membres correspondant à la recherche (avant application de la limite),
+     * utilisé pour savoir si "Voir plus"/"Voir moins" doivent être affichés.
+     *
+     * @param 'member'|'admin'|null $type
+     */
+    public function countFilteredMembers(?string $q, ?string $type): int
+    {
+        $qb = $this->createQueryBuilder('u')->select('COUNT(u.id)');
+
+        return (int) $this->applyMemberFilters($qb, $q, $type)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    /**
+     * @param 'member'|'admin'|null $type
+     */
+    private function applyMemberFilters(QueryBuilder $qb, ?string $q, ?string $type): QueryBuilder
+    {
+        if ($q !== null && $q !== '') {
+            $qb->andWhere('LOWER(u.pseudo) LIKE :q OR LOWER(u.email) LIKE :q')
+                ->setParameter('q', '%' . mb_strtolower($q) . '%')
+            ;
+        }
+
+        if ($type === 'admin' || $type === 'member') {
+            // Le rôle est stocké en JSON (ex. ["ROLE_USER","ROLE_ADMIN_EVENTS"]) : on repère un rôle
+            // administratif via une recherche du nom entre guillemets, pour éviter qu'un rôle comme
+            // "ROLE_ADMIN_EVENTS" ne matche par erreur un LIKE sur "ROLE_ADMIN".
+            $adminChecks = [];
+            foreach (array_keys(User::MANAGEABLE_ROLES) as $i => $role) {
+                $adminChecks[] = "u.roles LIKE :adminRole{$i}";
+                $qb->setParameter("adminRole{$i}", '%"' . $role . '"%');
+            }
+            $isAdmin = implode(' OR ', $adminChecks);
+
+            $qb->andWhere($type === 'admin' ? $isAdmin : "NOT ({$isAdmin})");
+        }
+
+        return $qb;
     }
 
     //    /**

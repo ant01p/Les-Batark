@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/events', name: 'admin_event_')]
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_ADMIN_EVENTS')]
 final class AdminEventController extends AbstractController
 {
     #[Route('', name: 'index')]

@@ -7,16 +7,26 @@
 {% endblock %}
 
 {% block body %}
-<div class="admin-page admin-page--shell">
+<div class="admin-page admin-page--shell" data-controller="admin-shell">
 
     {{ include('_shared/_flash.html.twig') }}
 
     <header class="admin-page-header">
-        <h1 class="admin-page-title">{{ block('admin_title') }}</h1>
+        <div class="admin-page-header-top">
+            <h1 class="admin-page-title">{{ block('admin_title') }}</h1>
+            <button type="button"
+                    class="btn btn-outline-light btn-sm admin-nav-toggle d-none d-lg-inline-flex align-items-center gap-2"
+                    data-admin-shell-target="toggleButton"
+                    data-action="click->admin-shell#toggle"
+                    aria-expanded="true">
+                <i class="bi bi-layout-sidebar-inset" data-admin-shell-target="toggleIcon"></i>
+                <span data-admin-shell-target="toggleLabel">Masquer le menu</span>
+            </button>
+        </div>
         {% block admin_subtitle %}{% endblock %}
     </header>
 
-    <div class="admin-shell">
+    <div class="admin-shell" data-admin-shell-target="shell">
         {% include 'admin/_nav_cards.html.twig' %}
 
         <div class="admin-shell-content">

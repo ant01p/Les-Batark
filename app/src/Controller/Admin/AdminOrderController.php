@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/orders', name: 'admin_order_')]
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_ADMIN_ORDERS')]
 final class AdminOrderController extends AbstractController
 {
     #[Route('', name: 'index')]

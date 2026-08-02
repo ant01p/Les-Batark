@@ -38,6 +38,28 @@ class OrderRepository extends ServiceEntityRepository
     }
 
     /**
+     * Toutes les commandes d'un membre (fiche administrative), contrairement à
+     * findNonFinishedByUser() utilisé par la page "Mon compte".
+     *
+     * @return Order[]
+     */
+    public function findByUserOrderedByDate(User $user): array
+    {
+        return $this->createQueryBuilder('o')
+            ->addSelect('oi', 'p', 't', 'q')
+            ->leftJoin('o.orderItems', 'oi')
+            ->leftJoin('oi.product', 'p')
+            ->leftJoin('oi.type', 't')
+            ->leftJoin('oi.quality', 'q')
+            ->andWhere('o.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('o.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
      * @return Order[]
      */
     public function findAllOrderedByDate(): array
@@ -51,6 +73,21 @@ class OrderRepository extends ServiceEntityRepository
             ->orderBy('o.createdAt', 'DESC')
             ->getQuery()
             ->getResult()
+        ;
+    }
+
+    /**
+     * Utilisé avant suppression d'un membre : la présence de commandes fait basculer
+     * vers une anonymisation plutôt qu'une suppression réelle.
+     */
+    public function countByUser(User $user): int
+    {
+        return (int) $this->createQueryBuilder('o')
+            ->select('COUNT(o.id)')
+            ->andWhere('o.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult()
         ;
     }
 

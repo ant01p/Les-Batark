@@ -10,20 +10,32 @@
 
     <div class="row g-3 mb-3">
         <div class="col-6 col-md-3">
-            <div class="card border-primary h-100">
+            <div class="card border-primary h-100{{ is_granted('ROLE_ADMIN_MEMBERS') ? ' admin-stat-card--link' : '' }}">
                 <div class="card-body text-center">
                     <i class="bi bi-people fs-2 text-primary d-block mb-2"></i>
                     <div class="h4 fw-bold text-white mb-0">{{ playerCount }}</div>
-                    <div class="text-muted small">Joueurs inscrits</div>
+                    <div class="text-muted small">
+                        {% if is_granted('ROLE_ADMIN_MEMBERS') %}
+                            <a href="{{ path('admin_member_index') }}" class="stretched-link text-reset text-decoration-none">Joueurs inscrits</a>
+                        {% else %}
+                            Joueurs inscrits
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-6 col-md-3">
-            <div class="card border-primary h-100">
+            <div class="card border-primary h-100{{ is_granted('ROLE_ADMIN_EVENTS') ? ' admin-stat-card--link' : '' }}">
                 <div class="card-body text-center">
                     <i class="bi bi-calendar-event fs-2 text-primary d-block mb-2"></i>
                     <div class="h4 fw-bold text-white mb-0">{{ eventCount }}</div>
-                    <div class="text-muted small">Événements</div>
+                    <div class="text-muted small">
+                        {% if is_granted('ROLE_ADMIN_EVENTS') %}
+                            <a href="{{ path('admin_event_index') }}" class="stretched-link text-reset text-decoration-none">Événements</a>
+                        {% else %}
+                            Événements
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>

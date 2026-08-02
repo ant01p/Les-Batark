@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\AdminActivityLog;
-use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,10 +18,12 @@ class AdminActivityLogRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param 'admin'|'member'|null $author
+     *
      * @return AdminActivityLog[]
      */
     public function findFiltered(
-        ?int $actorId,
+        ?string $author,
         ?string $action,
         ?string $subjectType,
         ?string $q,
@@ -30,12 +31,9 @@ class AdminActivityLogRepository extends ServiceEntityRepository
         ?\DateTimeImmutable $to,
         int $limit,
     ): array {
-        $qb = $this->createQueryBuilder('a')
-            ->addSelect('actor')
-            ->leftJoin('a.actor', 'actor')
-        ;
+        $qb = $this->createQueryBuilder('a');
 
-        return $this->applyFilters($qb, $actorId, $action, $subjectType, $q, $from, $to)
+        return $this->applyFilters($qb, $author, $action, $subjectType, $q, $from, $to)
             ->orderBy('a.createdAt', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()
@@ -43,8 +41,11 @@ class AdminActivityLogRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @param 'admin'|'member'|null $author
+     */
     public function countFiltered(
-        ?int $actorId,
+        ?string $author,
         ?string $action,
         ?string $subjectType,
         ?string $q,
@@ -53,43 +54,28 @@ class AdminActivityLogRepository extends ServiceEntityRepository
     ): int {
         $qb = $this->createQueryBuilder('a')->select('COUNT(a.id)');
 
-        return (int) $this->applyFilters($qb, $actorId, $action, $subjectType, $q, $from, $to)
+        return (int) $this->applyFilters($qb, $author, $action, $subjectType, $q, $from, $to)
             ->getQuery()
             ->getSingleScalarResult()
         ;
     }
 
     /**
-     * Admins ayant déjà au moins une ligne d'historique, pour le filtre "Administrateur".
-     *
-     * @return User[]
+     * @param 'admin'|'member'|null $author
      */
-    public function findDistinctActors(): array
-    {
-        // Racine sur User (et non AdminActivityLog) : Doctrine exige que l'alias
-        // racine du FROM fasse partie du SELECT quand on sélectionne des entités,
-        // hors on ne veut sélectionner que "actor", pas les lignes d'historique.
-        return $this->getEntityManager()->createQueryBuilder()
-            ->select('DISTINCT u')
-            ->from(User::class, 'u')
-            ->innerJoin(AdminActivityLog::class, 'a', 'WITH', 'a.actor = u')
-            ->orderBy('u.pseudo', 'ASC')
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-
     private function applyFilters(
         QueryBuilder $qb,
-        ?int $actorId,
+        ?string $author,
         ?string $action,
         ?string $subjectType,
         ?string $q,
         ?\DateTimeImmutable $from,
         ?\DateTimeImmutable $to,
     ): QueryBuilder {
-        if ($actorId !== null) {
-            $qb->andWhere('a.actor = :actorId')->setParameter('actorId', $actorId);
+        if ($author === 'admin') {
+            $qb->andWhere('a.action NOT IN (:selfServiceActions)')->setParameter('selfServiceActions', AdminActivityLog::SELF_SERVICE_ACTIONS);
+        } elseif ($author === 'member') {
+            $qb->andWhere('a.action IN (:selfServiceActions)')->setParameter('selfServiceActions', AdminActivityLog::SELF_SERVICE_ACTIONS);
         }
 
         if ($action !== null) {

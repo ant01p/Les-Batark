@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Server;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +15,21 @@ class ServerRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Server::class);
+    }
+
+    /**
+     * Server::$createdBy est non-nullable (pas d'onDelete SET NULL) : un membre ayant créé
+     * au moins un serveur ne peut donc jamais être supprimé réellement, seulement anonymisé.
+     */
+    public function countByCreator(User $user): int
+    {
+        return (int) $this->createQueryBuilder('s')
+            ->select('COUNT(s.id)')
+            ->andWhere('s.createdBy = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
     }
 
     public function findAllOrdered(): array

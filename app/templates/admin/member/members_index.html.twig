@@ -1,0 +1,90 @@
+{% extends 'admin/_layout.html.twig' %}
+{% import '_shared/_role_badge.html.twig' as badge %}
+
+{% block admin_title %}Membres{% endblock %}
+
+{% block admin_subtitle %}
+    <p class="text-muted mb-0">Consultez les membres inscrits et leur profil administratif</p>
+{% endblock %}
+
+{% block admin_content %}
+
+    <div class="card border-secondary mb-3">
+        <div class="card-body">
+            <form method="get" class="row g-2 align-items-end">
+                <input type="hidden" name="type" value="{{ type }}">
+                <div class="col-12 col-md-8">
+                    <label class="form-label small text-muted mb-1" for="filter-q">Pseudo ou adresse e-mail</label>
+                    <input type="text" id="filter-q" name="q" class="form-control" placeholder="Rechercher un membre…" value="{{ q }}">
+                </div>
+                <div class="col-12 col-md-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Rechercher</button>
+                    <a href="{{ path('admin_member_index') }}" class="btn btn-outline-light">Réinitialiser</a>
+                </div>
+                <div class="col-12">
+                    <div class="btn-group" role="group" aria-label="Filtrer par type de compte">
+                        <a href="{{ path('admin_member_index', { q: q, type: type == 'member' ? null : 'member' }) }}"
+                           class="btn btn-outline-light{{ type == 'member' ? ' active' : '' }}">Membres</a>
+                        <a href="{{ path('admin_member_index', { q: q, type: type == 'admin' ? null : 'admin' }) }}"
+                           class="btn btn-outline-light{{ type == 'admin' ? ' active' : '' }}">Admins</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border-secondary">
+        <div class="card-body">
+            {% if members is empty %}
+                <p class="text-muted small mb-0">
+                    {% if q or type %}
+                        Aucun membre ne correspond à ces critères.
+                    {% else %}
+                        Aucun membre inscrit pour l'instant.
+                    {% endif %}
+                </p>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col">Pseudo</th>
+                                <th scope="col">E-mail</th>
+                                <th scope="col">Rôles</th>
+                                <th scope="col">Adresse e-mail</th>
+                                <th scope="col">Statut</th>
+                                <th scope="col">Inscription</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for member in members %}
+                                <tr class="member-row">
+                                    <td>
+                                        <a href="{{ path('admin_member_show', { id: member.id, q: q, limit: limit }) }}" class="stretched-link text-reset text-decoration-none">{{ member.pseudo }}</a>
+                                    </td>
+                                    <td>{{ member.email }}</td>
+                                    <td>{{ badge.roles(member.roles) }}</td>
+                                    <td>{{ badge.verified(member.verified) }}</td>
+                                    <td>{{ badge.accountStatus(member) }}</td>
+                                    <td class="text-nowrap">{{ member.createdAt ? member.createdAt|date('d/m/Y') : '—' }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {% if hasMore or canShowLess %}
+                    <div class="d-flex justify-content-center gap-2 mt-3">
+                        {% if hasMore %}
+                            <a class="btn btn-outline-light" href="{{ path('admin_member_index', app.request.query.all|merge({ limit: limit + 20 })) }}">Voir plus</a>
+                        {% endif %}
+                        {% if canShowLess %}
+                            <a class="btn btn-outline-light" href="{{ path('admin_member_index', app.request.query.all|merge({ limit: limit - 20 })) }}">Voir moins</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

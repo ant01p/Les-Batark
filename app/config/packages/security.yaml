@@ -36,9 +36,27 @@ security:
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
 
+    # ROLE_ADMIN garde tous les droits (rétrocompatibilité) : il hérite de chaque permission
+    # spécialisée. ROLE_SUPER_ADMIN hérite de ROLE_ADMIN et n'ajoute rien ici : son pouvoir
+    # supplémentaire (gérer les permissions des autres administrateurs, modérer un compte
+    # administrateur, consulter l'historique complet) est vérifié explicitement dans le code,
+    # jamais via la hiérarchie, pour ne jamais être hérité par un simple ROLE_ADMIN.
+    role_hierarchy:
+        ROLE_ADMIN:
+            - ROLE_ADMIN_EVENTS
+            - ROLE_ADMIN_SHOP
+            - ROLE_ADMIN_ORDERS
+            - ROLE_ADMIN_SERVERS
+            - ROLE_ADMIN_RULES
+            - ROLE_ADMIN_MEMBERS
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
+
     # Note: Only the *first* matching rule is applied
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
+        # Accès au panneau admin dès qu'on détient au moins une permission administrative
+        # (ROLE_ADMIN/ROLE_SUPER_ADMIN sont inclus via la hiérarchie ci-dessus). Chaque
+        # contrôleur applique ensuite sa propre permission spécifique.
+        - { path: ^/admin, roles: [ROLE_ADMIN_EVENTS, ROLE_ADMIN_SHOP, ROLE_ADMIN_ORDERS, ROLE_ADMIN_SERVERS, ROLE_ADMIN_RULES, ROLE_ADMIN_MEMBERS] }
         - { path: ^/account, roles: ROLE_USER }
 
 when@test:

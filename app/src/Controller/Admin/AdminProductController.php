@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/products', name: 'admin_product_')]
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_ADMIN_SHOP')]
 final class AdminProductController extends AbstractController
 {
     private const IMAGE_SUBDIR = 'imageProduct';

@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\AdminActivityLog;
 use App\Entity\Order;
 use App\Entity\User;
 use App\Repository\OrderRepository;
 use App\Repository\UserRepository;
+use App\Service\AdminActivityLogger;
 use App\Service\PasswordChangeNotifier;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -50,13 +52,19 @@ class AccountController extends AbstractController
     }
 
     #[Route('/delete', name: 'delete', methods: ['POST'])]
-    public function delete(Request $request, EntityManagerInterface $em, TokenStorageInterface $tokenStorage): Response
+    public function delete(Request $request, EntityManagerInterface $em, TokenStorageInterface $tokenStorage, AdminActivityLogger $activityLogger): Response
     {
         if (!$this->isCsrfTokenValid('account_delete', $request->request->get('_token'))) {
             throw $this->createAccessDeniedException();
         }
 
+        /** @var User $user */
         $user = $this->getUser();
+
+        // Journalisé avant remove() : l'historique référence l'auteur par son id, qui doit
+        // encore exister en base au moment de l'INSERT (la colonne actor_id passera ensuite
+        // à NULL via onDelete: SET NULL quand la ligne user sera réellement supprimée).
+        $activityLogger->log(actor: $user, action: AdminActivityLog::ACTION_MEMBER_SELF_DELETED, subjectType: AdminActivityLog::SUBJECT_MEMBER, subjectId: $user->getId(), subjectLabel: $user->getPseudo());
 
         $em->remove($user);
         $em->flush();
@@ -137,7 +145,7 @@ class AccountController extends AbstractController
     }
 
     #[Route('/change-pseudo', name: 'change_pseudo', methods: ['POST'])]
-    public function changePseudo(Request $request, EntityManagerInterface $em, UserRepository $userRepository): Response
+    public function changePseudo(Request $request, EntityManagerInterface $em, UserRepository $userRepository, AdminActivityLogger $activityLogger): Response
     {
         if (!$this->isCsrfTokenValid('account_change_pseudo', $request->request->get('_token'))) {
             throw $this->createAccessDeniedException();
@@ -161,6 +169,7 @@ class AccountController extends AbstractController
             return $this->redirectToRoute('account_index', ['tab' => 'pseudo']);
         }
 
+        $oldPseudo = $user->getPseudo();
         $user->setPseudo($pseudo);
 
         try {
@@ -171,6 +180,8 @@ class AccountController extends AbstractController
 
             return $this->redirectToRoute('account_index', ['tab' => 'pseudo']);
         }
+
+        $activityLogger->log(actor: $user, action: AdminActivityLog::ACTION_MEMBER_PSEUDO_CHANGED, subjectType: AdminActivityLog::SUBJECT_MEMBER, subjectId: $user->getId(), subjectLabel: $pseudo, detail: sprintf('ancien pseudo : %s', $oldPseudo));
 
         $this->addFlash('success', 'Votre pseudo a été mis à jour.');
 

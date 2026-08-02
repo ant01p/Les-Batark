@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\AdminActivityLog;
 use App\Entity\Order;
+use App\Service\AdminActivityLogger;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Checkout\Session;
 use Stripe\Stripe;
@@ -96,7 +98,7 @@ class CheckoutController extends AbstractController
     }
 
     #[Route('/commande/succes', name: 'checkout_success', methods: ['GET'])]
-    public function success(Request $request, EntityManagerInterface $em): Response
+    public function success(Request $request, EntityManagerInterface $em, AdminActivityLogger $activityLogger): Response
     {
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
@@ -161,6 +163,14 @@ class CheckoutController extends AbstractController
 
         $em->persist($order);
         $em->flush();
+
+        $activityLogger->log(
+            actor: $user,
+            action: AdminActivityLog::ACTION_ORDER_CREATED,
+            subjectType: AdminActivityLog::SUBJECT_ORDER,
+            subjectId: $order->getId(),
+            subjectLabel: sprintf('#%s — %s', $order->getOrderCode(), $order->getCustomerPseudo()),
+        );
 
         return $this->render('checkout/success.html.twig', [
             'orderCode' => $orderCode,

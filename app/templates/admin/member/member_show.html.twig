@@ -1,0 +1,157 @@
+{% extends 'admin/_layout.html.twig' %}
+{% import '_shared/_role_badge.html.twig' as badge %}
+{% import '_shared/_confirm_modal.html.twig' as modals %}
+
+{% block admin_title %}{{ member.pseudo }}{% endblock %}
+
+{% block admin_subtitle %}
+    <p class="text-muted mb-0">Fiche administrative du membre</p>
+{% endblock %}
+
+{% block admin_content %}
+
+    {% set isSelf = app.user and app.user.id == member.id %}
+
+    <div class="d-flex justify-content-start mb-3">
+        <a href="{{ path('admin_member_index', { q: backQuery.q, limit: backQuery.limit }) }}" class="btn btn-outline-light">
+            <i class="bi bi-arrow-left me-1"></i>Retour aux membres
+        </a>
+    </div>
+
+    <div class="card border-primary mb-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-3">
+                <div>
+                    <h2 class="h4 fw-bold text-white mb-1">
+                        <i class="bi bi-person-circle me-2"></i>{{ member.pseudo }}
+                    </h2>
+                    <p class="text-muted mb-0">{{ member.email }}</p>
+                </div>
+                <div class="d-flex flex-wrap gap-1 justify-content-end">
+                    {{ badge.accountStatus(member) }}
+                    {{ badge.verified(member.verified) }}
+                    {{ badge.roles(member.roles) }}
+                </div>
+            </div>
+
+            <hr class="border-secondary">
+
+            <div class="row g-3">
+                <div class="col-6 col-md-4">
+                    <div class="text-muted small">Date d'inscription</div>
+                    <div class="text-white">{{ member.createdAt ? member.createdAt|date('d/m/Y à H:i') : '—' }}</div>
+                </div>
+                <div class="col-6 col-md-4">
+                    <div class="text-muted small">Nombre de commandes</div>
+                    <div class="text-white">{{ orders|length }}</div>
+                </div>
+                {% if member.suspended %}
+                    <div class="col-6 col-md-4">
+                        <div class="text-muted small">Suspendu depuis</div>
+                        <div class="text-white">{{ member.suspendedAt|date('d/m/Y à H:i') }}</div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <div class="card border-secondary mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                    <h3 class="h6 fw-semibold text-white mb-0">Permissions administratives</h3>
+                    {% if not isSelf %}
+                        <button type="button" class="btn btn-sm btn-outline-light" data-bs-toggle="collapse" data-bs-target="#memberPermissionsCollapse" aria-expanded="false" aria-controls="memberPermissionsCollapse">
+                            Définir le rôle
+                        </button>
+                    {% endif %}
+                </div>
+
+                {% if isSelf %}
+                    <p class="text-muted small mb-0">Vous ne pouvez pas modifier vos propres permissions depuis cette page.</p>
+                {% else %}
+                    <div class="collapse" id="memberPermissionsCollapse">
+                        {{ form_start(permissionsForm) }}
+                        <div class="row row-cols-1 row-cols-md-2 g-2 mb-3">
+                            {% for child in permissionsForm.roles %}
+                                <div class="col">
+                                    <div class="form-check">
+                                        {{ form_widget(child, { attr: { class: 'form-check-input' } }) }}
+                                        {{ form_label(child, null, { label_attr: { class: 'form-check-label' } }) }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enregistrer les permissions</button>
+                        {{ form_end(permissionsForm) }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="card border-secondary mb-3">
+        <div class="card-body">
+            <h3 class="h6 fw-semibold text-white mb-3">Commandes</h3>
+
+            {% if orders is empty %}
+                <p class="text-muted small mb-0">Aucune commande pour ce membre.</p>
+            {% else %}
+                {% for order in orders %}
+                    <div class="mb-3">
+                        {% include 'admin/order/_order_card.html.twig' with { order: order, context: 'admin' } %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    {% if not isSelf and canModerate %}
+        <div class="card border-secondary mb-3">
+            <div class="card-body">
+                <h3 class="h6 fw-semibold text-white mb-3">Suspension</h3>
+
+                {% if member.suspended %}
+                    <p class="text-muted small">Ce compte est actuellement suspendu : le membre ne peut pas se connecter.</p>
+                    <form method="post" action="{{ path('admin_member_reactivate', { id: member.id }) }}" id="reactivateMemberForm">
+                        <input type="hidden" name="_token" value="{{ csrf_token('reactivate_member_' ~ member.id) }}">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#reactivateMemberModal">Réactiver le compte</button>
+                    </form>
+                {% else %}
+                    <p class="text-muted small">La suspension empêche le membre de se connecter, sans supprimer ses données.</p>
+                    <form method="post" action="{{ path('admin_member_suspend', { id: member.id }) }}" id="suspendMemberForm">
+                        <input type="hidden" name="_token" value="{{ csrf_token('suspend_member_' ~ member.id) }}">
+                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#suspendMemberModal">Suspendre le compte</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card border-danger">
+            <div class="card-body">
+                <h3 class="h6 fw-semibold text-danger mb-3">Zone dangereuse</h3>
+                <p class="text-muted small">
+                    La suppression est définitive lorsqu'elle est possible. Si ce membre a des commandes ou a créé
+                    des serveurs, son compte sera anonymisé afin de conserver ces données.
+                </p>
+                <form method="post" action="{{ path('admin_member_delete', { id: member.id }) }}" id="deleteMemberForm">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_member_' ~ member.id) }}">
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteMemberModal">Supprimer le compte</button>
+                </form>
+            </div>
+        </div>
+    {% elseif not isSelf %}
+        <div class="card border-secondary">
+            <div class="card-body">
+                <p class="text-muted small mb-0">Seul un super-administrateur peut modérer le compte d'un autre administrateur.</p>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if not isSelf and canModerate %}
+        {{ modals.modal('suspendMemberModal', 'Suspendre le compte', 'Suspendre le compte de ' ~ member.pseudo ~ ' ? Il ne pourra plus se connecter.', 'suspendMemberForm', 'Suspendre', 'warning') }}
+        {{ modals.modal('reactivateMemberModal', 'Réactiver le compte', 'Réactiver le compte de ' ~ member.pseudo ~ ' ?', 'reactivateMemberForm', 'Réactiver', 'success') }}
+        {{ modals.modal('deleteMemberModal', 'Supprimer le compte', 'Supprimer définitivement le compte de ' ~ member.pseudo ~ ' ? Cette action est irréversible pour un compte sans commande ni serveur créé.', 'deleteMemberForm', 'Supprimer', 'danger') }}
+    {% endif %}
+
+{% endblock %}

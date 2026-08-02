@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/servers', name: 'admin_server_')]
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_ADMIN_SERVERS')]
 final class AdminServerController extends AbstractController
 {
     private const IMAGE_SUBDIR = 'imageServer';

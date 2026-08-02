@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\AdminActivityLog;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Form\ResendVerificationEmailFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
+use App\Service\AdminActivityLogger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,7 +33,7 @@ class RegistrationController extends AbstractController
 
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager, AdminActivityLogger $activityLogger,
     ): Response {
         $user = new User();
 
@@ -54,6 +56,8 @@ class RegistrationController extends AbstractController
 
             $entityManager->persist($user);
             $entityManager->flush();
+
+            $activityLogger->log(actor: $user, action: AdminActivityLog::ACTION_MEMBER_REGISTERED, subjectType: AdminActivityLog::SUBJECT_MEMBER, subjectId: $user->getId(), subjectLabel: $user->getPseudo());
 
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())

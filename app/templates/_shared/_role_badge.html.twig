@@ -1,0 +1,39 @@
+{# Libellés lisibles pour les rôles Symfony bruts (ROLE_*) et les statuts de compte/e-mail,
+   partagés entre la liste et la fiche administrative des membres. Les libellés viennent de
+   User::MANAGEABLE_ROLES (source unique), seule la couleur du badge est propre à ce template.
+   Texte toujours en noir (text-dark) quelle que soit la couleur de fond. #}
+{% macro roles(userRoles) %}
+    {% set labels = constant('App\\Entity\\User::MANAGEABLE_ROLES') %}
+    {% set badgeClasses = {
+        'ROLE_USER': 'bg-secondary',
+        'ROLE_ADMIN_EVENTS': 'bg-info',
+        'ROLE_ADMIN_SHOP': 'bg-info',
+        'ROLE_ADMIN_ORDERS': 'bg-info',
+        'ROLE_ADMIN_SERVERS': 'bg-info',
+        'ROLE_ADMIN_RULES': 'bg-info',
+        'ROLE_ADMIN_MEMBERS': 'bg-info',
+        'ROLE_ADMIN': 'bg-danger',
+        'ROLE_SUPER_ADMIN': 'bg-warning',
+    } %}
+    {% for role in userRoles %}
+        <span class="badge text-dark {{ badgeClasses[role] ?? 'bg-secondary' }}">{{ role == 'ROLE_USER' ? 'Membre' : (labels[role] ?? role) }}</span>
+    {% endfor %}
+{% endmacro %}
+
+{% macro verified(isVerified) %}
+    {% if isVerified %}
+        <span class="badge text-dark bg-success">Adresse vérifiée</span>
+    {% else %}
+        <span class="badge text-dark bg-warning">Adresse non vérifiée</span>
+    {% endif %}
+{% endmacro %}
+
+{% macro accountStatus(member) %}
+    {% if member.anonymized %}
+        <span class="badge text-dark bg-light">Compte supprimé</span>
+    {% elseif member.suspended %}
+        <span class="badge text-dark bg-warning">Compte suspendu</span>
+    {% else %}
+        <span class="badge text-dark bg-success">Compte actif</span>
+    {% endif %}
+{% endmacro %}
