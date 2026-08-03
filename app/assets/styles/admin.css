@@ -1,4 +1,83 @@
 /* ==========================================================================
+   Identité visuelle admin : remplace la palette violette du thème Vapor par
+   du noir / bleu nuit / anthracite avec accents bleu électrique + cyan.
+   Scopé à .admin-page (présent sur toutes les pages admin, shell comme
+   standalone) pour ne pas affecter le reste du site, qui garde Vapor tel
+   quel. Bootstrap 5.3 construit .btn-primary/.border-*/.badge.bg-*/... à
+   partir de ces variables : les redéfinir ici suffit à retéinter tous ces
+   composants sans dupliquer leurs règles.
+   ========================================================================== */
+
+.admin-page {
+    --bs-primary: #2f7dfb;
+    --bs-primary-rgb: 47, 125, 251;
+    --bs-info: #22d3ee;
+    --bs-info-rgb: 34, 211, 238;
+    --bs-secondary: #64748b;
+    --bs-secondary-rgb: 100, 116, 139;
+    --bs-success: #22c55e;
+    --bs-success-rgb: 34, 197, 94;
+    --bs-warning: #f59e0b;
+    --bs-warning-rgb: 245, 158, 11;
+    --bs-danger: #ef4444;
+    --bs-danger-rgb: 239, 68, 68;
+    --bs-body-color: #e5e9f0;
+    --bs-border-color: rgba(148, 163, 184, .18);
+    --bs-link-color: #22d3ee;
+    --bs-link-hover-color: #67e8f9;
+    --bs-focus-ring-color: rgba(47, 125, 251, .35);
+}
+
+/* Fond abe.jpg (public/images/abe.jpg) posé sur <body> plutôt que sur
+   .admin-page : couvre toute la largeur du viewport même sur les pages
+   formulaire standalone (colonne centrée à 900px, cf. commentaire ci-dessous).
+   position: fixed + z-index: -1 : équivalent moderne de background-attachment:
+   fixed, sans le jank connu sur mobile/iOS (cf. .auth-bg dans auth.css).
+   --admin-bg-image est portée par le style inline de <body>, voir
+   base.html.twig (block body_style) + admin/_layout.html.twig et les 3 pages
+   de formulaire standalone. Dégradé sombre superposé à l'image pour la
+   lisibilité, sans la masquer complètement. */
+body.admin-body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+        linear-gradient(180deg, rgba(4, 7, 14, .82) 0%, rgba(4, 7, 14, .88) 100%),
+        var(--admin-bg-image);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Pages avec la colonne de nav (admin-body--shell, cf. admin/_layout.html.twig) :
+   dégradé asymétrique qui laisse l'image bien plus visible à droite (où le
+   contenu laisse le plus d'espace libre), plus sombre à gauche pour la
+   lisibilité de la colonne de nav — cf. maquettes fournies. */
+body.admin-body--shell::before {
+    background-image:
+        linear-gradient(100deg, rgba(4, 7, 14, .93) 0%, rgba(4, 7, 14, .75) 42%, rgba(4, 7, 14, .4) 100%),
+        var(--admin-bg-image);
+}
+
+/* Navbar : dégradé noir -> transparent vers la droite pour laisser
+   apparaître abe.jpg derrière, uniquement sur les pages admin et à partir de
+   lg (en dessous, le menu passe par le burger offcanvas de _shared/_nav.html.twig,
+   pas assez de place pour l'effet). data-bs-theme="dark" sur .navbar garde les
+   liens/icônes blancs donc lisibles quelle que soit l'opacité. */
+@media (min-width: 992px) {
+    body.admin-body .navbar.bg-black {
+        background: linear-gradient(
+            90deg,
+            rgba(0, 0, 0, .97) 0%,
+            rgba(0, 0, 0, .93) 50%,
+            rgba(0, 0, 0, .55) 78%,
+            rgba(0, 0, 0, .16) 100%
+        ) !important;
+    }
+}
+
+/* ==========================================================================
    Page admin : conteneur de base (utilisé seul par les pages de formulaire
    standalone event_form/products_form/category_form, et combiné avec
    .admin-page--shell par admin/_layout.html.twig pour les pages avec nav)
@@ -118,22 +197,26 @@
     align-items: center;
     gap: 16px;
     padding: 18px 20px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    border-radius: 14px;
     color: var(--bs-white);
     text-decoration: none;
-    background: rgba(255, 255, 255, 0.03);
-    transition: background-color .15s ease, border-color .15s ease;
+    background: rgba(9, 13, 24, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease;
 }
 
 .admin-nav-card:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(17, 23, 40, 0.68);
+    border-color: rgba(148, 163, 184, 0.3);
     color: var(--bs-white);
 }
 
 .admin-nav-card.active {
-    background: rgba(var(--bs-primary-rgb), 0.18);
-    border-color: var(--bs-primary);
+    background: rgba(var(--bs-primary-rgb), 0.14);
+    border-color: rgba(var(--bs-primary-rgb), 0.6);
+    box-shadow: 0 0 0 1px rgba(var(--bs-primary-rgb), 0.18), 0 6px 20px rgba(var(--bs-primary-rgb), 0.14);
 }
 
 .admin-nav-card i {
@@ -244,6 +327,125 @@
     .admin-shell--nav-collapsed .admin-shell-content {
         flex: 1 1 100%;
     }
+}
+
+/* ==========================================================================
+   Cartes, formulaires, tableaux : effet verre sombre discret + accents bleu
+   électrique/cyan, cohérent avec le fond abe.jpg posé derrière (cf. section
+   "Identité visuelle" plus haut). Scopé à .admin-page pour ne pas affecter
+   le reste du site (auth/compte ont leur propre .auth-card).
+   ========================================================================== */
+
+.admin-page .card {
+    background: rgba(11, 15, 26, .58);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-color: rgba(148, 163, 184, .16);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, .25);
+}
+
+.admin-page .form-label {
+    color: #cbd5e1;
+}
+
+.admin-page .form-control,
+.admin-page .form-select {
+    background-color: rgba(255, 255, 255, .04);
+    border-color: rgba(148, 163, 184, .22);
+    color: var(--bs-body-color);
+}
+
+.admin-page .form-control:focus,
+.admin-page .form-select:focus {
+    background-color: rgba(255, 255, 255, .06);
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 .2rem var(--bs-focus-ring-color);
+    color: var(--bs-body-color);
+}
+
+.admin-page .form-control::placeholder {
+    color: #7c869c;
+}
+
+/* Tableaux : en-têtes bien séparés, lignes plus espacées, survol discret —
+   remplace le fond plein de .table-dark par un fond transparent cohérent
+   avec les cartes verre ci-dessus. */
+.admin-page .table {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--bs-body-color);
+    --bs-table-border-color: rgba(148, 163, 184, .14);
+    --bs-table-hover-bg: rgba(255, 255, 255, .045);
+    --bs-table-hover-color: #fff;
+}
+
+.admin-page .table thead th {
+    color: #93a1c2;
+    font-size: .78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    border-bottom: 2px solid rgba(148, 163, 184, .22);
+    padding-block: 12px;
+}
+
+.admin-page .table td {
+    padding-block: 14px;
+    vertical-align: middle;
+}
+
+/* Badges : version "verre" translucide (fond très transparent + bordure +
+   texte dans la même teinte) plutôt que les pastilles pleines de Bootstrap,
+   cf. maquettes. Les classes bg-*/text-bg-* restent posées par le PHP/Twig
+   existant (AdminActivityLog::getBadgeClass(), _role_badge.html.twig,
+   Server::getModeBadgeClass(), Event::getStatusBadgeClass()...) : seule leur
+   couleur change ici, aucune logique n'est touchée. */
+.admin-page .badge.bg-primary,
+.admin-page .badge.text-bg-primary {
+    background: rgba(47, 125, 251, .16) !important;
+    border: 1px solid rgba(47, 125, 251, .55);
+    color: #93c1ff !important;
+}
+
+.admin-page .badge.bg-info,
+.admin-page .badge.text-bg-info {
+    background: rgba(34, 211, 238, .14) !important;
+    border: 1px solid rgba(34, 211, 238, .55);
+    color: #67e8f9 !important;
+}
+
+.admin-page .badge.bg-success,
+.admin-page .badge.text-bg-success {
+    background: rgba(34, 197, 94, .16) !important;
+    border: 1px solid rgba(34, 197, 94, .55);
+    color: #6ee7a8 !important;
+}
+
+.admin-page .badge.bg-warning,
+.admin-page .badge.text-bg-warning {
+    background: rgba(245, 158, 11, .16) !important;
+    border: 1px solid rgba(245, 158, 11, .55);
+    color: #fbbf7d !important;
+}
+
+.admin-page .badge.bg-danger,
+.admin-page .badge.text-bg-danger {
+    background: rgba(239, 68, 68, .14) !important;
+    border: 1px solid rgba(239, 68, 68, .55);
+    color: #fca5a5 !important;
+}
+
+.admin-page .badge.bg-secondary,
+.admin-page .badge.text-bg-secondary {
+    background: rgba(236, 72, 153, .14) !important;
+    border: 1px solid rgba(236, 72, 153, .5);
+    color: #f9a8d4 !important;
+}
+
+.admin-page .badge.bg-light,
+.admin-page .badge.text-bg-light {
+    background: rgba(148, 163, 184, .14) !important;
+    border: 1px solid rgba(148, 163, 184, .4);
+    color: #cbd5e1 !important;
 }
 
 /* ==========================================================================

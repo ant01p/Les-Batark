@@ -14,7 +14,7 @@
         {% block stylesheets %}{% endblock %}
     </head>
 
-    <body class="{% block body_class %}{% endblock %}">
+    <body class="{% block body_class %}{% endblock %}"{% block body_style %}{% endblock %}>
 
         {% include '_shared/_nav.html.twig' %}
         
